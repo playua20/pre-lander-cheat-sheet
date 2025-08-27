@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, minimum-scale=1"
+        />
+        <title>Pre-landers UI Cheatsheet</title>
+        <style>
+            /* ===== THEME (без CSS-змінних) ===== */
+            body.theme-dark {
+                background: #0b0c0f;
+                color: #e6e8ee;
+            }
+            body.theme-light {
+                background: #f6f7fb;
+                color: #1c2430;
+            }
+
+            /* Базові стилі: */
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto,
+                    Arial, sans-serif;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            main {
+                flex-grow: 1;
+            }
+            figure {
+                margin: 0;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            /* Layout */
+            .app {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 16px;
+            }
+            .top-tabs {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-bottom: 12px;
+            }
+            .top-tab {
+                padding: 10px 14px;
+                border-radius: 10px;
+                cursor: pointer;
+                user-select: none;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #fff;
+                color: #1c2430;
+            }
+            body.theme-dark .top-tab {
+                border-color: rgba(255, 255, 255, 0.08);
+                background: #12141a;
+                color: #fff;
+            }
+            .top-tab[aria-selected="true"] {
+                outline: 2px solid #5bd1a8;
+            }
+
+            .shell {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                gap: 16px;
+            }
+            @media (max-width: 900px) {
+                .shell {
+                    grid-template-columns: 1fr;
+                }
+            }
+            .tab {
+                display: none;
+            }
+            .tab[data-active="true"] {
+                display: grid;
+            }
+
+            .sidebar {
+                position: sticky;
+                top: 12px;
+                align-self: start;
+                padding: 12px;
+                border-radius: 14px;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #fff;
+            }
+            body.theme-dark .sidebar {
+                border-color: rgba(255, 255, 255, 0.08);
+                background: #12141a;
+            }
+            .sidebar h4 {
+                margin: 8px 0 6px;
+                font-size: 12px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: #6b7686;
+            }
+            body.theme-dark .sidebar h4 {
+                color: #9aa3b2;
+            }
+            .list {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .list button,
+            .list .disabled {
+                width: 100%;
+                text-align: left;
+                padding: 8px 10px;
+                border-radius: 10px;
+                cursor: pointer;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #f2f4f8;
+                color: #1c2430;
+            }
+            body.theme-dark .list button,
+            body.theme-dark .list .disabled {
+                background: #0e1015;
+                color: #e6e8ee;
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+            .list .disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            .list button.active {
+                outline: 2px solid #5bd1a8;
+            }
+
+            .panel {
+                padding: 16px;
+                border-radius: 14px;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #fff;
+            }
+            body.theme-dark .panel {
+                background: #12141a;
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+
+            .inner-tabs {
+                display: flex;
+                gap: 8px;
+                margin: 10px 0 14px;
+            }
+            .inner-tab {
+                padding: 8px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #f2f4f8;
+                color: #1c2430;
+                cursor: pointer;
+            }
+            body.theme-dark .inner-tab {
+                background: #0e1015;
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+            .inner-tab[aria-selected="true"] {
+                outline: 2px solid #5bd1a8;
+            }
+
+            .buttons {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin: 10px 0;
+            }
+            .btn {
+                padding: 8px 12px;
+                border-radius: 10px;
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                background: #f2f4f8;
+                color: #1c2430;
+                cursor: pointer;
+            }
+            .btn.primary {
+                background: #5bd1a8;
+                color: #0a0e0c;
+                border-color: transparent;
+                font-weight: 600;
+            }
+            body.theme-dark .btn {
+                background: #0e1015;
+                color: #e6e8ee;
+                border-color: rgba(255, 255, 255, 0.08);
+            }
+            .btn.ghost {
+                background: transparent;
+            }
+            .badge {
+                display: inline-block;
+                vertical-align: middle;
+                font-size: 11px;
+                line-height: 1;
+                padding: 4px 6px;
+                border-radius: 6px;
+                margin-right: 8px;
+                color: #fff;
+                background: #1c2430;
+                font-weight: 700;
+            }
+            body.theme-dark .badge {
+                background: #5bd1a8;
+                color: #0a0e0c;
+            }
+
+            /* Controls */
+            .controls {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                margin-top: 10px;
+            }
+            @media (max-width: 640px) {
+                .controls {
+                    grid-template-columns: 1fr;
+                }
+            }
+            .control {
+                border: 1px solid rgba(0, 0, 0, 0.12);
+                border-radius: 10px;
+                padding: 10px;
+                background: #f2f4f8;
+            }
+            body.theme-dark .control {
+                border-color: rgba(255, 255, 255, 0.08);
+                background: #0e1015;
+            }
+            .control h5 {
+                margin: 0 0 8px;
+                font-size: 12px;
+                color: #6b7686;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+            body.theme-dark .control h5 {
+                color: #9aa3b2;
+            }
+            .control .row {
+                display: grid;
+                grid-template-columns: 110px 1fr;
+                gap: 8px;
+                align-items: center;
+                margin: 6px 0;
+            }
+            .control label {
+                font-size: 12px;
+                color: #6b7686;
+            }
+            body.theme-dark .control label {
+                color: #9aa3b2;
+            }
+            .control select,
+            .control input[type="number"] {
+                width: 100%;
+                padding: 8px;
+                border-radius: 8px;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                background: #fff;
+                color: #1c2430;
+            }
+            body.theme-dark .control select,
+            body.theme-dark .control input[type="number"] {
+                background: #0c0e13;
+                color: #e6e8ee;
+                border-color: rgba(255, 255, 255, 0.12);
+            }
+
+            /* Preview area */
+            .preview {
+                border: 1px dashed rgba(0, 0, 0, 0.15);
+                border-radius: 12px;
+                padding: 16px;
+                background: #fafbfe;
+            }
+            body.theme-dark .preview {
+                border-color: rgba(255, 255, 255, 0.12);
+                background: rgba(255, 255, 255, 0.02);
+            }
+
+            /* Базовий вигляд контенту (без <code>/<pre>/tables) */
+            .content h1,
+            .content h2,
+            .content h3,
+            .content h4,
+            .content h5,
+            .content h6 {
+                margin: 0.8em 0 0.35em;
+            }
+            .content p {
+                margin: 0.6em 0;
+            }
+            .content small {
+                color: #6b7686;
+            }
+            body.theme-dark .content small {
+                color: #9aa3b2;
+            }
+            .content a {
+                color: #0a7c5e;
+            }
+            body.theme-dark .content a {
+                color: #5bd1a8;
+            }
+            .content ul,
+            .content ol {
+                padding-left: 1.2em;
+            }
+            .content li {
+                margin: 0.35em 0;
+            }
+            .content blockquote {
+                margin: 1em 0;
+                padding: 12px 14px;
+                border-left: 4px solid #b8c2cc;
+                background: #f1f4f8;
+                border-radius: 8px;
+            }
+            body.theme-dark .content blockquote {
+                background: rgba(255, 255, 255, 0.03);
+                border-left-color: #3a4150;
+            }
+
+            /* Code / HTML boxes — високі й «гумові» */
+            .codebox {
+                background: #10131a;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 12px;
+                padding: 12px;
+                position: relative;
+                font-family: "Courier New", Courier, "Lucida Console", Monaco,
+                    monospace;
+                font-size: 13px;
+                line-height: 1.5;
+                color: #dfe3ea;
+                white-space: pre;
+                overflow: auto;
+                min-height: 620px;
+                max-height: none;
+            }
+            body.theme-light .codebox {
+                background: #0a0c11;
+                border-color: rgba(0, 0, 0, 0.2);
+                color: #dfe3ea;
+            }
+            .copybar {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+                margin: 8px 0;
+            }
+            .notice {
+                color: #6b7686;
+                font-size: 12px;
+            }
+            body.theme-dark .notice {
+                color: #9aa3b2;
+            }
+
+            /* === Highlight variants === */
+            .highlight {
+                padding: 0 0.25em;
+            }
+            .highlight-1 {
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 0, 0) 60%,
+                    rgba(255, 239, 120, 0.9) 60%
+                );
+            }
+            .highlight-2 {
+                background: #ffeb3b;
+                border-radius: 4px;
+            }
+            .highlight-3 {
+                box-shadow: inset 0 -8px 0 rgba(91, 209, 168, 0.35);
+            }
+            .highlight-4 {
+                outline: 2px solid #5bd1a8;
+                border-radius: 6px;
+            }
+            .highlight-5 {
+                text-decoration: underline wavy #ff6d6d 2px;
+            }
+            .highlight-6 {
+                background: #c8e6c9;
+                border-radius: 999px;
+                padding: 0.1em 0.5em;
+            }
+            .highlight-7 {
+                background: #ffe0b2;
+                border: 1px dashed #ff9800;
+                border-radius: 6px;
+                padding: 0.05em 0.3em;
+            }
+            .highlight-8 {
+                background: linear-gradient(
+                    90deg,
+                    rgba(91, 209, 168, 0.25),
+                    rgba(91, 209, 168, 0.05)
+                );
+            }
+            .highlight-9 {
+                background: linear-gradient(
+                    180deg,
+                    transparent 70%,
+                    rgba(0, 0, 0, 0.12) 0%
+                );
+            }
+            .highlight-10 {
+                text-shadow: 0 1px 0 #fff;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.65),
+                    rgba(255, 255, 255, 0.3)
+                );
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+    <body class="theme-light">
+        <div class="app">
+            <div class="top-tabs" role="tablist" aria-label="Main tabs">
+                <button
+                    class="top-tab"
+                    role="tab"
+                    aria-selected="true"
+                    data-tab="typography"
+                >
+                    Типографіка
+                </button>
+                <button
+                    class="top-tab"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="standard"
+                >
+                    Базові компоненти
+                </button>
+                <button
+                    class="top-tab"
+                    role="tab"
+                    aria-selected="false"
+                    data-tab="interactive"
+                >
+                    Інтерактивні компоненти
+                </button>
+            </div>
+
+            <!-- TIPOGRAPHY TAB -->
+            <section
+                class="shell tab"
+                id="tab-typography"
+                data-active="true"
+                aria-label="Типографіка"
+            >
+                <aside class="sidebar" id="tab-typography-sidebar">
+                    <h4>Шрифт</h4>
+                    <ul class="list" id="fontList"></ul>
+
+                    <h4>Стилі шрифту</h4>
+                    <div class="control">
+                        <h5>База</h5>
+                        <div class="row">
+                            <label for="baseSize">Base size</label>
+                            <input
+                                id="baseSize"
+                                type="number"
+                                min="12"
+                                max="22"
+                                step="1"
+                                value="16"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <h5>Heading scales</h5>
+                        <div class="row">
+                            <label>H1 size</label
+                            ><select data-key="h1.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>H2 size</label
+                            ><select data-key="h2.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>H3 size</label
+                            ><select data-key="h3.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>H4 size</label
+                            ><select data-key="h4.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>H5 size</label
+                            ><select data-key="h5.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>H6 size</label
+                            ><select data-key="h6.size"></select>
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <h5>Heading weight / line-height</h5>
+                        <div class="row">
+                            <label>H1</label
+                            ><select data-key="h1.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>H2</label
+                            ><select data-key="h2.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>H3</label
+                            ><select data-key="h3.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>H4</label
+                            ><select data-key="h4.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>H5</label
+                            ><select data-key="h5.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>H6</label
+                            ><select data-key="h6.weight"></select>
+                        </div>
+
+                        <div class="row">
+                            <label>H1 LH</label
+                            ><select data-key="h1.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>H2 LH</label
+                            ><select data-key="h2.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>H3 LH</label
+                            ><select data-key="h3.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>H4 LH</label
+                            ><select data-key="h4.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>H5 LH</label
+                            ><select data-key="h5.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>H6 LH</label
+                            ><select data-key="h6.lh"></select>
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <h5>Paragraphs / Links / Lists</h5>
+                        <div class="row">
+                            <label>P size</label
+                            ><select data-key="p.size"></select>
+                        </div>
+                        <div class="row">
+                            <label>P weight</label
+                            ><select data-key="p.weight"></select>
+                        </div>
+                        <div class="row">
+                            <label>P line-height</label
+                            ><select data-key="p.lh"></select>
+                        </div>
+                        <div class="row">
+                            <label>Links</label>
+                            <select id="linkStyle">
+                                <option value="underline">underline</option>
+                                <option value="hover">hover only</option>
+                                <option value="none">none</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <label>UL style</label>
+                            <select id="ulStyle">
+                                <option value="disc">disc</option>
+                                <option value="circle">circle</option>
+                                <option value="square">square</option>
+                                <option value="icon">icon</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <label>OL style</label>
+                            <select id="olStyle">
+                                <option value="disc">disc</option>
+                                <option value="decimal">decimal</option>
+                                <option value="decimal-leading-zero">
+                                    decimal-leading-zero
+                                </option>
+                                <option value="lower-alpha">lower-alpha</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <button class="btn" id="resetBtn">Скинути стилі</button>
+                    </div>
+                </aside>
+
+                <main class="panel">
+                    <div class="buttons">
+                        <button class="btn" id="randomizeTopBtn">
+                            🎲 Рандомно
+                        </button>
+                        <button class="btn" id="themeBtn">Тема: Light</button>
+                    </div>
+
+                    <div
+                        class="inner-tabs"
+                        role="tablist"
+                        aria-label="Typography inner tabs"
+                    >
+                        <button
+                            class="inner-tab"
+                            role="tab"
+                            aria-selected="true"
+                            data-inner="preview"
+                        >
+                            Preview
+                        </button>
+                        <button
+                            class="inner-tab"
+                            role="tab"
+                            aria-selected="false"
+                            data-inner="css"
+                        >
+                            CSS
+                        </button>
+                        <button
+                            class="inner-tab"
+                            role="tab"
+                            aria-selected="false"
+                            data-inner="html"
+                        >
+                            HTML
+                        </button>
+                    </div>
+
+                    <!-- PREVIEW -->
+                    <div
+                        id="typoPreview"
+                        class="preview"
+                        data-inner-panel="preview"
+                    >
+                        <div id="previewScope" class="content hover-mode">
+                            <h1>
+                                <span class="badge">&lt;h1&gt;</span>Elegant
+                                Typography Cheat Test
+                            </h1>
+                            <p>
+                                <span class="badge">&lt;small&gt;</span
+                                ><small>Lead-in:</small>
+                                <span class="badge" style="margin-left: 8px"
+                                    >&lt;p&gt;</span
+                                >This block demonstrates a consistent set of
+                                styles applied to the same content. Switch fonts
+                                on the left to compare rhythm, sizes, and
+                                contrast. You can also override heading scales,
+                                paragraph metrics, lists and links.
+                            </p>
+
+                            <h2>
+                                <span class="badge">&lt;h2&gt;</span>Section
+                                Title &amp; Rhythm
+                            </h2>
+                            <p>
+                                <span class="badge">&lt;p&gt;</span>Good
+                                typography balances
+                                <a href="#"
+                                    ><span class="badge">&lt;a&gt;</span
+                                    >readability</a
+                                >, hierarchy, and spacing. A clear scale for
+                                headings (H1–H6) and consistent paragraph
+                                line-height improve scannability and
+                                comprehension on long pre-landers.
+                            </p>
+
+                            <h3><span class="badge">&lt;h3&gt;</span>Lists</h3>
+
+                            <p id="ulLabel" class="notice">
+                                <span class="badge"
+                                    >&lt;ul&gt; + &lt;li&gt;</span
+                                >
+                                з іконкою
+                            </p>
+                            <ul>
+                                <li>
+                                    Readable base size with generous
+                                    line-height.
+                                </li>
+                                <li>
+                                    Predictable heading increments and weights.
+                                </li>
+                                <li>
+                                    Clear link styling with accessible states.
+                                </li>
+                            </ul>
+
+                            <p id="olLabel" class="notice">
+                                <span class="badge"
+                                    >&lt;ol&gt; + &lt;li&gt;</span
+                                >
+                                з точками
+                            </p>
+                            <ol>
+                                <li>
+                                    Use system/installed fonts to avoid CDNs.
+                                </li>
+                                <li>Keep min width at 320px.</li>
+                                <li>
+                                    Prefer semantic HTML for screen readers.
+                                </li>
+                            </ol>
+
+                            <h4>
+                                <span class="badge">&lt;h4&gt;</span>Blockquote
+                            </h4>
+                            <blockquote>
+                                <span class="badge">&lt;blockquote&gt;</span>
+                                “People ignore design that ignores people.” —
+                                Frank Chimero
+                            </blockquote>
+
+                            <h5>
+                                <span class="badge">&lt;h5&gt;</span>Highlights
+                            </h5>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-1"&gt;</span
+                                ><span class="highlight highlight-1"
+                                    >Variant 1 — marker line</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-2"&gt;</span
+                                ><span class="highlight highlight-2"
+                                    >Variant 2 — yellow pill</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-3"&gt;</span
+                                ><span class="highlight highlight-3"
+                                    >Variant 3 — inset shadow</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-4"&gt;</span
+                                ><span class="highlight highlight-4"
+                                    >Variant 4 — outline</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-5"&gt;</span
+                                ><span class="highlight highlight-5"
+                                    >Variant 5 — wavy underline</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-6"&gt;</span
+                                ><span class="highlight highlight-6"
+                                    >Variant 6 — soft pill</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-7"&gt;</span
+                                ><span class="highlight highlight-7"
+                                    >Variant 7 — dashed badge</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-8"&gt;</span
+                                ><span class="highlight highlight-8"
+                                    >Variant 8 — left-to-right glow</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-9"&gt;</span
+                                ><span class="highlight highlight-9"
+                                    >Variant 9 — underline shadow</span
+                                >
+                            </p>
+                            <p>
+                                <span class="badge"
+                                    >&lt;span class="highlight-10"&gt;</span
+                                ><span class="highlight highlight-10"
+                                    >Variant 10 — glossy</span
+                                >
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CSS -->
+                    <div id="typoCSS" data-inner-panel="css" hidden>
+                        <div class="copybar">
+                            <button class="btn" id="copyCssBtn">
+                                Copy CSS
+                            </button>
+                        </div>
+                        <div id="cssOutput" class="codebox"></div>
+                        <p class="notice">
+                            Скопійований CSS: спочатку «Базові стилі», потім
+                            обраний шрифт + всі ваші поточні налаштування.
+                        </p>
+                    </div>
+
+                    <!-- HTML -->
+                    <div id="typoHTML" data-inner-panel="html" hidden>
+                        <div class="copybar">
+                            <button class="btn" id="copyHtmlBtn">
+                                Copy HTML
+                            </button>
+                        </div>
+                        <div id="htmlOutput" class="codebox"></div>
+                    </div>
+                </main>
+            </section>
+
+            <!-- STANDARD TAB -->
+            <section
+                class="shell tab"
+                id="tab-standard"
+                aria-label="Базові компоненти"
+                hidden
+            >
+                <aside class="sidebar" id="standardSidebar">
+                    <h4>Базові</h4>
+                    <ul class="list">
+                        <li class="disabled">Header / Navbar</li>
+                        <li class="disabled">Advertisement | Disclosure</li>
+                        <li class="disabled">Breadcrumbs</li>
+                        <li class="disabled">Images (hero/product/avatar)</li>
+                        <li class="disabled">Footer (links + modals)</li>
+                    </ul>
+                    <h4>Контент</h4>
+                    <ul class="list">
+                        <li class="disabled">Callout/Alert</li>
+                        <li class="disabled">FAQ</li>
+                        <li class="disabled">Testimonials</li>
+                        <li class="disabled">Comments</li>
+                    </ul>
+                </aside>
+                <main class="panel">
+                    <p class="notice">
+                        Тут будуть живі демо базових елементів.
+                    </p>
+                </main>
+            </section>
+
+            <!-- INTERACTIVE TAB -->
+            <section
+                class="shell tab"
+                id="tab-interactive"
+                aria-label="Інтерактивні компоненти"
+                hidden
+            >
+                <aside class="sidebar" id="interactiveSidebar">
+                    <h4>Модулі</h4>
+                    <ul class="list">
+                        <li class="disabled">Modals</li>
+                        <li class="disabled">Toasts</li>
+                        <li class="disabled">Cookie / GDPR</li>
+                        <li class="disabled">Countdown</li>
+                        <li class="disabled">Sweepstakes / Wheel / Quiz</li>
+                        <li class="disabled">Social Proof</li>
+                        <li class="disabled">Order Form variants</li>
+                        <li class="disabled">Sticky CTA / Bars</li>
+                        <li class="disabled">Lockers (CTA → unlock)</li>
+                    </ul>
+                </aside>
+                <main class="panel">
+                    <p class="notice">Тут будуть інтерактивні демо та API.</p>
+                </main>
+            </section>
+        </div>
+
+        <style id="typoStyle"></style>
+        <script>
+            /* -------- Пресети (починаємо з Verdana) -------- */
+            const PRESETS = [
+                {
+                    id: "verdana-pro-tight",
+                    name: "Verdana Pro Tight",
+                    family: "Verdana, Geneva, Tahoma, sans-serif",
+                    base: 16,
+                    h: {
+                        1: { size: 2.4, weight: 800, lh: 1.12 },
+                        2: { size: 2.0, weight: 700, lh: 1.18 },
+                        3: { size: 1.68, weight: 700, lh: 1.22 },
+                        4: { size: 1.4, weight: 700, lh: 1.26 },
+                        5: { size: 1.18, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.0, weight: 400, lh: 1.65 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "verdana-spacious",
+                    name: "Verdana Spacious",
+                    family: "Verdana, Geneva, Tahoma, sans-serif",
+                    base: 16,
+                    h: {
+                        1: { size: 2.5, weight: 800, lh: 1.12 },
+                        2: { size: 2.05, weight: 700, lh: 1.18 },
+                        3: { size: 1.75, weight: 700, lh: 1.22 },
+                        4: { size: 1.45, weight: 700, lh: 1.26 },
+                        5: { size: 1.2, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.02, weight: 400, lh: 1.75 },
+                    link: "hover",
+                    ul: "disc",
+                    ol: "disc",
+                },
+
+                {
+                    id: "verdana-clean",
+                    name: "Verdana Clean",
+                    family: "Verdana, Geneva, Tahoma, sans-serif",
+                    base: 16,
+                    h: {
+                        1: { size: 2.35, weight: 800, lh: 1.15 },
+                        2: { size: 1.95, weight: 700, lh: 1.2 },
+                        3: { size: 1.6, weight: 700, lh: 1.25 },
+                        4: { size: 1.35, weight: 700, lh: 1.3 },
+                        5: { size: 1.15, weight: 700, lh: 1.35 },
+                        6: { size: 1.0, weight: 700, lh: 1.4 },
+                    },
+                    p: { size: 1.0, weight: 400, lh: 1.7 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "tahoma-compact",
+                    name: "Tahoma Compact",
+                    family: "Tahoma, Verdana, Segoe, sans-serif",
+                    base: 16,
+                    h: {
+                        1: { size: 2.2, weight: 800, lh: 1.15 },
+                        2: { size: 1.85, weight: 700, lh: 1.2 },
+                        3: { size: 1.55, weight: 700, lh: 1.25 },
+                        4: { size: 1.3, weight: 700, lh: 1.3 },
+                        5: { size: 1.12, weight: 700, lh: 1.35 },
+                        6: { size: 1.0, weight: 700, lh: 1.4 },
+                    },
+                    p: { size: 0.98, weight: 400, lh: 1.65 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "trebuchet-modern",
+                    name: "Trebuchet Modern",
+                    family: '"Trebuchet MS","Segoe UI",Tahoma,sans-serif',
+                    base: 16,
+                    h: {
+                        1: { size: 2.45, weight: 800, lh: 1.12 },
+                        2: { size: 2.0, weight: 700, lh: 1.18 },
+                        3: { size: 1.65, weight: 700, lh: 1.22 },
+                        4: { size: 1.38, weight: 700, lh: 1.28 },
+                        5: { size: 1.18, weight: 700, lh: 1.32 },
+                        6: { size: 1.0, weight: 700, lh: 1.36 },
+                    },
+                    p: { size: 1.02, weight: 400, lh: 1.7 },
+                    link: "hover",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "arial-neutral",
+                    name: "Arial Neutral",
+                    family: "Arial, Helvetica, sans-serif",
+                    base: 16,
+                    h: {
+                        1: { size: 2.3, weight: 800, lh: 1.15 },
+                        2: { size: 1.9, weight: 700, lh: 1.2 },
+                        3: { size: 1.6, weight: 700, lh: 1.25 },
+                        4: { size: 1.35, weight: 700, lh: 1.28 },
+                        5: { size: 1.15, weight: 700, lh: 1.32 },
+                        6: { size: 1.0, weight: 700, lh: 1.36 },
+                    },
+                    p: { size: 1.0, weight: 400, lh: 1.68 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "system-ui",
+                    name: "System UI",
+                    family: 'system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans","Helvetica Neue",Arial,sans-serif',
+                    base: 16,
+                    h: {
+                        1: { size: 2.4, weight: 800, lh: 1.12 },
+                        2: { size: 2.0, weight: 700, lh: 1.18 },
+                        3: { size: 1.7, weight: 700, lh: 1.22 },
+                        4: { size: 1.4, weight: 700, lh: 1.26 },
+                        5: { size: 1.2, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.0, weight: 400, lh: 1.7 },
+                    link: "hover",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "georgia-classic",
+                    name: "Georgia Classic (serif)",
+                    family: 'Georgia,"Times New Roman",Times,serif',
+                    base: 16,
+                    h: {
+                        1: { size: 2.5, weight: 800, lh: 1.12 },
+                        2: { size: 2.05, weight: 700, lh: 1.18 },
+                        3: { size: 1.75, weight: 700, lh: 1.2 },
+                        4: { size: 1.45, weight: 700, lh: 1.26 },
+                        5: { size: 1.2, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.02, weight: 400, lh: 1.8 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "times-editorial",
+                    name: "Times Editorial (serif)",
+                    family: '"Times New Roman",Times,Georgia,serif',
+                    base: 16,
+                    h: {
+                        1: { size: 2.6, weight: 800, lh: 1.1 },
+                        2: { size: 2.1, weight: 700, lh: 1.16 },
+                        3: { size: 1.8, weight: 700, lh: 1.2 },
+                        4: { size: 1.5, weight: 700, lh: 1.26 },
+                        5: { size: 1.22, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.02, weight: 400, lh: 1.78 },
+                    link: "underline",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "palatino-readable",
+                    name: "Palatino Readable (serif)",
+                    family: '"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif',
+                    base: 16,
+                    h: {
+                        1: { size: 2.45, weight: 800, lh: 1.12 },
+                        2: { size: 2.0, weight: 700, lh: 1.18 },
+                        3: { size: 1.7, weight: 700, lh: 1.22 },
+                        4: { size: 1.42, weight: 700, lh: 1.26 },
+                        5: { size: 1.18, weight: 700, lh: 1.3 },
+                        6: { size: 1.0, weight: 700, lh: 1.34 },
+                    },
+                    p: { size: 1.02, weight: 400, lh: 1.8 },
+                    link: "hover",
+                    ul: "disc",
+                    ol: "disc",
+                },
+                {
+                    id: "mono-doc",
+                    name: "Monospace Document",
+                    family: '"Courier New",Courier,"Lucida Console",Monaco,monospace',
+                    base: 16,
+                    h: {
+                        1: { size: 2.1, weight: 800, lh: 1.12 },
+                        2: { size: 1.8, weight: 700, lh: 1.18 },
+                        3: { size: 1.55, weight: 700, lh: 1.22 },
+                        4: { size: 1.35, weight: 700, lh: 1.28 },
+                        5: { size: 1.15, weight: 700, lh: 1.32 },
+                        6: { size: 1.0, weight: 700, lh: 1.36 },
+                    },
+                    p: { size: 0.98, weight: 400, lh: 1.7 },
+                    link: "none",
+                    ul: "square",
+                    ol: "disc",
+                },
+            ];
+
+            /* UI refs */
+            const tabs = document.querySelectorAll(".top-tab");
+            const tabPanels = {
+                typography: document.getElementById("tab-typography"),
+                standard: document.getElementById("tab-standard"),
+                interactive: document.getElementById("tab-interactive"),
+            };
+            tabs.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    tabs.forEach((b) =>
+                        b.setAttribute("aria-selected", "false")
+                    );
+                    btn.setAttribute("aria-selected", "true");
+                    const key = btn.dataset.tab;
+                    Object.entries(tabPanels).forEach(([k, el]) => {
+                        el.dataset.active = k === key ? "true" : "";
+                        el.hidden = k !== key;
+                    });
+                    setTimeout(equalizeCodeHeights, 0);
+                });
+            });
+
+            /* Lists */
+            const fontList = document.getElementById("fontList");
+
+            /* Options for controls */
+            const sizeOptions = [
+                0.9, 1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.2,
+                2.4, 2.6,
+            ];
+            const weightOptions = [300, 400, 500, 600, 700, 800, 900];
+            const lhOptions = [
+                1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.5, 1.6, 1.7, 1.8,
+            ];
+
+            let current = structuredClone(PRESETS[0]);
+            let overrides = { ul: "icon", ol: "disc" }; // UL з іконками + OL із точками — за замовчуванням
+
+            /* Render font list */
+            function renderFonts() {
+                fontList.innerHTML = "";
+                PRESETS.forEach((p) => {
+                    const b = document.createElement("button");
+                    b.textContent = p.name;
+                    if (p.id === current.id) b.classList.add("active");
+                    b.addEventListener("click", () => {
+                        current = structuredClone(
+                            PRESETS.find((x) => x.id === p.id)
+                        );
+                        overrides = { ul: "icon", ol: "disc" };
+                        applyStyles();
+                        syncControls();
+                        renderCSS();
+                        renderHTML();
+                        renderListLabels();
+                        renderFonts();
+                        equalizeCodeHeights();
+                    });
+                    fontList.appendChild(b);
+                });
+            }
+            renderFonts();
+
+            /* Helpers */
+            function fillSelect(el, arr, value) {
+                el.innerHTML = "";
+                arr.forEach((v) => {
+                    const opt = document.createElement("option");
+                    opt.value = v;
+                    opt.textContent = String(v);
+                    if (String(v) === String(value)) opt.selected = true;
+                    el.appendChild(opt);
+                });
+            }
+
+            function syncControls() {
+                document.getElementById("baseSize").value = current.base;
+                const map = [
+                    ["h1.size", current.h[1].size],
+                    ["h2.size", current.h[2].size],
+                    ["h3.size", current.h[3].size],
+                    ["h4.size", current.h[4].size],
+                    ["h5.size", current.h[5].size],
+                    ["h6.size", current.h[6].size],
+                    ["h1.weight", current.h[1].weight],
+                    ["h2.weight", current.h[2].weight],
+                    ["h3.weight", current.h[3].weight],
+                    ["h4.weight", current.h[4].weight],
+                    ["h5.weight", current.h[5].weight],
+                    ["h6.weight", current.h[6].weight],
+                    ["h1.lh", current.h[1].lh],
+                    ["h2.lh", current.h[2].lh],
+                    ["h3.lh", current.h[3].lh],
+                    ["h4.lh", current.h[4].lh],
+                    ["h5.lh", current.h[5].lh],
+                    ["h6.lh", current.h[6].lh],
+                    ["p.size", current.p.size],
+                    ["p.weight", current.p.weight],
+                    ["p.lh", current.p.lh],
+                ];
+                document.querySelectorAll("[data-key]").forEach((sel) => {
+                    const found = map.find(([k]) => k === sel.dataset.key);
+                    if (!found) return;
+                    const val = overrides[sel.dataset.key] ?? found[1];
+                    if (sel.dataset.key.includes(".size"))
+                        fillSelect(sel, sizeOptions, val);
+                    else if (sel.dataset.key.includes(".weight"))
+                        fillSelect(sel, weightOptions, val);
+                    else if (sel.dataset.key.includes(".lh"))
+                        fillSelect(sel, lhOptions, val);
+                });
+                document.getElementById("linkStyle").value =
+                    overrides["link"] ?? current.link;
+                document.getElementById("ulStyle").value =
+                    overrides["ul"] ?? current.ul;
+                document.getElementById("olStyle").value =
+                    overrides["ol"] ?? current.ol;
+            }
+
+            /* Apply styles and generate CSS text */
+            function applyStyles() {
+                const s = document.getElementById("typoStyle");
+                const get = (k, fallback) =>
+                    k in overrides ? overrides[k] : fallback;
+                const base = current.base;
+                const fam = current.family;
+
+                const h = {};
+                for (let i = 1; i <= 6; i++) {
+                    h[i] = {
+                        size: parseFloat(get(`h${i}.size`, current.h[i].size)),
+                        weight: parseInt(
+                            get(`h${i}.weight`, current.h[i].weight),
+                            10
+                        ),
+                        lh: parseFloat(get(`h${i}.lh`, current.h[i].lh)),
+                    };
+                }
+                const p = {
+                    size: parseFloat(get("p.size", current.p.size)),
+                    weight: parseInt(get("p.weight", current.p.weight), 10),
+                    lh: parseFloat(get("p.lh", current.p.lh)),
+                };
+                const link = get("link", current.link);
+                const ul = get("ul", current.ul);
+                const ol = get("ol", current.ol);
+
+                const scope = document.getElementById("previewScope");
+                scope.classList.toggle("hover-mode", link === "hover");
+
+                const ICON_URL =
+                    "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/check-circle-fill.svg";
+
+                let css = `
+/* Typography applied to .content */
+.content{ font-family:${fam}; font-size:${base}px; }
+.content h1{ font-size:${(base * h[1].size).toFixed(2)}px; line-height:${
+                    h[1].lh
+                }; font-weight:${h[1].weight}; }
+.content h2{ font-size:${(base * h[2].size).toFixed(2)}px; line-height:${
+                    h[2].lh
+                }; font-weight:${h[2].weight}; }
+.content h3{ font-size:${(base * h[3].size).toFixed(2)}px; line-height:${
+                    h[3].lh
+                }; font-weight:${h[3].weight}; }
+.content h4{ font-size:${(base * h[4].size).toFixed(2)}px; line-height:${
+                    h[4].lh
+                }; font-weight:${h[4].weight}; }
+.content h5{ font-size:${(base * h[5].size).toFixed(2)}px; line-height:${
+                    h[5].lh
+                }; font-weight:${h[5].weight}; }
+.content h6{ font-size:${(base * h[6].size).toFixed(2)}px; line-height:${
+                    h[6].lh
+                }; font-weight:${h[6].weight}; }
+.content p{ font-size:${(base * p.size).toFixed(2)}px; line-height:${
+                    p.lh
+                }; font-weight:${p.weight}; }
+${
+    link === "hover"
+        ? `.content a{ text-decoration:none }\n.content a:hover{ text-decoration:underline }`
+        : link === "none"
+        ? `.content a{ text-decoration:none }`
+        : `.content a{ text-decoration:underline }`
+}
+${
+    ul === "icon"
+        ? `.content ul{ list-style:none; padding-left:0 }
+.content ul li{ position:relative; padding-left:28px }
+.content ul li::before{
+  content:""; position:absolute; left:0; top:.33em; width:18px; height:18px;
+  -webkit-mask:url('${ICON_URL}') no-repeat center / 18px 18px;
+  mask:url('${ICON_URL}') no-repeat center / 18px 18px;
+  background-color:#5bd1a8; /* замініть картинку/колір на свої */
+}`
+        : `.content ul{ list-style:${ul}; }`
+}
+.content ol{ list-style:${ol}; }`;
+
+                s.textContent = css;
+
+                renderListLabels();
+            }
+
+            /* Labels above lists */
+            function renderListLabels() {
+                const ulSel = overrides["ul"] ?? current.ul;
+                const ulMap = {
+                    icon: "з іконкою",
+                    disc: "з точками",
+                    circle: "з точками",
+                    square: "з точками",
+                };
+                const ulText = ulMap[ulSel] || "з точками";
+                const olText = "з точками"; // як просив, завжди «з точками»
+
+                const ulLabel = document.getElementById("ulLabel");
+                const olLabel = document.getElementById("olLabel");
+                if (ulLabel)
+                    ulLabel.innerHTML = `<span class="badge">&lt;ul&gt; + &lt;li&gt;</span> ${ulText}`;
+                if (olLabel)
+                    olLabel.innerHTML = `<span class="badge">&lt;ol&gt; + &lt;li&gt;</span> ${olText}`;
+            }
+
+            /* Control events */
+            function bindControlEvents() {
+                document
+                    .getElementById("baseSize")
+                    .addEventListener("input", (e) => {
+                        const v = Math.max(
+                            12,
+                            Math.min(22, Number(e.target.value || 16))
+                        );
+                        current.base = v;
+                        applyStyles();
+                        renderCSS();
+                        equalizeCodeHeights();
+                    });
+                document.querySelectorAll("[data-key]").forEach((sel) => {
+                    sel.addEventListener("change", (e) => {
+                        const key = sel.dataset.key;
+                        overrides[key] = Number(e.target.value);
+                        applyStyles();
+                        renderCSS();
+                        equalizeCodeHeights();
+                    });
+                });
+                document
+                    .getElementById("linkStyle")
+                    .addEventListener("change", (e) => {
+                        overrides["link"] = e.target.value;
+                        applyStyles();
+                        renderCSS();
+                        equalizeCodeHeights();
+                    });
+                document
+                    .getElementById("ulStyle")
+                    .addEventListener("change", (e) => {
+                        overrides["ul"] = e.target.value;
+                        applyStyles();
+                        renderCSS();
+                        equalizeCodeHeights();
+                    });
+                document
+                    .getElementById("olStyle")
+                    .addEventListener("change", (e) => {
+                        overrides["ol"] = e.target.value;
+                        applyStyles();
+                        renderCSS();
+                        equalizeCodeHeights();
+                    });
+                document
+                    .getElementById("resetBtn")
+                    .addEventListener("click", () => {
+                        overrides = { ul: "icon", ol: "disc" };
+                        applyStyles();
+                        syncControls();
+                        renderCSS();
+                        renderListLabels();
+                        equalizeCodeHeights();
+                    });
+            }
+            bindControlEvents();
+
+            /* Randomize (адекватні межі) */
+            function randomizeAll() {
+                const rand = (min, max, step = 0.01) =>
+                    Math.round((min + Math.random() * (max - min)) / step) *
+                    step;
+                current.base = Math.round(rand(15, 18, 1));
+                const h6 = rand(1.0, 1.06, 0.01);
+                const h5 = rand(h6 + 0.1, 1.25, 0.01);
+                const h4 = rand(h5 + 0.1, 1.45, 0.01);
+                const h3 = rand(h4 + 0.15, 1.75, 0.01);
+                const h2 = rand(h3 + 0.2, 2.1, 0.01);
+                const h1 = rand(h2 + 0.25, 2.6, 0.01);
+                overrides["h1.size"] = h1;
+                overrides["h2.size"] = h2;
+                overrides["h3.size"] = h3;
+                overrides["h4.size"] = h4;
+                overrides["h5.size"] = h5;
+                overrides["h6.size"] = h6;
+                [1, 2, 3, 4, 5, 6].forEach((i) => {
+                    overrides[`h${i}.weight`] = [600, 700, 800][
+                        Math.floor(Math.random() * 3)
+                    ];
+                    overrides[`h${i}.lh`] = [
+                        1.12, 1.15, 1.18, 1.22, 1.26, 1.3, 1.34,
+                    ][Math.floor(Math.random() * 7)];
+                });
+                overrides["p.size"] = rand(0.96, 1.06, 0.01);
+                overrides["p.weight"] = [400, 400, 500][
+                    Math.floor(Math.random() * 3)
+                ];
+                overrides["p.lh"] = [1.6, 1.65, 1.7, 1.75, 1.8][
+                    Math.floor(Math.random() * 5)
+                ];
+                overrides["link"] = ["underline", "hover", "none"][
+                    Math.floor(Math.random() * 3)
+                ];
+                overrides["ul"] = ["disc", "circle", "square", "icon"][
+                    Math.floor(Math.random() * 4)
+                ];
+                overrides["ol"] = [
+                    "disc",
+                    "decimal",
+                    "decimal-leading-zero",
+                    "lower-alpha",
+                ][Math.floor(Math.random() * 4)];
+                applyStyles();
+                syncControls();
+                renderCSS();
+                renderListLabels();
+                equalizeCodeHeights();
+            }
+            document
+                .getElementById("randomizeTopBtn")
+                .addEventListener("click", randomizeAll);
+
+            /* Theme toggle */
+            document
+                .getElementById("themeBtn")
+                .addEventListener("click", () => {
+                    const body = document.body;
+                    if (body.classList.contains("theme-dark")) {
+                        body.classList.remove("theme-dark");
+                        body.classList.add("theme-light");
+                        document.getElementById("themeBtn").textContent =
+                            "Тема: Light";
+                    } else {
+                        body.classList.remove("theme-light");
+                        body.classList.add("theme-dark");
+                        document.getElementById("themeBtn").textContent =
+                            "Тема: Dark";
+                    }
+                });
+
+            /* Inner tabs */
+            const innerTabs = document.querySelectorAll(".inner-tab");
+            innerTabs.forEach((t) => {
+                t.addEventListener("click", () => {
+                    innerTabs.forEach((x) =>
+                        x.setAttribute("aria-selected", "false")
+                    );
+                    t.setAttribute("aria-selected", "true");
+                    const key = t.dataset.inner;
+                    document
+                        .querySelectorAll("[data-inner-panel]")
+                        .forEach((p) => {
+                            p.hidden = p.dataset.innerPanel !== key;
+                        });
+                    equalizeCodeHeights();
+                });
+            });
+
+            /* Copy helpers */
+            async function copyFrom(id) {
+                const el = document.getElementById(id);
+                const txt = el.textContent;
+                try {
+                    await navigator.clipboard.writeText(txt);
+                } catch (e) {
+                    const t = document.createElement("textarea");
+                    t.value = txt;
+                    document.body.appendChild(t);
+                    t.select();
+                    try {
+                        document.execCommand("copy");
+                    } finally {
+                        document.body.removeChild(t);
+                    }
+                }
+            }
+
+            document
+                .getElementById("copyCssBtn")
+                .addEventListener("click", () => copyFrom("cssOutput"));
+            document
+                .getElementById("copyHtmlBtn")
+                .addEventListener("click", () => copyFrom("htmlOutput"));
+
+            /* CSS export */
+            function renderCSS() {
+                const baseStyles = `/* Базові стилі: */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+main { flex-grow: 1; }
+figure { margin: 0; }
+img { max-width: 100%; height: auto; display: block; }`;
+                const dynamic =
+                    document.getElementById("typoStyle").textContent;
+                const css =
+                    baseStyles +
+                    "\n\n/* Типографіка */\n" +
+                    dynamic +
+                    `\n\n/* Highlight variants */
+.highlight{ padding:0 .25em }
+.highlight-1{ background:linear-gradient(180deg,rgba(255,255,0,.0) 60%, rgba(255,239,120,.9) 60%) }
+.highlight-2{ background:#ffeb3b; border-radius:4px }
+.highlight-3{ box-shadow:inset 0 -8px 0 rgba(91,209,168,.35) }
+.highlight-4{ outline:2px solid #5bd1a8; border-radius:6px }
+.highlight-5{ text-decoration:underline wavy #ff6d6d 2px }
+.highlight-6{ background:#c8e6c9; border-radius:999px; padding:.1em .5em }
+.highlight-7{ background:#ffe0b2; border:1px dashed #ff9800; border-radius:6px; padding:.05em .3em }
+.highlight-8{ background:linear-gradient(90deg, rgba(91,209,168,.25), rgba(91,209,168,.05)) }
+.highlight-9{ background:linear-gradient(180deg, transparent 70%, rgba(0,0,0,.12) 0%) }
+.highlight-10{ text-shadow:0 1px 0 #fff; background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.3)); border-radius:4px }`;
+                document.getElementById("cssOutput").textContent = css;
+            }
+
+            /* HTML export — без <span class="badge"> і без видимого "\n" */
+            function renderHTML() {
+                const scope = document
+                    .getElementById("previewScope")
+                    .cloneNode(true);
+                // прибираємо підказкові бейджі
+                scope.querySelectorAll(".badge").forEach((n) => n.remove());
+                const html = `<div class="content">
+  ${scope.innerHTML.trim()}
+</div>`;
+                document.getElementById("htmlOutput").textContent = html; // реальні переноси, не "\n"
+            }
+
+            /* Висота кодових боксів */
+            function equalizeCodeHeights() {
+                const preview = document.getElementById("typoPreview");
+                const target = Math.max(
+                    620,
+                    preview ? preview.offsetHeight : 0
+                );
+                ["cssOutput", "htmlOutput"].forEach((id) => {
+                    const box = document.getElementById(id);
+                    if (box) box.style.minHeight = target + "px";
+                });
+            }
+
+            /* Init */
+            function init() {
+                syncControls();
+                applyStyles();
+                renderCSS();
+                renderHTML();
+                renderListLabels();
+                equalizeCodeHeights();
+            }
+            init();
+        </script>
+    </body>
+</html>
