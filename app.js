@@ -373,6 +373,26 @@ const LIGHT_SCHEMES = [
     { bg: "#f5f5f0", text: "#33332d", link: "#3498db" },
     { bg: "#fbf0f0", text: "#3c2020", link: "#e74c3c" },
     { bg: "#e6f2f2", text: "#1e3232", link: "#2ecc71" },
+    { bg: "#fefefe", text: "#202020", link: "#ff69b4" }, 
+    { bg: "#f0fdf4", text: "#1f2937", link: "#22c55e" }, 
+    { bg: "#fff7ed", text: "#3b2313", link: "#f97316" },
+    { bg: "#f5f3ff", text: "#312e81", link: "#6366f1" },
+    { bg: "#ecfeff", text: "#0e7490", link: "#06b6d4" },
+    { bg: "#fdf2f8", text: "#500724", link: "#db2777" },
+    { bg: "#f3f4f6", text: "#111827", link: "#3b82f6" },
+    { bg: "#f9fafb", text: "#030712", link: "#6b7280" },
+    { bg: "#fffbeb", text: "#422006", link: "#eab308" },
+    { bg: "#f7fee7", text: "#1a2e05", link: "#84cc16" },
+    { bg: "#ecfccb", text: "#1a2e05", link: "#65a30d" },
+    { bg: "#fff7fb", text: "#4a044e", link: "#d946ef" },
+    { bg: "#faf5ff", text: "#4c1d95", link: "#8b5cf6" },
+    { bg: "#fff1f2", text: "#4c0519", link: "#e11d48" },
+    { bg: "#f0f9ff", text: "#0c4a6e", link: "#0ea5e9" },
+    { bg: "#eff6ff", text: "#1e3a8a", link: "#3b82f6" },
+    { bg: "#f9faff", text: "#2e1065", link: "#7c3aed" },
+    { bg: "#fefce8", text: "#422006", link: "#ca8a04" },
+    { bg: "#f1f5f9", text: "#0f172a", link: "#64748b" },
+    { bg: "#f3e8ff", text: "#4c1d95", link: "#a855f7" },
 ];
   const DARK_SCHEMES = [
       { bg: "#1c1c1e", text: "#e5e5e5", link: "#00a8ff" },
@@ -390,6 +410,11 @@ const LIGHT_SCHEMES = [
       { bg: "#1f1b29", text: "#e9e6ec", link: "#d4af37" },
       { bg: "#0c0f16", text: "#ececec", link: "#a78bfa" },
       { bg: "#2b2b2b", text: "#e0e0e0", link: "#c04a44" },
+      { bg: "#111827", text: "#f9fafb", link: "#60a5fa" },
+      { bg: "#171717", text: "#f3f4f6", link: "#fbbf24" }, 
+      { bg: "#1e1b4b", text: "#e0e7ff", link: "#a78bfa" }, 
+      { bg: "#162e3b", text: "#d1d5db", link: "#34d399" }, 
+      { bg: "#2c1a1d", text: "#fecaca", link: "#f43f5e" },
   ];
 
   function randomFrom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
