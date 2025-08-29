@@ -1,2363 +1,273 @@
 <!DOCTYPE html>
 <html lang="uk">
-    <head>
-        <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, minimum-scale=1"
-        />
-        <title>Pre-landers UI Cheatsheet</title>
-        <style>
-            /* ===== ТЕМА ДОДАТКА (без CSS-змінних) — впливає на оболонку, НЕ на Preview ===== */
-            body.theme-dark {
-                background: #0b0c0f;
-                color: #e6e8ee;
-            }
-            body.theme-light {
-                background: #f6f7fb;
-                color: #1c2430;
-            }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <title>Pre-landers UI Cheatsheet</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="theme-light">
+    <div class="app">
+      <div class="top-tabs" role="tablist" aria-label="Main tabs">
+        <button class="top-tab" role="tab" aria-selected="true" data-tab="typography">Типографіка</button>
+        <button class="top-tab" role="tab" aria-selected="false" data-tab="standard">Базові компоненти</button>
+        <button class="top-tab" role="tab" aria-selected="false" data-tab="interactive">Інтерактивні компоненти</button>
+        <button class="top-tab" role="switch" id="themeBtn">Тема: Light</button>
+      </div>
 
-            /* ===== БАЗОВІ СТИЛІ (за вимогою) ===== */
-            * {
-                box-sizing: border-box;
-            }
-            html,
-            body {
-                height: 100%;
-            }
-            html {
-                scroll-behavior: smooth;
-            }
-            body {
-                margin: 0;
-                font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto,
-                    Arial, sans-serif;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-            }
-            main {
-                flex-grow: 1;
-            }
-            figure {
-                margin: 0;
-            }
-            img {
-                max-width: 100%;
-                height: auto;
-                display: block;
-            }
+      <!-- TIPOGRAPHY TAB -->
+      <section class="shell tab" id="tab-typography" data-active="true" aria-label="Типографіка">
+        <aside class="sidebar" id="tab-typography-sidebar">
+          <div class="sidebar-tabs" role="tablist" aria-label="Sidebar tabs">
+            <button class="sidebar-tab" id="sbFontsTab" aria-selected="true">Шрифт</button>
+            <button class="sidebar-tab" id="sbColorsTab" aria-selected="false">Кольори</button>
+          </div>
 
-            /* ===== РОЗКЛАДКА ===== */
-            .app {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 16px;
-            }
-            .top-tabs {
-                display: flex;
-                gap: 8px;
-                flex-wrap: wrap;
-                margin-bottom: 12px;
-            }
-            .top-tab {
-                padding: 10px 14px;
-                border-radius: 10px;
-                cursor: pointer;
-                user-select: none;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #fff;
-                color: #1c2430;
-            }
-            body.theme-dark .top-tab {
-                border-color: rgba(255, 255, 255, 0.08);
-                background: #12141a;
-                color: #fff;
-            }
-            .top-tab[aria-selected="true"] {
-                outline: 2px solid #5bd1a8;
-            }
-
-            .shell {
-                display: grid;
-                grid-template-columns: 260px 1fr;
-                gap: 16px;
-            }
-            @media (max-width: 900px) {
-                .shell {
-                    grid-template-columns: 1fr;
-                }
-            }
-            .tab {
-                display: none;
-            }
-            .tab[data-active="true"] {
-                display: grid;
-            }
-
-            /* ===== САЙДБАР ===== */
-            .sidebar {
-                position: sticky;
-                top: 12px;
-                align-self: start;
-                padding: 12px;
-                border-radius: 14px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #fff;
-            }
-            body.theme-dark .sidebar {
-                border-color: rgba(255, 255, 255, 0.08);
-                background: #12141a;
-            }
-            .sidebar h4 {
-                margin: 8px 0 6px;
-                font-size: 12px;
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                color: #6b7686;
-            }
-            body.theme-dark .sidebar h4 {
-                color: #9aa3b2;
-            }
-            .sidebar-tabs {
-                display: flex;
-                gap: 6px;
-                margin-bottom: 8px;
-            }
-            .sidebar-tab {
-                flex: 1;
-                padding: 6px 8px;
-                border-radius: 8px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #f2f4f8;
-                color: #1c2430;
-                cursor: pointer;
-                text-align: center;
-                font-weight: 600;
-            }
-            body.theme-dark .sidebar-tab {
-                background: #0e1015;
-                color: #e6e8ee;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-            .sidebar-tab[aria-selected="true"] {
-                outline: 2px solid #5bd1a8;
-            }
-
-            /* Акордеон у підпанелі "Шрифт" */
-            .acc-head {
-                margin: 8px 0;
-                padding: 8px 10px;
-                border-radius: 10px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #f2f4f8;
-                cursor: pointer;
-                font-weight: 700;
-            }
-            body.theme-dark .acc-head {
-                background: #0e1015;
-                color: #e6e8ee;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-            .acc-head[aria-expanded="true"] {
-                outline: 2px solid #5bd1a8;
-            }
-            .acc-body {
-                display: none;
-                margin-top: 8px;
-            }
-            .acc-body[data-open="true"] {
-                display: block;
-            }
-
-            .list {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-            .list button,
-            .list .disabled {
-                width: 100%;
-                text-align: left;
-                padding: 8px 10px;
-                border-radius: 10px;
-                cursor: pointer;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #f2f4f8;
-                color: #1c2430;
-            }
-            body.theme-dark .list button,
-            body.theme-dark .list .disabled {
-                background: #0e1015;
-                color: #e6e8ee;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-            .list .disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-            }
-            .list button.active {
-                outline: 2px solid #5bd1a8;
-            }
-
-            /* Панель контенту */
-            .panel {
-                padding: 16px;
-                border-radius: 14px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #fff;
-            }
-            body.theme-dark .panel {
-                background: #12141a;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-
-            .inner-tabs {
-                display: flex;
-                gap: 8px;
-                margin: 10px 0 14px;
-            }
-            .inner-tab {
-                padding: 8px 12px;
-                border-radius: 10px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #f2f4f8;
-                color: #1c2430;
-                cursor: pointer;
-            }
-            body.theme-dark .inner-tab {
-                background: #0e1015;
-                color: #fff;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-            .inner-tab[aria-selected="true"] {
-                outline: 2px solid #5bd1a8;
-            }
-
-            .buttons {
-                display: flex;
-                gap: 8px;
-                flex-wrap: wrap;
-                margin: 10px 0;
-            }
-            .btn {
-                padding: 8px 12px;
-                border-radius: 10px;
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                background: #f2f4f8;
-                color: #1c2430;
-                cursor: pointer;
-            }
-            .btn.primary {
-                background: #5bd1a8;
-                color: #0a0e0c;
-                border-color: transparent;
-                font-weight: 600;
-            }
-            body.theme-dark .btn {
-                background: #0e1015;
-                color: #e6e8ee;
-                border-color: rgba(255, 255, 255, 0.08);
-            }
-            .btn.ghost {
-                background: transparent;
-            }
-
-            .badge {
-                display: inline-block;
-                vertical-align: middle;
-                font-size: 11px;
-                line-height: 1;
-                padding: 4px 6px;
-                border-radius: 6px;
-                margin-right: 8px;
-                color: #fff;
-                background: #1c2430;
-                font-weight: 700;
-            }
-            body.theme-dark .badge {
-                background: #5bd1a8;
-                color: #0a0e0c;
-            }
-
-            /* ===== КОНТРОЛИ ===== */
-            .controls {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
-                margin-top: 10px;
-            }
-            @media (max-width: 640px) {
-                .controls {
-                    grid-template-columns: 1fr;
-                }
-            }
-            .control {
-                border: 1px solid rgba(0, 0, 0, 0.12);
-                border-radius: 10px;
-                padding: 10px;
-                background: #f2f4f8;
-            }
-            body.theme-dark .control {
-                border-color: rgba(255, 255, 255, 0.08);
-                background: #0e1015;
-            }
-            .control h5 {
-                margin: 0 0 8px;
-                font-size: 12px;
-                color: #6b7686;
-                letter-spacing: 0.04em;
-                text-transform: uppercase;
-            }
-            body.theme-dark .control h5 {
-                color: #9aa3b2;
-            }
-            .control .row {
-                display: grid;
-                grid-template-columns: 120px 1fr;
-                gap: 8px;
-                align-items: center;
-                margin: 6px 0;
-            }
-            .control label {
-                font-size: 12px;
-                color: #6b7686;
-            }
-            body.theme-dark .control label {
-                color: #9aa3b2;
-            }
-            .control select,
-            .control input[type="number"] {
-                width: 100%;
-                padding: 8px;
-                border-radius: 8px;
-                border: 1px solid rgba(0, 0, 0, 0.15);
-                background: #fff;
-                color: #1c2430;
-            }
-            body.theme-dark .control select,
-            body.theme-dark .control input[type="number"] {
-                background: #0c0e13;
-                color: #e6e8ee;
-                border-color: rgba(255, 255, 255, 0.12);
-            }
-
-            /* ===== ПРЕВ’Ю (фон цього блоку може рандомитись) ===== */
-            .preview {
-                border: 1px dashed rgba(0, 0, 0, 0.15);
-                border-radius: 12px;
-                padding: 16px;
-                background: #fafbfe;
-            }
-            body.theme-dark .preview {
-                border-color: rgba(255, 255, 255, 0.12);
-                background: rgba(255, 255, 255, 0.02);
-            }
-
-            /* ===== БАЗОВИЙ ВИГЛЯД КОНТЕНТУ ===== */
-            .content h1,
-            .content h2,
-            .content h3,
-            .content h4,
-            .content h5,
-            .content h6 {
-                margin: 0.8em 0 0.35em;
-            }
-            .content p {
-                margin: 0.6em 0;
-            }
-            .content a {
-                color: #0a7c5e;
-            }
-            .content ul,
-            .content ol {
-                padding-left: 1.2em;
-            }
-            .content li {
-                margin: 0.35em 0;
-            }
-            .content blockquote {
-                margin: 1em 0;
-                padding: 12px 14px;
-                border-left: 4px solid #b8c2cc;
-                background: #f1f4f8;
-                border-radius: 8px;
-            }
-
-            /* ===== БЛОКИ КОДУ (CSS/HTML) — високі та «гумові» ===== */
-            .codebox {
-                background: #10131a;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                border-radius: 12px;
-                padding: 12px;
-                position: relative;
-                font-family: "Courier New", Courier, "Lucida Console", Monaco,
-                    monospace;
-                font-size: 13px;
-                line-height: 1.5;
-                color: #dfe3ea;
-                white-space: pre;
-                overflow: auto;
-                min-height: 620px;
-                max-height: none;
-            }
-            body.theme-light .codebox {
-                background: #0a0c11;
-                border-color: rgba(0, 0, 0, 0.2);
-                color: #dfe3ea;
-            }
-            .copybar {
-                display: flex;
-                justify-content: flex-end;
-                gap: 8px;
-                margin: 8px 0;
-            }
-            .notice {
-                color: #6b7686;
-                font-size: 12px;
-            }
-            body.theme-dark .notice {
-                color: #9aa3b2;
-            }
-
-            /* ===== ПІДСВІТКИ (20 варіантів) ===== */
-            .highlight {
-                padding: 0 0.25em;
-            }
-            .highlight-1 {
-                background: linear-gradient(
-                    180deg,
-                    rgba(255, 255, 0, 0) 60%,
-                    rgba(255, 239, 120, 0.9) 60%
-                );
-            }
-            .highlight-2 {
-                background: #ffeb3b;
-                border-radius: 4px;
-            }
-            .highlight-3 {
-                box-shadow: inset 0 -8px 0 rgba(91, 209, 168, 0.35);
-            }
-            .highlight-4 {
-                outline: 2px solid #5bd1a8;
-                border-radius: 6px;
-            }
-            .highlight-5 {
-                text-decoration: underline wavy #ff6d6d 2px;
-            }
-            .highlight-6 {
-                background: #c8e6c9;
-                border-radius: 999px;
-                padding: 0.1em 0.5em;
-            }
-            .highlight-7 {
-                background: #ffe0b2;
-                border: 1px dashed #ff9800;
-                border-radius: 6px;
-                padding: 0.05em 0.3em;
-            }
-            .highlight-8 {
-                background: linear-gradient(
-                    90deg,
-                    rgba(91, 209, 168, 0.25),
-                    rgba(91, 209, 168, 0.05)
-                );
-            }
-            .highlight-9 {
-                background: linear-gradient(
-                    180deg,
-                    transparent 70%,
-                    rgba(0, 0, 0, 0.12) 0%
-                );
-            }
-            .highlight-10 {
-                text-shadow: 0 1px 0 #fff;
-                background: linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.65),
-                    rgba(255, 255, 255, 0.3)
-                );
-                border-radius: 4px;
-            }
-            /* додаткові 10 */
-            .highlight-11 {
-                text-decoration: underline dotted currentColor 2px;
-                text-underline-offset: 4px;
-            }
-            .highlight-12 {
-                text-decoration: underline double currentColor 3px;
-                text-underline-offset: 3px;
-            }
-            .highlight-13 {
-                background: linear-gradient(90deg, #ffe5f0, #fff0f5);
-            }
-            .highlight-14 {
-                border-bottom: 3px solid #5bd1a8;
-            }
-            .highlight-15 {
-                box-shadow: 0 0 0 3px rgba(91, 209, 168, 0.35);
-            }
-            .highlight-16 {
-                background: repeating-linear-gradient(
-                    135deg,
-                    rgba(0, 0, 0, 0.08),
-                    rgba(0, 0, 0, 0.08) 6px,
-                    transparent 6px,
-                    transparent 12px
-                );
-            }
-            .highlight-17 {
-                text-decoration: underline dashed #1e6be3 3px;
-                text-underline-offset: 4px;
-            }
-            .highlight-18 {
-                border-left: 4px solid #1e6be3;
-                padding-left: 0.4em;
-            }
-            .highlight-19 {
-                background: linear-gradient(
-                    180deg,
-                    rgba(0, 0, 0, 0.08),
-                    rgba(0, 0, 0, 0.02)
-                );
-            }
-            .highlight-20 {
-                outline: 2px dashed #9aa3b2;
-                border-radius: 4px;
-            }
-        </style>
-    </head>
-    <body class="theme-light">
-        <div class="app">
-            <div class="top-tabs" role="tablist" aria-label="Main tabs">
-                <button
-                    class="top-tab"
-                    role="tab"
-                    aria-selected="true"
-                    data-tab="typography"
-                >
-                    Типографіка
-                </button>
-                <button
-                    class="top-tab"
-                    role="tab"
-                    aria-selected="false"
-                    data-tab="standard"
-                >
-                    Базові компоненти
-                </button>
-                <button
-                    class="top-tab"
-                    role="tab"
-                    aria-selected="false"
-                    data-tab="interactive"
-                >
-                    Інтерактивні компоненти
-                </button>
+          <div id="fontsPanel">
+            <button class="accordion-hdr" id="accFonts" aria-expanded="true"><span class="chev">&#x25BC;</span> Шрифт</button>
+            <div class="accordion-panel" id="accFontsBody">
+              <ul class="list" id="fontList"></ul>
             </div>
 
-            <!-- ===== ВКЛАДКА ТИПОГРАФІКА ===== -->
-            <section
-                class="shell tab"
-                id="tab-typography"
-                data-active="true"
-                aria-label="Типографіка"
-            >
-                <aside class="sidebar" id="tab-typography-sidebar">
-                    <div
-                        class="sidebar-tabs"
-                        role="tablist"
-                        aria-label="Sidebar tabs"
-                    >
-                        <button
-                            class="sidebar-tab"
-                            id="sbFontsBtn"
-                            aria-selected="true"
-                            data-sb="fonts"
-                        >
-                            Шрифт
-                        </button>
-                        <button
-                            class="sidebar-tab"
-                            id="sbColorsBtn"
-                            aria-selected="false"
-                            data-sb="colors"
-                        >
-                            Кольори
-                        </button>
-                    </div>
-
-                    <!-- Підпанель: ШРИФТ -->
-                    <div id="sbFonts" data-sb-panel="fonts">
-                        <!-- Акордеон "Шрифт" -->
-                        <div
-                            class="acc-head"
-                            role="button"
-                            data-acc="fonts"
-                            aria-expanded="true"
-                        >
-                            &#x25BC; Шрифт
-                        </div>
-                        <div
-                            class="acc-body"
-                            data-acc-panel="fonts"
-                            data-open="true"
-                        >
-                            <ul class="list" id="fontList"></ul>
-                        </div>
-
-                        <!-- Акордеон "Стилі шрифту" -->
-                        <div
-                            class="acc-head"
-                            role="button"
-                            data-acc="styles"
-                            aria-expanded="false"
-                        >
-                            &#x25BC; Стилі шрифту
-                        </div>
-                        <div class="acc-body" data-acc-panel="styles">
-                            <div class="control">
-                                <h5>База</h5>
-                                <div class="row">
-                                    <label for="baseSize">Base size</label>
-                                    <input
-                                        id="baseSize"
-                                        type="number"
-                                        min="12"
-                                        max="22"
-                                        step="1"
-                                        value="16"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="control">
-                                <h5>Заголовки — розміри</h5>
-                                <div class="row">
-                                    <label>H1 size</label
-                                    ><select data-key="h1.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H2 size</label
-                                    ><select data-key="h2.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H3 size</label
-                                    ><select data-key="h3.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H4 size</label
-                                    ><select data-key="h4.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H5 size</label
-                                    ><select data-key="h5.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H6 size</label
-                                    ><select data-key="h6.size"></select>
-                                </div>
-                            </div>
-
-                            <div class="control">
-                                <h5>Заголовки — товщина / міжряддя</h5>
-                                <div class="row">
-                                    <label>H1</label
-                                    ><select data-key="h1.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H2</label
-                                    ><select data-key="h2.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H3</label
-                                    ><select data-key="h3.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H4</label
-                                    ><select data-key="h4.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H5</label
-                                    ><select data-key="h5.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H6</label
-                                    ><select data-key="h6.weight"></select>
-                                </div>
-
-                                <div class="row">
-                                    <label>H1 LH</label
-                                    ><select data-key="h1.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H2 LH</label
-                                    ><select data-key="h2.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H3 LH</label
-                                    ><select data-key="h3.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H4 LH</label
-                                    ><select data-key="h4.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H5 LH</label
-                                    ><select data-key="h5.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>H6 LH</label
-                                    ><select data-key="h6.lh"></select>
-                                </div>
-                            </div>
-
-                            <div class="control">
-                                <h5>Параграфи / Посилання / Списки</h5>
-                                <div class="row">
-                                    <label>P size</label
-                                    ><select data-key="p.size"></select>
-                                </div>
-                                <div class="row">
-                                    <label>P weight</label
-                                    ><select data-key="p.weight"></select>
-                                </div>
-                                <div class="row">
-                                    <label>P line-height</label
-                                    ><select data-key="p.lh"></select>
-                                </div>
-                                <div class="row">
-                                    <label>Links</label>
-                                    <select id="linkStyle">
-                                        <option value="underline">
-                                            underline
-                                        </option>
-                                        <option value="hover">
-                                            hover only
-                                        </option>
-                                        <option value="underline-hover">
-                                            hover & underline
-                                        </option>
-                                        <option value="hover-color">
-                                            hover color
-                                        </option>
-                                        <option value="none">none</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <label>UL style</label>
-                                    <select id="ulStyle">
-                                        <option value="disc">disc</option>
-                                        <option value="circle">circle</option>
-                                        <option value="square">square</option>
-                                        <option value="icon">icon</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <label>OL style</label>
-                                    <select id="olStyle">
-                                        <option value="disc">disc</option>
-                                        <option value="decimal">decimal</option>
-                                        <option value="decimal-leading-zero">
-                                            decimal-leading-zero
-                                        </option>
-                                        <option value="lower-alpha">
-                                            lower-alpha
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Підпанель: КОЛЬОРИ (для Preview) -->
-                    <div id="sbColors" data-sb-panel="colors" hidden>
-                        <h4>Кольори</h4>
-                        <div class="control">
-                            <h5>Фон Preview</h5>
-                            <div class="row">
-                                <label>Background</label
-                                ><select id="c-bg"></select>
-                            </div>
-                        </div>
-
-                        <div class="control">
-                            <h5>Текст</h5>
-                            <div class="row">
-                                <label>Звичайний</label
-                                ><select id="c-text"></select>
-                            </div>
-                            <div class="row">
-                                <label>Заголовки</label
-                                ><select id="c-headings"></select>
-                            </div>
-                        </div>
-
-                        <div class="control">
-                            <h5>Посилання</h5>
-                            <div class="row">
-                                <label>Link</label
-                                ><select id="c-link"></select>
-                            </div>
-                            <div class="row">
-                                <label>Hover</label
-                                ><select id="c-link-hover"></select>
-                            </div>
-                        </div>
-
-                        <div class="control">
-                            <h5>Blockquote</h5>
-                            <div class="row">
-                                <label>BQ color</label
-                                ><select id="c-bq-color"></select>
-                            </div>
-                            <div class="row">
-                                <label>BQ bg</label
-                                ><select id="c-bq-bg"></select>
-                            </div>
-                            <div class="row">
-                                <label>BQ border</label
-                                ><select id="c-bq-border"></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="buttons">
-                        <button class="btn" id="resetBtn">Скинути стилі</button>
-                    </div>
-                </aside>
-
-                <main class="panel">
-                    <div class="buttons">
-                        <button class="btn" id="randomizeTopBtn">
-                            🎲 Рандомна типографіка
-                        </button>
-                        <button class="btn" id="randomColorsBtn">
-                            🎲 Рандомні кольори
-                        </button>
-                        <button class="btn" id="themeBtn">Тема: Light</button>
-                    </div>
-
-                    <div
-                        class="inner-tabs"
-                        role="tablist"
-                        aria-label="Typography inner tabs"
-                    >
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="true"
-                            data-inner="preview"
-                        >
-                            Preview
-                        </button>
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="false"
-                            data-inner="css"
-                        >
-                            CSS
-                        </button>
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="false"
-                            data-inner="html"
-                        >
-                            HTML
-                        </button>
-                    </div>
-
-                    <!-- PREVIEW -->
-                    <div
-                        id="typoPreview"
-                        class="preview"
-                        data-inner-panel="preview"
-                    >
-                        <div id="previewScope" class="content hover-mode">
-                            <h1>
-                                <span class="badge">&lt;h1&gt;</span>Elegant
-                                Typography Cheat Test
-                            </h1>
-
-                            <p>
-                                <span class="badge">&lt;p&gt;</span>This block
-                                demonstrates a consistent set of styles applied
-                                to the same content. Switch fonts on the left to
-                                compare rhythm, sizes, and contrast. You can
-                                also override heading scales, paragraph metrics,
-                                lists and links.
-                            </p>
-
-                            <h2>
-                                <span class="badge">&lt;h2&gt;</span>Section
-                                Title &amp; Rhythm
-                            </h2>
-                            <p>
-                                <span class="badge">&lt;p&gt;</span>Good
-                                typography balances
-                                <a href="#"
-                                    ><span class="badge">&lt;a&gt;</span
-                                    >readability</a
-                                >, hierarchy, and spacing. A clear scale for
-                                headings (H1–H6) and consistent paragraph
-                                line-height improve scannability and
-                                comprehension on long pre-landers.
-                            </p>
-
-                            <h3><span class="badge">&lt;h3&gt;</span>Lists</h3>
-
-                            <p id="ulLabel" class="notice">
-                                <span class="badge"
-                                    >&lt;ul&gt; + &lt;li&gt;</span
-                                >
-                                з іконкою
-                            </p>
-                            <ul>
-                                <li>
-                                    Readable base size with generous
-                                    line-height.
-                                </li>
-                                <li>
-                                    Predictable heading increments and weights.
-                                </li>
-                                <li>
-                                    Clear link styling with accessible states.
-                                </li>
-                            </ul>
-
-                            <p id="olLabel" class="notice">
-                                <span class="badge"
-                                    >&lt;ol&gt; + &lt;li&gt;</span
-                                >
-                                з точками
-                            </p>
-                            <ol>
-                                <li>
-                                    Use system/installed fonts to avoid CDNs.
-                                </li>
-                                <li>Keep min width at 320px.</li>
-                                <li>
-                                    Prefer semantic HTML for screen readers.
-                                </li>
-                            </ol>
-
-                            <h4>
-                                <span class="badge">&lt;h4&gt;</span>Blockquote
-                            </h4>
-                            <blockquote>
-                                <span class="badge">&lt;blockquote&gt;</span>
-                                “People ignore design that ignores people.” —
-                                Frank Chimero
-                            </blockquote>
-
-                            <h5>
-                                <span class="badge">&lt;h5&gt;</span>Highlights
-                            </h5>
-                            <!-- 20 варіантів підсвітки -->
-                            <div
-                                style="
-                                    display: grid;
-                                    grid-template-columns: repeat(
-                                        2,
-                                        minmax(0, 1fr)
-                                    );
-                                    gap: 6px;
-                                "
-                            >
-                                <p>
-                                    <span class="badge">&lt;span .h1&gt;</span
-                                    ><span class="highlight highlight-1"
-                                        >Variant 1</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h2&gt;</span
-                                    ><span class="highlight highlight-2"
-                                        >Variant 2</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h3&gt;</span
-                                    ><span class="highlight highlight-3"
-                                        >Variant 3</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h4&gt;</span
-                                    ><span class="highlight highlight-4"
-                                        >Variant 4</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h5&gt;</span
-                                    ><span class="highlight highlight-5"
-                                        >Variant 5</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h6&gt;</span
-                                    ><span class="highlight highlight-6"
-                                        >Variant 6</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h7&gt;</span
-                                    ><span class="highlight highlight-7"
-                                        >Variant 7</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h8&gt;</span
-                                    ><span class="highlight highlight-8"
-                                        >Variant 8</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h9&gt;</span
-                                    ><span class="highlight highlight-9"
-                                        >Variant 9</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h10&gt;</span
-                                    ><span class="highlight highlight-10"
-                                        >Variant 10</span
-                                    >
-                                </p>
-
-                                <p>
-                                    <span class="badge">&lt;span .h11&gt;</span
-                                    ><span class="highlight highlight-11"
-                                        >Variant 11</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h12&gt;</span
-                                    ><span class="highlight highlight-12"
-                                        >Variant 12</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h13&gt;</span
-                                    ><span class="highlight highlight-13"
-                                        >Variant 13</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h14&gt;</span
-                                    ><span class="highlight highlight-14"
-                                        >Variant 14</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h15&gt;</span
-                                    ><span class="highlight highlight-15"
-                                        >Variant 15</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h16&gt;</span
-                                    ><span class="highlight highlight-16"
-                                        >Variant 16</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h17&gt;</span
-                                    ><span class="highlight highlight-17"
-                                        >Variant 17</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h18&gt;</span
-                                    ><span class="highlight highlight-18"
-                                        >Variant 18</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h19&gt;</span
-                                    ><span class="highlight highlight-19"
-                                        >Variant 19</span
-                                    >
-                                </p>
-                                <p>
-                                    <span class="badge">&lt;span .h20&gt;</span
-                                    ><span class="highlight highlight-20"
-                                        >Variant 20</span
-                                    >
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CSS -->
-                    <div id="typoCSS" data-inner-panel="css" hidden>
-                        <div class="copybar">
-                            <button class="btn" id="copyCssBtn">
-                                Copy CSS
-                            </button>
-                        </div>
-                        <div id="cssOutput" class="codebox"></div>
-                        <p class="notice">
-                            Скопійований CSS: спочатку «Базові стилі», потім
-                            обрана типографіка та кольори Preview.
-                        </p>
-                    </div>
-
-                    <!-- HTML -->
-                    <div id="typoHTML" data-inner-panel="html" hidden>
-                        <div class="copybar">
-                            <button class="btn" id="copyHtmlBtn">
-                                Copy HTML
-                            </button>
-                        </div>
-                        <div id="htmlOutput" class="codebox"></div>
-                    </div>
-                </main>
-            </section>
-
-            <!-- ===== ВКЛАДКА БАЗОВІ КОМПОНЕНТИ ===== -->
-            <section
-                class="shell tab"
-                id="tab-standard"
-                aria-label="Базові компоненти"
-                hidden
-            >
-                <aside class="sidebar" id="standardSidebar">
-                    <h4>Базові</h4>
-                    <ul class="list">
-                        <button id="stdButtonsBtn" class="active">
-                            Buttons
-                        </button>
-                        <li class="disabled">Header / Navbar</li>
-                        <li class="disabled">Advertisement | Disclosure</li>
-                        <li class="disabled">Breadcrumbs</li>
-                        <li class="disabled">Images (hero/product/avatar)</li>
-                        <li class="disabled">Footer (links + modals)</li>
-                    </ul>
-                    <h4>Контент</h4>
-                    <ul class="list">
-                        <li class="disabled">Callout/Alert</li>
-                        <li class="disabled">FAQ</li>
-                        <li class="disabled">Testimonials</li>
-                        <li class="disabled">Comments</li>
-                    </ul>
-                </aside>
-
-                <main class="panel">
-                    <div
-                        class="inner-tabs"
-                        role="tablist"
-                        aria-label="Standard inner tabs"
-                    >
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="true"
-                            data-inner="std-preview"
-                        >
-                            Preview
-                        </button>
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="false"
-                            data-inner="std-css"
-                        >
-                            CSS
-                        </button>
-                        <button
-                            class="inner-tab"
-                            role="tab"
-                            aria-selected="false"
-                            data-inner="std-html"
-                        >
-                            HTML
-                        </button>
-                    </div>
-
-                    <!-- PREVIEW: BUTTONS -->
-                    <div
-                        id="stdPreview"
-                        class="preview"
-                        data-inner-panel="std-preview"
-                    >
-                        <div class="content">
-                            <h3>
-                                <span class="badge">&lt;Buttons&gt;</span>10
-                                варіантів
-                            </h3>
-                            <div
-                                class="btn-grid"
-                                style="
-                                    display: grid;
-                                    grid-template-columns: repeat(
-                                        2,
-                                        minmax(0, 1fr)
-                                    );
-                                    gap: 10px;
-                                "
-                            >
-                                <button class="cmp-btn btn-solid">
-                                    Solid Primary
-                                </button>
-                                <button class="cmp-btn btn-outline">
-                                    Outline
-                                </button>
-                                <button class="cmp-btn btn-ghost2">
-                                    Ghost
-                                </button>
-                                <button class="cmp-btn btn-soft">Soft</button>
-                                <button class="cmp-btn btn-gradient">
-                                    Gradient
-                                </button>
-                                <button class="cmp-btn btn-pill">Pill</button>
-                                <button class="cmp-btn btn-icon-left">
-                                    <img
-                                        alt=""
-                                        src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/arrow-right.svg"
-                                    />Icon Left
-                                </button>
-                                <button class="cmp-btn btn-elevated">
-                                    Elevated
-                                </button>
-                                <button class="cmp-btn btn-linkish">
-                                    Link-like
-                                </button>
-                                <button class="cmp-btn btn-dashed">
-                                    Dashed
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CSS -->
-                    <div id="stdCSS" data-inner-panel="std-css" hidden>
-                        <div class="copybar">
-                            <button class="btn" id="copyStdCssBtn">
-                                Copy CSS
-                            </button>
-                        </div>
-                        <div id="stdCssOutput" class="codebox"></div>
-                    </div>
-
-                    <!-- HTML -->
-                    <div id="stdHTML" data-inner-panel="std-html" hidden>
-                        <div class="copybar">
-                            <button class="btn" id="copyStdHtmlBtn">
-                                Copy HTML
-                            </button>
-                        </div>
-                        <div id="stdHtmlOutput" class="codebox"></div>
-                    </div>
-                </main>
-            </section>
-
-            <!-- ===== ВКЛАДКА ІНТЕРАКТИВНІ КОМПОНЕНТИ ===== -->
-            <section
-                class="shell tab"
-                id="tab-interactive"
-                aria-label="Інтерактивні компоненти"
-                hidden
-            >
-                <aside class="sidebar" id="interactiveSidebar">
-                    <h4>Модулі</h4>
-                    <ul class="list">
-                        <li class="disabled">Modals</li>
-                        <li class="disabled">Toasts</li>
-                        <li class="disabled">Cookie / GDPR</li>
-                        <li class="disabled">Countdown</li>
-                        <li class="disabled">Sweepstakes / Wheel / Quiz</li>
-                        <li class="disabled">Social Proof</li>
-                        <li class="disabled">Order Form variants</li>
-                        <li class="disabled">Sticky CTA / Bars</li>
-                        <li class="disabled">Lockers (CTA → unlock)</li>
-                    </ul>
-                </aside>
-                <main class="panel">
-                    <p class="notice">Тут будуть інтерактивні демо та API.</p>
-                </main>
-            </section>
-        </div>
-
-        <style id="typoStyle"></style>
-        <style id="stdButtonsStyle"></style>
-        <script>
-            /* ---------- ПРЕСЕТИ ШРИФТІВ (починаємо з Verdana) ---------- */
-            const PRESETS = [
-                {
-                    id: "verdana-pro-tight",
-                    name: "Verdana Pro Tight",
-                    family: "Verdana, Geneva, Tahoma, sans-serif",
-                    base: 16,
-                    h: {
-                        1: { size: 2.4, weight: 800, lh: 1.12 },
-                        2: { size: 2.0, weight: 700, lh: 1.18 },
-                        3: { size: 1.68, weight: 700, lh: 1.22 },
-                        4: { size: 1.4, weight: 700, lh: 1.26 },
-                        5: { size: 1.18, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.0, weight: 400, lh: 1.65 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "verdana-spacious",
-                    name: "Verdana Spacious",
-                    family: "Verdana, Geneva, Tahoma, sans-serif",
-                    base: 16,
-                    h: {
-                        1: { size: 2.5, weight: 800, lh: 1.12 },
-                        2: { size: 2.05, weight: 700, lh: 1.18 },
-                        3: { size: 1.75, weight: 700, lh: 1.22 },
-                        4: { size: 1.45, weight: 700, lh: 1.26 },
-                        5: { size: 1.2, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.02, weight: 400, lh: 1.75 },
-                    link: "hover",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "verdana-clean",
-                    name: "Verdana Clean",
-                    family: "Verdana, Geneva, Tahoma, sans-serif",
-                    base: 16,
-                    h: {
-                        1: { size: 2.35, weight: 800, lh: 1.15 },
-                        2: { size: 1.95, weight: 700, lh: 1.2 },
-                        3: { size: 1.6, weight: 700, lh: 1.25 },
-                        4: { size: 1.35, weight: 700, lh: 1.3 },
-                        5: { size: 1.15, weight: 700, lh: 1.35 },
-                        6: { size: 1.0, weight: 700, lh: 1.4 },
-                    },
-                    p: { size: 1.0, weight: 400, lh: 1.7 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "tahoma-compact",
-                    name: "Tahoma Compact",
-                    family: "Tahoma, Verdana, Segoe, sans-serif",
-                    base: 16,
-                    h: {
-                        1: { size: 2.2, weight: 800, lh: 1.15 },
-                        2: { size: 1.85, weight: 700, lh: 1.2 },
-                        3: { size: 1.55, weight: 700, lh: 1.25 },
-                        4: { size: 1.3, weight: 700, lh: 1.3 },
-                        5: { size: 1.12, weight: 700, lh: 1.35 },
-                        6: { size: 1.0, weight: 700, lh: 1.4 },
-                    },
-                    p: { size: 0.98, weight: 400, lh: 1.65 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "trebuchet-modern",
-                    name: "Trebuchet Modern",
-                    family: '"Trebuchet MS","Segoe UI",Tahoma,sans-serif',
-                    base: 16,
-                    h: {
-                        1: { size: 2.45, weight: 800, lh: 1.12 },
-                        2: { size: 2.0, weight: 700, lh: 1.18 },
-                        3: { size: 1.65, weight: 700, lh: 1.22 },
-                        4: { size: 1.38, weight: 700, lh: 1.28 },
-                        5: { size: 1.18, weight: 700, lh: 1.32 },
-                        6: { size: 1.0, weight: 700, lh: 1.36 },
-                    },
-                    p: { size: 1.02, weight: 400, lh: 1.7 },
-                    link: "hover",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "arial-neutral",
-                    name: "Arial Neutral",
-                    family: "Arial, Helvetica, sans-serif",
-                    base: 16,
-                    h: {
-                        1: { size: 2.3, weight: 800, lh: 1.15 },
-                        2: { size: 1.9, weight: 700, lh: 1.2 },
-                        3: { size: 1.6, weight: 700, lh: 1.25 },
-                        4: { size: 1.35, weight: 700, lh: 1.28 },
-                        5: { size: 1.15, weight: 700, lh: 1.32 },
-                        6: { size: 1.0, weight: 700, lh: 1.36 },
-                    },
-                    p: { size: 1.0, weight: 400, lh: 1.68 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "system-ui",
-                    name: "System UI",
-                    family: 'system-ui,-apple-system,"Segoe UI",Roboto,Ubuntu,Cantarell,"Noto Sans","Helvetica Neue",Arial,sans-serif',
-                    base: 16,
-                    h: {
-                        1: { size: 2.4, weight: 800, lh: 1.12 },
-                        2: { size: 2.0, weight: 700, lh: 1.18 },
-                        3: { size: 1.7, weight: 700, lh: 1.22 },
-                        4: { size: 1.4, weight: 700, lh: 1.26 },
-                        5: { size: 1.2, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.0, weight: 400, lh: 1.7 },
-                    link: "hover",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "georgia-classic",
-                    name: "Georgia Classic (serif)",
-                    family: 'Georgia,"Times New Roman",Times,serif',
-                    base: 16,
-                    h: {
-                        1: { size: 2.5, weight: 800, lh: 1.12 },
-                        2: { size: 2.05, weight: 700, lh: 1.18 },
-                        3: { size: 1.75, weight: 700, lh: 1.2 },
-                        4: { size: 1.45, weight: 700, lh: 1.26 },
-                        5: { size: 1.2, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.02, weight: 400, lh: 1.8 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "times-editorial",
-                    name: "Times Editorial (serif)",
-                    family: '"Times New Roman",Times,Georgia,serif',
-                    base: 16,
-                    h: {
-                        1: { size: 2.6, weight: 800, lh: 1.1 },
-                        2: { size: 2.1, weight: 700, lh: 1.16 },
-                        3: { size: 1.8, weight: 700, lh: 1.2 },
-                        4: { size: 1.5, weight: 700, lh: 1.26 },
-                        5: { size: 1.22, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.02, weight: 400, lh: 1.78 },
-                    link: "underline",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "palatino-readable",
-                    name: "Palatino Readable (serif)",
-                    family: '"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif',
-                    base: 16,
-                    h: {
-                        1: { size: 2.45, weight: 800, lh: 1.12 },
-                        2: { size: 2.0, weight: 700, lh: 1.18 },
-                        3: { size: 1.7, weight: 700, lh: 1.22 },
-                        4: { size: 1.42, weight: 700, lh: 1.26 },
-                        5: { size: 1.18, weight: 700, lh: 1.3 },
-                        6: { size: 1.0, weight: 700, lh: 1.34 },
-                    },
-                    p: { size: 1.02, weight: 400, lh: 1.8 },
-                    link: "hover",
-                    ul: "disc",
-                    ol: "disc",
-                },
-                {
-                    id: "mono-doc",
-                    name: "Monospace Document",
-                    family: '"Courier New",Courier,"Lucida Console",Monaco,monospace',
-                    base: 16,
-                    h: {
-                        1: { size: 2.1, weight: 800, lh: 1.12 },
-                        2: { size: 1.8, weight: 700, lh: 1.18 },
-                        3: { size: 1.55, weight: 700, lh: 1.22 },
-                        4: { size: 1.35, weight: 700, lh: 1.28 },
-                        5: { size: 1.15, weight: 700, lh: 1.32 },
-                        6: { size: 1.0, weight: 700, lh: 1.36 },
-                    },
-                    p: { size: 0.98, weight: 400, lh: 1.7 },
-                    link: "none",
-                    ul: "square",
-                    ol: "disc",
-                },
-            ];
-
-            /* ---------- ПАЛІТРИ ДЛЯ ВИБОРУ ---------- */
-            const COLOR_PALETTE = [
-                ["#1c2430", "Ink"],
-                ["#111827", "Near Black"],
-                ["#334155", "Slate"],
-                ["#0a7c5e", "Teal"],
-                ["#0f766e", "Deep Teal"],
-                ["#1e6be3", "Blue"],
-                ["#7a3aed", "Purple"],
-                ["#e11d48", "Crimson"],
-                ["#15803d", "Green"],
-                ["#c2410c", "Orange"],
-                ["#6b7280", "Gray"],
-                ["#9aa3b2", "Muted Gray"],
-                ["#ffffff", "White"],
-                ["#e6e8ee", "Off White"],
-                ["#f1f4f8", "Panel"],
-            ];
-            const BG_PALETTE = [
-                ["#f6f7fb", "Light"],
-                ["#ffffff", "White"],
-                ["#fdf7e3", "Ivory"],
-                ["#f4f1ee", "Paper"],
-                ["#f3f8f6", "Mint"],
-                ["#0b0c0f", "Charcoal"],
-                ["#0a0c11", "Night"],
-                ["#0f172a", "Navy"],
-                ["#111827", "Slate Dark"],
-            ];
-
-            /* ---------- СТАН ---------- */
-            let current = structuredClone(PRESETS[0]);
-            let overrides = { ul: "icon", ol: "disc" }; // типографічні оверриди
-            let colors = {
-                // КОЛЬОРИ ЛИШЕ ДЛЯ PREVIEW
-                bgPreview: "#fafbfe",
-                text: "#1c2430",
-                headings: "#1c2430",
-                link: "#0a7c5e",
-                linkHover: "#046b54",
-                bqColor: "#1c2430",
-                bqBg: "#f1f4f8",
-                bqBorder: "#b8c2cc",
-            };
-
-            /* ---------- ПОСИЛАННЯ НА UI ---------- */
-            const tabs = document.querySelectorAll(".top-tab");
-            const tabPanels = {
-                typography: document.getElementById("tab-typography"),
-                standard: document.getElementById("tab-standard"),
-                interactive: document.getElementById("tab-interactive"),
-            };
-            tabs.forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    tabs.forEach((b) =>
-                        b.setAttribute("aria-selected", "false")
-                    );
-                    btn.setAttribute("aria-selected", "true");
-                    const key = btn.dataset.tab;
-                    Object.entries(tabPanels).forEach(([k, el]) => {
-                        el.dataset.active = k === key ? "true" : "";
-                        el.hidden = k !== key;
-                    });
-                    setTimeout(equalizeCodeHeights, 0);
-                });
-            });
-
-            /* ---------- ВКЛАДКИ САЙДБАРУ (Шрифт/Кольори) ---------- */
-            document.querySelectorAll(".sidebar-tab").forEach((b) => {
-                b.addEventListener("click", () => {
-                    document
-                        .querySelectorAll(".sidebar-tab")
-                        .forEach((x) =>
-                            x.setAttribute("aria-selected", "false")
-                        );
-                    b.setAttribute("aria-selected", "true");
-                    const key = b.dataset.sb;
-                    document
-                        .querySelectorAll("[data-sb-panel]")
-                        .forEach((p) => {
-                            p.hidden = p.dataset.sbPanel !== key;
-                        });
-                });
-            });
-
-            /* ---------- АКОРДЕОН У "Шрифт" ---------- */
-            function openAcc(which) {
-                document
-                    .querySelectorAll(".acc-head")
-                    .forEach((h) => h.setAttribute("aria-expanded", "false"));
-                document
-                    .querySelectorAll(".acc-body")
-                    .forEach((b) => (b.dataset.open = ""));
-                const head = document.querySelector(
-                    `.acc-head[data-acc="${which}"]`
-                );
-                const body = document.querySelector(
-                    `.acc-body[data-acc-panel="${which}"]`
-                );
-                if (head && body) {
-                    head.setAttribute("aria-expanded", "true");
-                    body.dataset.open = "true";
-                }
-            }
-            document.querySelectorAll(".acc-head").forEach((h) => {
-                h.addEventListener("click", () => openAcc(h.dataset.acc));
-            });
-
-            /* ---------- РЕНДЕР ШРИФТІВ ---------- */
-            const fontList = document.getElementById("fontList");
-            const sizeOptions = [
-                0.9, 1.0, 1.05, 1.1, 1.15, 1.2, 1.3, 1.4, 1.6, 1.8, 2.0, 2.2,
-                2.4, 2.6,
-            ];
-            const weightOptions = [300, 400, 500, 600, 700, 800, 900];
-            const lhOptions = [
-                1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.5, 1.6, 1.7, 1.8,
-            ];
-
-            function renderFonts() {
-                fontList.innerHTML = "";
-                PRESETS.forEach((p) => {
-                    const b = document.createElement("button");
-                    b.textContent = p.name;
-                    if (p.id === current.id) b.classList.add("active");
-                    b.addEventListener("click", () => {
-                        current = structuredClone(
-                            PRESETS.find((x) => x.id === p.id)
-                        );
-                        overrides = { ul: "icon", ol: "disc" }; // повертаємо дефолти списків
-                        applyStyles();
-                        syncControls();
-                        renderCSS();
-                        renderHTML();
-                        renderListLabels();
-                        renderFonts();
-                        equalizeCodeHeights();
-                    });
-                    fontList.appendChild(b);
-                });
-            }
-            renderFonts();
-
-            /* ---------- ХЕЛПЕРИ ДЛЯ СЕЛЕКТІВ ---------- */
-            function fillSelect(el, arr, value) {
-                el.innerHTML = "";
-                arr.forEach((v) => {
-                    const opt = document.createElement("option");
-                    opt.value = v;
-                    opt.textContent = String(v);
-                    if (String(v) === String(value)) opt.selected = true;
-                    el.appendChild(opt);
-                });
-            }
-            function fillColorSelect(el, palette, currentHex) {
-                el.innerHTML = "";
-                palette.forEach(([hex, name]) => {
-                    const opt = document.createElement("option");
-                    opt.value = hex;
-                    opt.textContent = name + " " + hex;
-                    if (hex.toLowerCase() === currentHex.toLowerCase())
-                        opt.selected = true;
-                    el.appendChild(opt);
-                });
-            }
-
-            /* ---------- СИНХРОНІЗАЦІЯ КОНТРОЛІВ ---------- */
-            function syncControls() {
-                document.getElementById("baseSize").value = current.base;
-                const map = [
-                    ["h1.size", current.h[1].size],
-                    ["h2.size", current.h[2].size],
-                    ["h3.size", current.h[3].size],
-                    ["h4.size", current.h[4].size],
-                    ["h5.size", current.h[5].size],
-                    ["h6.size", current.h[6].size],
-                    ["h1.weight", current.h[1].weight],
-                    ["h2.weight", current.h[2].weight],
-                    ["h3.weight", current.h[3].weight],
-                    ["h4.weight", current.h[4].weight],
-                    ["h5.weight", current.h[5].weight],
-                    ["h6.weight", current.h[6].weight],
-                    ["h1.lh", current.h[1].lh],
-                    ["h2.lh", current.h[2].lh],
-                    ["h3.lh", current.h[3].lh],
-                    ["h4.lh", current.h[4].lh],
-                    ["h5.lh", current.h[5].lh],
-                    ["h6.lh", current.h[6].lh],
-                    ["p.size", current.p.size],
-                    ["p.weight", current.p.weight],
-                    ["p.lh", current.p.lh],
-                ];
-                document.querySelectorAll("[data-key]").forEach((sel) => {
-                    const found = map.find(([k]) => k === sel.dataset.key);
-                    if (!found) return;
-                    const val = overrides[sel.dataset.key] ?? found[1];
-                    if (sel.dataset.key.includes(".size"))
-                        fillSelect(sel, sizeOptions, val);
-                    else if (sel.dataset.key.includes(".weight"))
-                        fillSelect(sel, weightOptions, val);
-                    else if (sel.dataset.key.includes(".lh"))
-                        fillSelect(sel, lhOptions, val);
-                });
-                document.getElementById("linkStyle").value =
-                    overrides["link"] ?? current.link;
-                document.getElementById("ulStyle").value =
-                    overrides["ul"] ?? current.ul;
-                document.getElementById("olStyle").value =
-                    overrides["ol"] ?? current.ol;
-
-                // селекти кольорів (для Preview)
-                fillColorSelect(
-                    document.getElementById("c-bg"),
-                    BG_PALETTE,
-                    colors.bgPreview
-                );
-                fillColorSelect(
-                    document.getElementById("c-text"),
-                    COLOR_PALETTE,
-                    colors.text
-                );
-                fillColorSelect(
-                    document.getElementById("c-headings"),
-                    COLOR_PALETTE,
-                    colors.headings
-                );
-                fillColorSelect(
-                    document.getElementById("c-link"),
-                    COLOR_PALETTE,
-                    colors.link
-                );
-                fillColorSelect(
-                    document.getElementById("c-link-hover"),
-                    COLOR_PALETTE,
-                    colors.linkHover
-                );
-                fillColorSelect(
-                    document.getElementById("c-bq-color"),
-                    COLOR_PALETTE,
-                    colors.bqColor
-                );
-                fillColorSelect(
-                    document.getElementById("c-bq-bg"),
-                    COLOR_PALETTE,
-                    colors.bqBg
-                );
-                fillColorSelect(
-                    document.getElementById("c-bq-border"),
-                    COLOR_PALETTE,
-                    colors.bqBorder
-                );
-            }
-
-            /* ---------- КОЛІРНІ МАТЕМАТИЧНІ ФУНКЦІЇ ---------- */
-            function hexToRgb(h) {
-                const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
-                return m
-                    ? {
-                          r: parseInt(m[1], 16),
-                          g: parseInt(m[2], 16),
-                          b: parseInt(m[3], 16),
-                      }
-                    : null;
-            }
-            function luminance(hex) {
-                const { r, g, b } = hexToRgb(hex);
-                const a = [r, g, b].map((v) => {
-                    v /= 255;
-                    return v <= 0.03928
-                        ? v / 12.92
-                        : Math.pow((v + 0.055) / 1.055, 2.4);
-                });
-                return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-            }
-            function contrast(hex1, hex2) {
-                const L1 = luminance(hex1),
-                    L2 = luminance(hex2);
-                const [a, b] = L1 > L2 ? [L1, L2] : [L2, L1];
-                return (a + 0.05) / (b + 0.05);
-            }
-            function mix(hex1, hex2, ratio) {
-                const c1 = hexToRgb(hex1),
-                    c2 = hexToRgb(hex2);
-                const m = (a, b) => Math.round(a * (1 - ratio) + b * ratio);
-                return (
-                    "#" +
-                    [m(c1.r, c2.r), m(c1.g, c2.g), m(c1.b, c2.b)]
-                        .map((x) => x.toString(16).padStart(2, "0"))
-                        .join("")
-                );
-            }
-            function lighten(hex, amt = 0.15) {
-                return mix(hex, "#ffffff", amt);
-            }
-            function darken(hex, amt = 0.15) {
-                return mix(hex, "#000000", amt);
-            }
-
-            /* ---------- ЗАСТОСУВАННЯ СТИЛІВ І КОЛЬОРІВ ---------- */
-            function applyStyles() {
-                const s = document.getElementById("typoStyle");
-                const get = (k, fallback) =>
-                    k in overrides ? overrides[k] : fallback;
-                const base = current.base;
-                const fam = current.family;
-
-                const h = {};
-                for (let i = 1; i <= 6; i++) {
-                    h[i] = {
-                        size: parseFloat(get(`h${i}.size`, current.h[i].size)),
-                        weight: parseInt(
-                            get(`h${i}.weight`, current.h[i].weight),
-                            10
-                        ),
-                        lh: parseFloat(get(`h${i}.lh`, current.h[i].lh)),
-                    };
-                }
-                const p = {
-                    size: parseFloat(get("p.size", current.p.size)),
-                    weight: parseInt(get("p.weight", current.p.weight), 10),
-                    lh: parseFloat(get("p.lh", current.p.lh)),
-                };
-                const link = get("link", current.link);
-                const ul = get("ul", current.ul);
-                const ol = get("ol", current.ol);
-
-                const scope = document.getElementById("previewScope");
-                scope.classList.toggle(
-                    "hover-mode",
-                    ["hover", "hover-color"].includes(link)
-                );
-
-                const ICON_URL =
-                    "https://api.iconify.design/ic:baseline-check-circle.svg?color=%23008000";
-
-                /* Генеруємо CSS для .content (лише Preview) */
-                let css = `
-/* Типографіка для .content (всередині Preview) */
-.content{ font-family:${fam}; font-size:${base}px; color:${colors.text}; }
-.content h1{ font-size:${(base * h[1].size).toFixed(2)}px; line-height:${
-                    h[1].lh
-                }; font-weight:${h[1].weight}; color:${colors.headings}; }
-.content h2{ font-size:${(base * h[2].size).toFixed(2)}px; line-height:${
-                    h[2].lh
-                }; font-weight:${h[2].weight}; color:${colors.headings}; }
-.content h3{ font-size:${(base * h[3].size).toFixed(2)}px; line-height:${
-                    h[3].lh
-                }; font-weight:${h[3].weight}; color:${colors.headings}; }
-.content h4{ font-size:${(base * h[4].size).toFixed(2)}px; line-height:${
-                    h[4].lh
-                }; font-weight:${h[4].weight}; color:${colors.headings}; }
-.content h5{ font-size:${(base * h[5].size).toFixed(2)}px; line-height:${
-                    h[5].lh
-                }; font-weight:${h[5].weight}; color:${colors.headings}; }
-.content h6{ font-size:${(base * h[6].size).toFixed(2)}px; line-height:${
-                    h[6].lh
-                }; font-weight:${h[6].weight}; color:${colors.headings}; }
-.content p{ font-size:${(base * p.size).toFixed(2)}px; line-height:${
-                    p.lh
-                }; font-weight:${p.weight}; }
-${
-    link === "hover"
-        ? `.content a{ color:${colors.link}; text-decoration:none }\n.content a:hover{ color:${colors.linkHover}; text-decoration:underline }`
-        : link === "underline-hover"
-        ? `.content a{ color:${colors.link}; text-decoration:underline }\n.content a:hover{ color:${colors.linkHover}; text-decoration:underline }`
-        : link === "hover-color"
-        ? `.content a{ color:${colors.link}; text-decoration:none }\n.content a:hover{ color:${colors.linkHover}; text-decoration:none }`
-        : link === "none"
-        ? `.content a{ color:${colors.link}; text-decoration:none }`
-        : `.content a{ color:${colors.link}; text-decoration:underline }`
-}
-${
-    ul === "icon"
-        ? `.content ul{ list-style:none; padding-left:0 }
-.content ul li{ position:relative; padding-left:28px }
-.content ul li::before{
-  content:""; position:absolute; left:0; top:.33em; width:18px; height:18px;
-  background:url('${ICON_URL}') no-repeat center / 18px 18px; /* Змініть картинку на свою */
-}`
-        : `.content ul{ list-style:${ul}; }`
-}
-.content ol{ list-style:${ol}; }
-.content blockquote{ color:${colors.bqColor}; background:${
-                    colors.bqBg
-                }; border-left-color:${colors.bqBorder}; }`;
-
-                s.textContent = css;
-
-                // фон ТІЛЬКИ для Preview
-                document.getElementById("typoPreview").style.background =
-                    colors.bgPreview;
-
-                renderListLabels();
-            }
-
-            /* Підписи над списками у Preview */
-            function renderListLabels() {
-                const ulSel = overrides["ul"] ?? current.ul;
-                const ulMap = {
-                    icon: "з іконкою",
-                    disc: "з точками",
-                    circle: "з точками",
-                    square: "з точками",
-                };
-                const ulText = ulMap[ulSel] || "з точками";
-                const olText = "з точками";
-                const ulLabel = document.getElementById("ulLabel");
-                const olLabel = document.getElementById("olLabel");
-                if (ulLabel)
-                    ulLabel.innerHTML = `<span class="badge">&lt;ul&gt; + &lt;li&gt;</span> ${ulText}`;
-                if (olLabel)
-                    olLabel.innerHTML = `<span class="badge">&lt;ol&gt; + &lt;li&gt;</span> ${olText}`;
-            }
-
-            /* Обробники контролів (типографіка й кольори) */
-            function bindControlEvents() {
-                document
-                    .getElementById("baseSize")
-                    .addEventListener("input", (e) => {
-                        const v = Math.max(
-                            12,
-                            Math.min(22, Number(e.target.value || 16))
-                        );
-                        current.base = v;
-                        applyStyles();
-                        renderCSS();
-                        equalizeCodeHeights();
-                    });
-                document.querySelectorAll("[data-key]").forEach((sel) => {
-                    sel.addEventListener("change", (e) => {
-                        const key = sel.dataset.key;
-                        overrides[key] = Number(e.target.value);
-                        applyStyles();
-                        renderCSS();
-                        equalizeCodeHeights();
-                    });
-                });
-                document
-                    .getElementById("linkStyle")
-                    .addEventListener("change", (e) => {
-                        overrides["link"] = e.target.value;
-                        applyStyles();
-                        renderCSS();
-                        equalizeCodeHeights();
-                    });
-                document
-                    .getElementById("ulStyle")
-                    .addEventListener("change", (e) => {
-                        overrides["ul"] = e.target.value;
-                        applyStyles();
-                        renderCSS();
-                        equalizeCodeHeights();
-                    });
-                document
-                    .getElementById("olStyle")
-                    .addEventListener("change", (e) => {
-                        overrides["ol"] = e.target.value;
-                        applyStyles();
-                        renderCSS();
-                        equalizeCodeHeights();
-                    });
-
-                document
-                    .getElementById("resetBtn")
-                    .addEventListener("click", () => {
-                        overrides = { ul: "icon", ol: "disc" };
-                        colors = {
-                            bgPreview: "#fafbfe",
-                            text: "#1c2430",
-                            headings: "#1c2430",
-                            link: "#0a7c5e",
-                            linkHover: "#046b54",
-                            bqColor: "#1c2430",
-                            bqBg: "#f1f4f8",
-                            bqBorder: "#b8c2cc",
-                        };
-                        applyStyles();
-                        syncControls();
-                        renderCSS();
-                        renderHTML();
-                        renderListLabels();
-                        equalizeCodeHeights();
-                    });
-
-                // селекти кольорів (Preview)
-                const ids = [
-                    "c-bg",
-                    "c-text",
-                    "c-headings",
-                    "c-link",
-                    "c-link-hover",
-                    "c-bq-color",
-                    "c-bq-bg",
-                    "c-bq-border",
-                ];
-                ids.forEach((id) => {
-                    document
-                        .getElementById(id)
-                        .addEventListener("change", (e) => {
-                            const v = e.target.value;
-                            if (id === "c-bg") {
-                                colors.bgPreview = v;
-                            } else if (id === "c-text") {
-                                colors.text = v;
-                            } else if (id === "c-headings") {
-                                colors.headings = v;
-                            } else if (id === "c-link") {
-                                colors.link = v;
-                            } else if (id === "c-link-hover") {
-                                colors.linkHover = v;
-                            } else if (id === "c-bq-color") {
-                                colors.bqColor = v;
-                            } else if (id === "c-bq-bg") {
-                                colors.bqBg = v;
-                            } else if (id === "c-bq-border") {
-                                colors.bqBorder = v;
-                            }
-                            applyStyles();
-                            renderCSS();
-                            equalizeCodeHeights();
-                        });
-                });
-            }
-            bindControlEvents();
-
-            /* Рандомізація ТИПОГРАФІКИ (адекватні межі) */
-            function randomizeAll() {
-                const rand = (min, max, step = 0.01) =>
-                    Math.round((min + Math.random() * (max - min)) / step) *
-                    step;
-                current.base = Math.round(rand(15, 18, 1));
-                const h6 = rand(1.0, 1.06, 0.01);
-                const h5 = rand(h6 + 0.1, 1.25, 0.01);
-                const h4 = rand(h5 + 0.1, 1.45, 0.01);
-                const h3 = rand(h4 + 0.15, 1.75, 0.01);
-                const h2 = rand(h3 + 0.2, 2.1, 0.01);
-                const h1 = rand(h2 + 0.25, 2.6, 0.01);
-                overrides["h1.size"] = h1;
-                overrides["h2.size"] = h2;
-                overrides["h3.size"] = h3;
-                overrides["h4.size"] = h4;
-                overrides["h5.size"] = h5;
-                overrides["h6.size"] = h6;
-                [1, 2, 3, 4, 5, 6].forEach((i) => {
-                    overrides[`h${i}.weight`] = [600, 700, 800][
-                        Math.floor(Math.random() * 3)
-                    ];
-                    overrides[`h${i}.lh`] = [
-                        1.12, 1.15, 1.18, 1.22, 1.26, 1.3, 1.34,
-                    ][Math.floor(Math.random() * 7)];
-                });
-                overrides["p.size"] = rand(0.96, 1.06, 0.01);
-                overrides["p.weight"] = [400, 400, 500][
-                    Math.floor(Math.random() * 3)
-                ];
-                overrides["p.lh"] = [1.6, 1.65, 1.7, 1.75, 1.8][
-                    Math.floor(Math.random() * 5)
-                ];
-                overrides["link"] = [
-                    "underline",
-                    "hover",
-                    "underline-hover",
-                    "hover-color",
-                    "none",
-                ][Math.floor(Math.random() * 5)];
-                overrides["ul"] = ["disc", "circle", "square", "icon"][
-                    Math.floor(Math.random() * 4)
-                ];
-                overrides["ol"] = [
-                    "disc",
-                    "decimal",
-                    "decimal-leading-zero",
-                    "lower-alpha",
-                ][Math.floor(Math.random() * 4)];
-                applyStyles();
-                syncControls();
-                renderCSS();
-                renderListLabels();
-                equalizeCodeHeights();
-            }
-            document
-                .getElementById("randomizeTopBtn")
-                .addEventListener("click", randomizeAll);
-
-            /* Рандомізація КОЛЬОРІВ (лише Preview, з урахуванням контрасту) */
-            function randomizeColors() {
-                // випадковий фон Preview
-                const bg =
-                    BG_PALETTE[
-                        Math.floor(Math.random() * BG_PALETTE.length)
-                    ][0];
-                colors.bgPreview = bg;
-                const lightBg = luminance(bg) > 0.5;
-
-                // колір тексту/заголовків із достатнім контрастом
-                colors.text = lightBg ? "#1c2430" : "#e6e8ee";
-                colors.headings = colors.text;
-
-                // підбір акценту (посилань) з найбільшим контрастом
-                const accents = [
-                    "#0a7c5e",
-                    "#1e6be3",
-                    "#7a3aed",
-                    "#e11d48",
-                    "#15803d",
-                    "#c2410c",
-                ];
-                let best = accents[0],
-                    bestC = 0;
-                accents.forEach((a) => {
-                    const c = contrast(a, bg);
-                    if (c > bestC) {
-                        bestC = c;
-                        best = a;
-                    }
-                });
-                colors.link = best;
-                colors.linkHover = lightBg
-                    ? darken(best, 0.2)
-                    : lighten(best, 0.2);
-
-                // blockquote
-                colors.bqColor = colors.text;
-                colors.bqBg = lightBg
-                    ? "#f1f4f8"
-                    : "rgba(255,255,255,.04)".replace(" ", "");
-                colors.bqBorder = lightBg ? "#b8c2cc" : lighten(best, 0.25);
-
-                applyStyles();
-                syncControls();
-                renderCSS();
-                equalizeCodeHeights();
-            }
-            document
-                .getElementById("randomColorsBtn")
-                .addEventListener("click", randomizeColors);
-
-            /* Перемикач теми (оболонка додатка) */
-            document
-                .getElementById("themeBtn")
-                .addEventListener("click", () => {
-                    const body = document.body;
-                    if (body.classList.contains("theme-dark")) {
-                        body.classList.remove("theme-dark");
-                        body.classList.add("theme-light");
-                        document.getElementById("themeBtn").textContent =
-                            "Тема: Light";
-                    } else {
-                        body.classList.remove("theme-light");
-                        body.classList.add("theme-dark");
-                        document.getElementById("themeBtn").textContent =
-                            "Тема: Dark";
-                    }
-                });
-
-            /* Внутрішні вкладки (типографіка і стандартні) */
-            document.querySelectorAll(".inner-tab").forEach((t) => {
-                t.addEventListener("click", () => {
-                    const groupPrefix = t.dataset.inner.startsWith("std-")
-                        ? "std-"
-                        : "";
-                    document
-                        .querySelectorAll(
-                            `.inner-tab[data-inner^="${groupPrefix}"]`
-                        )
-                        .forEach((x) =>
-                            x.setAttribute("aria-selected", "false")
-                        );
-                    t.setAttribute("aria-selected", "true");
-                    document
-                        .querySelectorAll("[data-inner-panel]")
-                        .forEach((p) => {
-                            const want = p.dataset.innerPanel;
-                            const show = t.dataset.inner === want;
-                            if (want.startsWith(groupPrefix)) p.hidden = !show;
-                            else if (!want.startsWith("std-") && !groupPrefix)
-                                p.hidden = !show;
-                        });
-                    equalizeCodeHeights();
-                });
-            });
-
-            /* Копіювання тексту з боксів */
-            async function copyFrom(id) {
-                const el = document.getElementById(id);
-                const txt = el.textContent;
-                try {
-                    await navigator.clipboard.writeText(txt);
-                } catch (e) {
-                    const t = document.createElement("textarea");
-                    t.value = txt;
-                    document.body.appendChild(t);
-                    t.select();
-                    try {
-                        document.execCommand("copy");
-                    } finally {
-                        document.body.removeChild(t);
-                    }
-                }
-            }
-            document
-                .getElementById("copyCssBtn")
-                .addEventListener("click", () => copyFrom("cssOutput"));
-            document
-                .getElementById("copyHtmlBtn")
-                .addEventListener("click", () => copyFrom("htmlOutput"));
-
-            /* Експорт CSS типографіки */
-            function renderCSS() {
-                const baseStyles = `/* Базові стилі: */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-html { scroll-behavior: smooth; }
-body { margin: 0; }
-main { flex-grow: 1; }
-figure { margin: 0; }
-img { max-width: 100%; height: auto; display: block; }`;
-                const dynamic =
-                    document.getElementById("typoStyle").textContent;
-                const highlights = `/* Підсвітки (1–20) — див.класи .highlight-* */
-.highlight{ padding:0 .25em }
-.highlight-1{ background:linear-gradient(180deg,rgba(255,255,0,.0) 60%, rgba(255,239,120,.9) 60%) }
-.highlight-2{ background:#ffeb3b; border-radius:4px }
-.highlight-3{ box-shadow:inset 0 -8px 0 rgba(91,209,168,.35) }
-.highlight-4{ outline:2px solid #5bd1a8; border-radius:6px }
-.highlight-5{ text-decoration:underline wavy #ff6d6d 2px }
-.highlight-6{ background:#c8e6c9; border-radius:999px; padding:.1em .5em }
-.highlight-7{ background:#ffe0b2; border:1px dashed #ff9800; border-radius:6px; padding:.05em .3em }
-.highlight-8{ background:linear-gradient(90deg, rgba(91,209,168,.25), rgba(91,209,168,.05)) }
-.highlight-9{ background:linear-gradient(180deg, transparent 70%, rgba(0,0,0,.12) 0%) }
-.highlight-10{ text-shadow:0 1px 0 #fff; background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.3)); border-radius:4px }
-.highlight-11{ text-decoration:underline dotted currentColor 2px; text-underline-offset:4px }
-.highlight-12{ text-decoration:underline double currentColor 3px; text-underline-offset:3px }
-.highlight-13{ background:linear-gradient(90deg,#ffe5f0,#fff0f5) }
-.highlight-14{ border-bottom:3px solid #5bd1a8 }
-.highlight-15{ box-shadow:0 0 0 3px rgba(91,209,168,.35) }
-.highlight-16{ background:repeating-linear-gradient(135deg,rgba(0,0,0,.08),rgba(0,0,0,.08) 6px,transparent 6px,transparent 12px) }
-.highlight-17{ text-decoration:underline dashed #1e6be3 3px; text-underline-offset:4px }
-.highlight-18{ border-left:4px solid #1e6be3; padding-left:.4em }
-.highlight-19{ background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.02)) }
-.highlight-20{ outline:2px dashed #9aa3b2; border-radius:4px }`;
-                const css =
-                    baseStyles +
-                    "\n\n/* Типографіка + Кольори Preview */\n" +
-                    dynamic +
-                    "\n\n" +
-                    highlights;
-                document.getElementById("cssOutput").textContent = css;
-            }
-
-            /* Експорт HTML (без .badge) */
-            function renderHTML() {
-                const scope = document
-                    .getElementById("previewScope")
-                    .cloneNode(true);
-                scope.querySelectorAll(".badge").forEach((n) => n.remove());
-                const html = `<div class="content">
-  ${scope.innerHTML.trim()}
-</div>`;
-                document.getElementById("htmlOutput").textContent = html;
-            }
-
-            /* Вирівнювання висоти боксів коду */
-            function equalizeCodeHeights() {
-                const p1 = document.getElementById("typoPreview");
-                const p2 = document.getElementById("stdPreview");
-                const target = Math.max(
-                    620,
-                    p1 ? p1.offsetHeight : 0,
-                    p2 ? p2.offsetHeight : 0
-                );
-                [
-                    "cssOutput",
-                    "htmlOutput",
-                    "stdCssOutput",
-                    "stdHtmlOutput",
-                ].forEach((id) => {
-                    const box = document.getElementById(id);
-                    if (box) box.style.minHeight = target + "px";
-                });
-            }
-
-            /* ---------- СТАНДАРТНІ КОМПОНЕНТИ: BUTTONS ---------- */
-            const BUTTONS_CSS = `/* Базова кнопка компонента */
-.cmp-btn{ --padY:10px; --padX:14px; padding:var(--padY) var(--padX); border-radius:10px; border:1px solid transparent; cursor:pointer; font-weight:600; line-height:1; transition:transform .08s ease, box-shadow .18s ease, background .18s ease, color .18s ease; display:inline-flex; align-items:center; justify-content:center; gap:8px }
-.cmp-btn:active{ transform:translateY(1px) }
-
-/* 1. Насичена */
-.btn-solid{ background:#0a7c5e; color:#fff }
-.btn-solid:hover{ background:#096e55 }
-
-/* 2. Контурна */
-.btn-outline{ background:#fff; color:#0a7c5e; border-color:#0a7c5e }
-.btn-outline:hover{ background:#e7f6f1 }
-
-/* 3. Ghost */
-.btn-ghost2{ background:transparent; color:#0a7c5e }
-.btn-ghost2:hover{ background:rgba(10,124,94,.08) }
-
-/* 4. Soft */
-.btn-soft{ background:#e8faf4; color:#0a7c5e; border-color:#c8eee3 }
-.btn-soft:hover{ background:#dcf6ee }
-
-/* 5. Градієнт */
-.btn-gradient{ background:linear-gradient(135deg,#1e6be3,#0a7c5e); color:#fff }
-.btn-gradient:hover{ filter:brightness(.95) }
-
-/* 6. Pill */
-.btn-pill{ background:#1e6be3; color:#fff; border-radius:999px; padding:12px 18px }
-.btn-pill:hover{ background:#1a5ccc }
-
-/* 7. Іконка зліва (CDN-іконка) */
-.btn-icon-left{ background:#0a7c5e; color:#fff }
-.btn-icon-left img{ width:1em; height:1em; display:inline-block }
-.btn-icon-left:hover{ background:#096e55 }
-
-/* 8. Піднята */
-.btn-elevated{ background:#fff; color:#0a7c5e; box-shadow:0 6px 16px rgba(0,0,0,.12); border-color:#e5e7eb }
-.btn-elevated:hover{ box-shadow:0 8px 20px rgba(0,0,0,.16) }
-
-/* 9. Посилання */
-.btn-linkish{ background:transparent; color:#1e6be3; text-decoration:underline }
-.btn-linkish:hover{ color:#174db0 }
-
-/* 10. Пунктирна */
-.btn-dashed{ background:#fff; color:#0a7c5e; border:2px dashed #0a7c5e }
-.btn-dashed:hover{ background:#e7f6f1 }`;
-
-            function mountButtonsCSS() {
-                document.getElementById("stdButtonsStyle").textContent =
-                    BUTTONS_CSS;
-                document.getElementById("stdCssOutput").textContent =
-                    BUTTONS_CSS;
-            }
-            function renderButtonsHTML() {
-                const html = `<div class="btn-grid">
-  <button class="cmp-btn btn-solid">Solid Primary</button>
-  <button class="cmp-btn btn-outline">Outline</button>
-  <button class="cmp-btn btn-ghost2">Ghost</button>
-  <button class="cmp-btn btn-soft">Soft</button>
-  <button class="cmp-btn btn-gradient">Gradient</button>
-  <button class="cmp-btn btn-pill">Pill</button>
-  <button class="cmp-btn btn-icon-left"><img alt="" src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/arrow-right.svg" />Icon Left</button>
-  <button class="cmp-btn btn-elevated">Elevated</button>
-  <button class="cmp-btn btn-linkish">Link-like</button>
-  <button class="cmp-btn btn-dashed">Dashed</button>
-</div>`;
-                document.getElementById("stdHtmlOutput").textContent = html;
-            }
-            document
-                .getElementById("copyStdCssBtn")
-                .addEventListener("click", () => copyFrom("stdCssOutput"));
-            document
-                .getElementById("copyStdHtmlBtn")
-                .addEventListener("click", () => copyFrom("stdHtmlOutput"));
-
-            /* ---------- ІНІЦІАЛІЗАЦІЯ ---------- */
-            function init() {
-                openAcc("fonts"); // за замовчуванням — список шрифтів
-                syncControls();
-                applyStyles();
-                renderCSS();
-                renderHTML();
-                renderListLabels();
-                mountButtonsCSS();
-                renderButtonsHTML();
-                equalizeCodeHeights();
-            }
-            init();
-        </script>
-    </body>
+            <button class="accordion-hdr" id="accStyles" aria-expanded="false"><span class="chev">&#x25BC;</span> Стилі шрифту</button>
+            <div class="accordion-panel" id="accStylesBody" hidden>
+              <div class="control">
+                <h5>База</h5>
+                <div class="row">
+                  <label for="baseSize">Base size</label>
+                  <input id="baseSize" type="number" min="12" max="22" step="1" value="16" />
+                </div>
+              </div>
+
+              <div class="control">
+                <h5>Heading scales</h5>
+                <div class="row"><label>H1 size</label><select data-key="h1.size"></select></div>
+                <div class="row"><label>H2 size</label><select data-key="h2.size"></select></div>
+                <div class="row"><label>H3 size</label><select data-key="h3.size"></select></div>
+                <div class="row"><label>H4 size</label><select data-key="h4.size"></select></div>
+                <div class="row"><label>H5 size</label><select data-key="h5.size"></select></div>
+                <div class="row"><label>H6 size</label><select data-key="h6.size"></select></div>
+              </div>
+
+              <div class="control">
+                <h5>Heading weight / line-height</h5>
+                <div class="row"><label>H1</label><select data-key="h1.weight"></select></div>
+                <div class="row"><label>H2</label><select data-key="h2.weight"></select></div>
+                <div class="row"><label>H3</label><select data-key="h3.weight"></select></div>
+                <div class="row"><label>H4</label><select data-key="h4.weight"></select></div>
+                <div class="row"><label>H5</label><select data-key="h5.weight"></select></div>
+                <div class="row"><label>H6</label><select data-key="h6.weight"></select></div>
+                <div class="row"><label>H1 LH</label><select data-key="h1.lh"></select></div>
+                <div class="row"><label>H2 LH</label><select data-key="h2.lh"></select></div>
+                <div class="row"><label>H3 LH</label><select data-key="h3.lh"></select></div>
+                <div class="row"><label>H4 LH</label><select data-key="h4.lh"></select></div>
+                <div class="row"><label>H5 LH</label><select data-key="h5.lh"></select></div>
+                <div class="row"><label>H6 LH</label><select data-key="h6.lh"></select></div>
+              </div>
+
+              <div class="control">
+                <h5>Paragraphs / Links / Lists</h5>
+                <div class="row"><label>P size</label><select data-key="p.size"></select></div>
+                <div class="row"><label>P weight</label><select data-key="p.weight"></select></div>
+                <div class="row"><label>P line-height</label><select data-key="p.lh"></select></div>
+                <div class="row">
+                  <label>Links</label>
+                  <select id="linkStyle">
+                    <option value="underline">underline</option>
+                    <option value="hover">hover only</option>
+                    <option value="hover-underline">hover & underline</option>
+                    <option value="none">none</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label>UL style</label>
+                  <select id="ulStyle">
+                    <option value="disc">disc</option>
+                    <option value="circle">circle</option>
+                    <option value="square">square</option>
+                    <option value="icon">icon</option>
+                  </select>
+                </div>
+                <div class="row">
+                  <label>OL style</label>
+                  <select id="olStyle">
+                    <option value="disc">disc</option>
+                    <option value="decimal">decimal</option>
+                    <option value="decimal-leading-zero">decimal-leading-zero</option>
+                    <option value="lower-alpha">lower-alpha</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="colorsPanel" hidden>
+            <div class="control">
+              <h5>Фон демо (Preview)</h5>
+              <div class="row"><label>Background</label><input type="color" id="color-previewBg" value="#fafbfe" /></div>
+            </div>
+            <div class="control">
+              <h5>Тексти</h5>
+              <div class="row"><label>H1</label><input type="color" id="color-h1" value="#1c2430" /></div>
+              <div class="row"><label>H2</label><input type="color" id="color-h2" value="#1c2430" /></div>
+              <div class="row"><label>H3</label><input type="color" id="color-h3" value="#1c2430" /></div>
+              <div class="row"><label>H4</label><input type="color" id="color-h4" value="#1c2430" /></div>
+              <div class="row"><label>H5</label><input type="color" id="color-h5" value="#1c2430" /></div>
+              <div class="row"><label>H6</label><input type="color" id="color-h6" value="#1c2430" /></div>
+              <div class="row"><label>P</label><input type="color" id="color-p" value="#1c2430" /></div>
+              <div class="row"><label>Link</label><input type="color" id="color-a" value="#0a7c5e" /></div>
+              <div class="row"><label>Link hover</label><input type="color" id="color-aHover" value="#085f48" /></div>
+            </div>
+            <div class="control">
+              <h5>Blockquote</h5>
+              <div class="row"><label>Text</label><input type="color" id="color-bqText" value="#1c2430" /></div>
+              <div class="row"><label>Background</label><input type="color" id="color-bqBg" value="#f1f4f8" /></div>
+              <div class="row"><label>Border</label><input type="color" id="color-bqBorder" value="#b8c2cc" /></div>
+            </div>
+          </div>
+
+          <div class="buttons">
+            <button class="btn" id="resetBtn">Скинути стилі</button>
+          </div>
+        </aside>
+
+        <main class="panel">
+          <div class="buttons">
+            <button class="btn" id="randomizeTopBtn">🎲 Рандомна типографіка</button>
+            <button class="btn" id="randomizeColorsBtn">🎲 Рандомні кольори</button>
+          </div>
+
+          <div class="inner-tabs" role="tablist" aria-label="Typography inner tabs">
+            <button class="inner-tab" role="tab" aria-selected="true" data-inner="preview">Preview</button>
+            <button class="inner-tab" role="tab" aria-selected="false" data-inner="css">CSS</button>
+            <button class="inner-tab" role="tab" aria-selected="false" data-inner="html">HTML</button>
+          </div>
+
+          <div id="typoPreview" class="preview" data-inner-panel="preview">
+            <div id="previewScope" class="content hover-mode">
+              <h1><span class="badge">&lt;h1&gt;</span>Elegant Typography Cheat Test</h1>
+              <p><span class="badge">&lt;p&gt;</span>This block demonstrates a consistent set of styles applied to the same content. Switch fonts on the left to compare rhythm, sizes, and contrast. You can also override heading scales, paragraph metrics, lists and links.</p>
+              <h2><span class="badge">&lt;h2&gt;</span>Section Title &amp; Rhythm</h2>
+              <p><span class="badge">&lt;p&gt;</span>Good typography balances <a href="#"><span class="badge">&lt;a&gt;</span>readability</a>, hierarchy, and spacing. A clear scale for headings (H1–H6) and consistent paragraph line-height improve scannability and comprehension on long pre-landers.</p>
+              <h3><span class="badge">&lt;h3&gt;</span>Lists</h3>
+              <p id="ulLabel" class="notice"><span class="badge">&lt;ul&gt; + &lt;li&gt;</span> з іконкою</p>
+              <ul>
+                <li>Readable base size with generous line-height.</li>
+                <li>Predictable heading increments and weights.</li>
+                <li>Clear link styling with accessible states.</li>
+              </ul>
+              <p id="olLabel" class="notice"><span class="badge">&lt;ol&gt; + &lt;li&gt;</span> з точками</p>
+              <ol>
+                <li>Use system/installed fonts to avoid CDNs.</li>
+                <li>Keep min width at 320px.</li>
+                <li>Prefer semantic HTML for screen readers.</li>
+              </ol>
+              <h4><span class="badge">&lt;h4&gt;</span>Blockquote</h4>
+              <blockquote><span class="badge">&lt;blockquote&gt;</span>“People ignore design that ignores people.” — Frank Chimero</blockquote>
+              <h5><span class="badge">&lt;h5&gt;</span>Highlights (20)</h5>
+              <p><span class="badge">&lt;span .highlight-1&gt;</span><span class="highlight highlight-1">Variant 1</span></p>
+              <p><span class="badge">&lt;span .highlight-2&gt;</span><span class="highlight highlight-2">Variant 2</span></p>
+              <p><span class="badge">&lt;span .highlight-3&gt;</span><span class="highlight highlight-3">Variant 3</span></p>
+              <p><span class="badge">&lt;span .highlight-4&gt;</span><span class="highlight highlight-4">Variant 4</span></p>
+              <p><span class="badge">&lt;span .highlight-5&gt;</span><span class="highlight highlight-5">Variant 5</span></p>
+              <p><span class="badge">&lt;span .highlight-6&gt;</span><span class="highlight highlight-6">Variant 6</span></p>
+              <p><span class="badge">&lt;span .highlight-7&gt;</span><span class="highlight highlight-7">Variant 7</span></p>
+              <p><span class="badge">&lt;span .highlight-8&gt;</span><span class="highlight highlight-8">Variant 8</span></p>
+              <p><span class="badge">&lt;span .highlight-9&gt;</span><span class="highlight highlight-9">Variant 9</span></p>
+              <p><span class="badge">&lt;span .highlight-10&gt;</span><span class="highlight highlight-10">Variant 10</span></p>
+              <p><span class="badge">&lt;span .highlight-11&gt;</span><span class="highlight highlight-11">Variant 11</span></p>
+              <p><span class="badge">&lt;span .highlight-12&gt;</span><span class="highlight highlight-12">Variant 12</span></p>
+              <p><span class="badge">&lt;span .highlight-13&gt;</span><span class="highlight highlight-13">Variant 13</span></p>
+              <p><span class="badge">&lt;span .highlight-14&gt;</span><span class="highlight highlight-14">Variant 14</span></p>
+              <p><span class="badge">&lt;span .highlight-15&gt;</span><span class="highlight highlight-15">Variant 15</span></p>
+              <p><span class="badge">&lt;span .highlight-16&gt;</span><span class="highlight highlight-16">Variant 16</span></p>
+              <p><span class="badge">&lt;span .highlight-17&gt;</span><span class="highlight highlight-17">Variant 17</span></p>
+              <p><span class="badge">&lt;span .highlight-18&gt;</span><span class="highlight highlight-18">Variant 18</span></p>
+              <p><span class="badge">&lt;span .highlight-19&gt;</span><span class="highlight highlight-19">Variant 19</span></p>
+              <p><span class="badge">&lt;span .highlight-20&gt;</span><span class="highlight highlight-20">Variant 20</span></p>
+            </div>
+          </div>
+
+          <div id="typoCSS" data-inner-panel="css" hidden>
+            <div class="copybar"><button class="btn" id="copyCssBtn">Copy CSS</button></div>
+            <div id="cssOutput" class="codebox"></div>
+            <p class="notice">Скопійований CSS: спочатку «Базові стилі», потім обрана типографіка + ваші налаштування і кольори.</p>
+          </div>
+
+          <div id="typoHTML" data-inner-panel="html" hidden>
+            <div class="copybar"><button class="btn" id="copyHtmlBtn">Copy HTML</button></div>
+            <div id="htmlOutput" class="codebox"></div>
+          </div>
+        </main>
+      </section>
+
+      <!-- STANDARD TAB -->
+      <section class="shell tab" id="tab-standard" aria-label="Базові компоненти" hidden>
+        <aside class="sidebar" id="standardSidebar">
+          <h4>Базові</h4>
+          <ul class="list">
+            <li class="disabled">Header / Navbar</li>
+            <li class="disabled">Advertisement | Disclosure</li>
+            <li class="disabled">Breadcrumbs</li>
+            <li class="disabled">Images (hero/product/avatar)</li>
+            <li><button id="sbButtons" class="active">Buttons</button></li>
+            <li class="disabled">Footer (links + modals)</li>
+          </ul>
+          <h4>Контент</h4>
+          <ul class="list">
+            <li class="disabled">Callout/Alert</li>
+            <li class="disabled">FAQ</li>
+            <li class="disabled">Testimonials</li>
+            <li class="disabled">Comments</li>
+          </ul>
+        </aside>
+        <main class="panel">
+          <div class="inner-tabs" role="tablist" aria-label="Buttons inner tabs">
+            <button class="inner-tab" role="tab" aria-selected="true" data-inner="btns-preview">Preview</button>
+            <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-css">CSS</button>
+            <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-html">HTML</button>
+          </div>
+          <div id="btnsPreview" data-inner-panel="btns-preview">
+            <div class="btns-grid" id="btnsGrid"></div>
+          </div>
+          <div id="btnsCSS" data-inner-panel="btns-css" hidden>
+            <div class="copybar"><button class="btn" id="copyBtnsCssBtn">Copy CSS</button></div>
+            <div id="btnsCssOutput" class="codebox"></div>
+          </div>
+          <div id="btnsHTML" data-inner-panel="btns-html" hidden>
+            <div class="copybar"><button class="btn" id="copyBtnsHtmlBtn">Copy HTML</button></div>
+            <div id="btnsHtmlOutput" class="codebox"></div>
+          </div>
+        </main>
+      </section>
+
+      <!-- INTERACTIVE TAB -->
+      <section class="shell tab" id="tab-interactive" aria-label="Інтерактивні компоненти" hidden>
+        <aside class="sidebar" id="interactiveSidebar">
+          <h4>Модулі</h4>
+          <ul class="list">
+            <li class="disabled">Modals</li>
+            <li class="disabled">Toasts</li>
+            <li class="disabled">Cookie / GDPR</li>
+            <li class="disabled">Countdown</li>
+            <li class="disabled">Sweepstakes / Wheel / Quiz</li>
+            <li class="disabled">Social Proof</li>
+            <li class="disabled">Order Form variants</li>
+            <li class="disabled">Sticky CTA / Bars</li>
+            <li class="disabled">Lockers (CTA → unlock)</li>
+          </ul>
+        </aside>
+        <main class="panel">
+          <p class="notice">Тут будуть інтерактивні демо та API.</p>
+        </main>
+      </section>
+    </div>
+
+    <!-- Динамічні стилі -->
+    <style id="typoStyle"></style>
+    <style id="colorStyle"></style>
+    <style id="btnKitStyle"></style>
+
+    <script src="app.js" defer></script>
+  </body>
 </html>
