@@ -519,27 +519,27 @@ img { max-width: 100%; height: auto; display: block; }`;
 
   // ===== Кнопки (10+10) =====
   const BUTTONS = [
-    { cls:'btn-demo primary', label:'Primary' },
-    { cls:'btn-demo outline', label:'Outline' },
-    { cls:'btn-demo ghost', label:'Ghost' },
-    { cls:'btn-demo gradient', label:'Gradient' },
-    { cls:'btn-demo shadow', label:'Shadow' },
-    { cls:'btn-demo raised', label:'3D Raised' },
-    { cls:'btn-demo pill primary', label:'Pill Primary' },
-    { cls:'btn-demo link', label:'Link' },
-    { cls:'btn-demo success', label:'Success' },
-    { cls:'btn-demo warning', label:'Warning' },
+    { cls:'btn primary', label:'Primary' },
+    { cls:'btn outline', label:'Outline' },
+    { cls:'btn ghost', label:'Ghost' },
+    { cls:'btn gradient', label:'Gradient' },
+    { cls:'btn shadow', label:'Shadow' },
+    { cls:'btn raised', label:'3D Raised' },
+    { cls:'btn pill primary', label:'Pill Primary' },
+    { cls:'btn link', label:'Link' },
+    { cls:'btn success', label:'Success' },
+    { cls:'btn warning', label:'Warning' },
     // квадратні
-    { cls:'btn-demo square primary', label:'Square Primary' },
-    { cls:'btn-demo square outline', label:'Square Outline' },
-    { cls:'btn-demo square dashed', label:'Square Dashed' },
-    { cls:'btn-demo square info', label:'Square Info' },
-    { cls:'btn-demo square danger', label:'Square Danger' },
-    { cls:'btn-demo square ghost', label:'Square Ghost' },
-    { cls:'btn-demo square neon', label:'Square Neon' },
-    { cls:'btn-demo square glass', label:'Square Glass' },
-    { cls:'btn-demo square icon-left', label:'Icon Left' },
-    { cls:'btn-demo square icon-right', label:'Icon Right' },
+    { cls:'btn square primary', label:'Square Primary' },
+    { cls:'btn square outline', label:'Square Outline' },
+    { cls:'btn square dashed', label:'Square Dashed' },
+    { cls:'btn square info', label:'Square Info' },
+    { cls:'btn square danger', label:'Square Danger' },
+    { cls:'btn square ghost', label:'Square Ghost' },
+    { cls:'btn square neon', label:'Square Neon' },
+    { cls:'btn square glass', label:'Square Glass' },
+    { cls:'btn square icon-left', label:'Icon Left' },
+    { cls:'btn square icon-right', label:'Icon Right' },
   ];
 
   function renderButtons(){
@@ -555,26 +555,26 @@ img { max-width: 100%; height: auto; display: block; }`;
 
   function renderButtonsCSS(){
     const css = `/* Бібліотека кнопок (можна вирізати потрібне) */
-.btn-demo{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; font-weight:600; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:#fff; color:#1c2430; cursor:pointer; user-select:none; text-decoration:none; }
-.btn-demo.square{ border-radius:6px; }
-.btn-demo.pill{ border-radius:999px; }
-.btn-demo.full{ width:100%; }
-.btn-demo.ghost{ background:transparent; }
-.btn-demo.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; }
-.btn-demo.outline{ background:transparent; border:2px solid #1c2430; color:#1c2430; }
-.btn-demo.dashed{ border-style:dashed; }
-.btn-demo.shadow{ box-shadow: 0 8px 16px rgba(0,0,0,.15); }
-.btn-demo.gradient{ background:linear-gradient(90deg,#5bd1a8,#09c2a1); border-color:transparent; color:#0a0e0c; }
-.btn-demo.raised{ box-shadow: 0 4px 0 #0f7f66; background:#14b8a6; border-color:#0f7f66; color:#0a0e0c; }
-.btn-demo.link{ background:transparent; border-color:transparent; color:#0a7c5e; text-decoration:underline; }
-.btn-demo.warning{ background:#ffb020; border-color:#ffb020; color:#1c2430; }
-.btn-demo.danger{ background:#ef4444; border-color:#ef4444; color:#fff; }
-.btn-demo.success{ background:#22c55e; border-color:#22c55e; color:#0a0e0c; }
-.btn-demo.info{ background:#3b82f6; border-color:#3b82f6; color:#fff; }
-.btn-demo.glass{ background:rgba(255,255,255,.35); backdrop-filter: blur(6px); border-color:rgba(255,255,255,.5); }
-.btn-demo.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; }
-.btn-demo.icon-left::before{ content:"↗"; }
-.btn-demo.icon-right::after{ content:"→"; }`;
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; font-weight:600; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:#fff; color:#1c2430; cursor:pointer; user-select:none; text-decoration:none; }
+.btn.square{ border-radius:6px; }
+.btn.pill{ border-radius:999px; }
+.btn.full{ width:100%; }
+.btn.ghost{ background:transparent; }
+.btn.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; }
+.btn.outline{ background:transparent; border:2px solid #1c2430; color:#1c2430; }
+.btn.dashed{ border-style:dashed; }
+.btn.shadow{ box-shadow: 0 8px 16px rgba(0,0,0,.15); }
+.btn.gradient{ background:linear-gradient(90deg,#5bd1a8,#09c2a1); border-color:transparent; color:#0a0e0c; }
+.btn.raised{ box-shadow: 0 4px 0 #0f7f66; background:#14b8a6; border-color:#0f7f66; color:#0a0e0c; }
+.btn.link{ background:transparent; border-color:transparent; color:#0a7c5e; text-decoration:underline; }
+.btn.warning{ background:#ffb020; border-color:#ffb020; color:#1c2430; }
+.btn.danger{ background:#ef4444; border-color:#ef4444; color:#fff; }
+.btn.success{ background:#22c55e; border-color:#22c55e; color:#0a0e0c; }
+.btn.info{ background:#3b82f6; border-color:#3b82f6; color:#fff; }
+.btn.glass{ background:rgba(255,255,255,.35); backdrop-filter: blur(6px); border-color:rgba(255,255,255,.5); }
+.btn.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; }
+.btn.icon-left::before{ content:"↗"; }
+.btn.icon-right::after{ content:"→"; }`;
     document.getElementById('btnsCssOutput').textContent = css;
     document.getElementById('btnKitStyle').textContent = css; // щоб демо було стилізоване
   }
