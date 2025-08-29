@@ -471,11 +471,12 @@ const LIGHT_SCHEMES = [
 
   // ===== Експорт CSS/HTML =====
   function renderCSS(){
+    // Базові стилі з підстановкою вибраного Background у body
     const baseStyles = `/* Базові стилі: */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 html { scroll-behavior: smooth; }
-body { margin: 0; }
+body { margin: 0; background: ${colorOverrides.previewBg}; }
 main { flex-grow: 1; }
 figure { margin: 0; }
 img { max-width: 100%; height: auto; display: block; }`;
@@ -542,7 +543,7 @@ img { max-width: 100%; height: auto; display: block; }`;
     });
   }
 
-  // ===== Кнопки (10+10) =====
+  // ===== Кнопки (набір) =====
   const BUTTONS = [
     { cls:'btn primary', label:'Primary' },
     { cls:'btn outline', label:'Outline' },
@@ -570,42 +571,56 @@ img { max-width: 100%; height: auto; display: block; }`;
   function renderButtons(){
     const grid = document.getElementById('btnsGrid');
     grid.innerHTML='';
-    BUTTONS.forEach(b=>{
+    BUTTONS.forEach((b, i)=>{
+      const wrap = document.createElement('div');
+      wrap.style.display = 'flex';
+      wrap.style.flexDirection = 'column';
+      wrap.style.gap = '4px';
+      const num = document.createElement('div');
+      num.style.fontSize = '12px';
+      num.style.opacity = '0.7';
+      num.textContent = String(i+1).padStart(2,'0');
       const a = document.createElement('a');
       a.href = '#'; a.className = b.cls; a.textContent = b.label;
       a.addEventListener('click', e=>e.preventDefault());
-      grid.appendChild(a);
+      wrap.appendChild(num); wrap.appendChild(a);
+      grid.appendChild(wrap);
     });
   }
 
   function renderButtonsCSS(){
-    const css = `/* Бібліотека кнопок (можна вирізати потрібне) */
+    const css = `/* Бібліотека кнопок (можна вирізати потрібне). Нумерація 01..20 відповідає прев'ю */
 .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; font-weight:600; border-radius:12px; border:1px solid rgba(0,0,0,.1); background:#fff; color:#1c2430; cursor:pointer; user-select:none; text-decoration:none; }
 .btn.square{ border-radius:6px; }
 .btn.pill{ border-radius:999px; }
 .btn.full{ width:100%; }
 .btn.ghost{ background:transparent; }
-.btn.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; }
-.btn.outline{ background:transparent; border:2px solid #1c2430; color:#1c2430; }
-.btn.dashed{ border-style:dashed; }
-.btn.shadow{ box-shadow: 0 8px 16px rgba(0,0,0,.15); }
-.btn.gradient{ background:linear-gradient(90deg,#5bd1a8,#09c2a1); border-color:transparent; color:#0a0e0c; }
-.btn.raised{ box-shadow: 0 4px 0 #0f7f66; background:#14b8a6; border-color:#0f7f66; color:#0a0e0c; }
-.btn.link{ background:transparent; border-color:transparent; color:#0a7c5e; text-decoration:underline; }
-.btn.warning{ background:#ffb020; border-color:#ffb020; color:#1c2430; }
-.btn.danger{ background:#ef4444; border-color:#ef4444; color:#fff; }
-.btn.success{ background:#22c55e; border-color:#22c55e; color:#0a0e0c; }
-.btn.info{ background:#3b82f6; border-color:#3b82f6; color:#fff; }
-.btn.glass{ background:rgba(255,255,255,.35); backdrop-filter: blur(6px); border-color:rgba(255,255,255,.5); }
-.btn.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; }
-.btn.icon-left::before{ content:"↗"; }
-.btn.icon-right::after{ content:"→"; }`;
+.btn.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; } /* 01 */
+.btn.outline{ background:transparent; border:2px solid #1c2430; color:#1c2430; } /* 02 */
+.btn.ghost{ } /* 03 */
+.btn.gradient{ background:linear-gradient(90deg,#5bd1a8,#09c2a1); border-color:transparent; color:#0a0e0c; } /* 04 */
+.btn.shadow{ box-shadow: 0 8px 16px rgba(0,0,0,.15); } /* 05 */
+.btn.raised{ box-shadow: 0 4px 0 #0f7f66; background:#14b8a6; border-color:#0f7f66; color:#0a0e0c; } /* 06 */
+.btn.pill.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; } /* 07 */
+.btn.link{ background:transparent; border-color:transparent; color:#0a7c5e; text-decoration:underline; } /* 08 */
+.btn.success{ background:#22c55e; border-color:#22c55e; color:#0a0e0c; } /* 09 */
+.btn.warning{ background:#ffb020; border-color:#ffb020; color:#1c2430; } /* 10 */
+.btn.square.primary{ background:#5bd1a8; border-color:#5bd1a8; color:#0a0e0c; } /* 11 */
+.btn.square.outline{ background:transparent; border:2px solid #1c2430; color:#1c2430; } /* 12 */
+.btn.square.dashed{ border-style:dashed; } /* 13 */
+.btn.square.info{ background:#3b82f6; border-color:#3b82f6; color:#fff; } /* 14 */
+.btn.square.danger{ background:#ef4444; border-color:#ef4444; color:#fff; } /* 15 */
+.btn.square.ghost{ background:transparent; } /* 16 */
+.btn.square.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; } /* 17 */
+.btn.square.glass{ background:rgba(255,255,255,.35); backdrop-filter: blur(6px); border-color:rgba(255,255,255,.5); } /* 18 */
+.btn.square.icon-left::before{ content:"↗"; } /* 19 */
+.btn.square.icon-right::after{ content:"→"; } /* 20 */`;
     document.getElementById('btnsCssOutput').textContent = css;
     document.getElementById('btnKitStyle').textContent = css; // щоб демо було стилізоване
   }
 
   function renderButtonsHTML(){
-    const html = BUTTONS.map(b=>`<a href="#" class="${b.cls}">${b.label}</a>`).join('\n');
+    const html = BUTTONS.map((b,i)=>`<!-- ${String(i+1).padStart(2,'0')} --><a href="#" class="${b.cls}">${b.label}</a>`).join('\n');
     document.getElementById('btnsHtmlOutput').textContent = html;
   }
 

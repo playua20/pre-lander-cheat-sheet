@@ -143,4 +143,3 @@ body.theme-dark .notice{ color:#9aa3b2; }
 .btn.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; }
 .btn.icon-left::before{ content:"↗"; }
 .btn.icon-right::after{ content:"→"; }
-
