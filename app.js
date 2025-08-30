@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
 .content ul{ list-style:none; padding-left:0 }
 .content ul li{ position:relative; padding-left:28px }
 .content ul li::before{
-  content:""; position:absolute; left:0; top:.33em; width:18px; height:18px;
+  content:""; position: absolute;top: 50%;left: 0;transform: translateY(-50%); width:18px; height:18px;
   background:url('${ICON_URL}') no-repeat center / 18px 18px; /* Змініть картинку на свою */
 }`;
         } else {
