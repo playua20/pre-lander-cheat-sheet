@@ -1,3 +1,4 @@
+// app.js;
 document.addEventListener("DOMContentLoaded", () => {
     // ===== Пресети (Verdana попереду) =====
     const PRESETS = [
@@ -879,7 +880,7 @@ img { max-width: 100%; height: auto; display: block; }`;
         const scope = document.getElementById("previewScope").cloneNode(true);
         scope.querySelectorAll(".badge").forEach((n) => n.remove());
         const html = `<div class="content">
-  ${scope.innerHTML.trim()}
+    ${scope.innerHTML.trim()}
 </div>`;
         document.getElementById("htmlOutput").textContent = html;
     }
@@ -1119,6 +1120,709 @@ img { max-width: 100%; height: auto; display: block; }`;
         .getElementById("copyBtnsHtmlBtn")
         .addEventListener("click", () => copyFrom("btnsHtmlOutput"));
 
+    // Ripple для кнопок із класом .ripple
+    document.addEventListener("click", (e) => {
+        const btn = e.target.closest(".btn.ripple");
+        if (!btn) return;
+        const rect = btn.getBoundingClientRect();
+        const ink = document.createElement("span");
+        ink.className = "ripple-ink";
+        const size = Math.max(rect.width, rect.height);
+        ink.style.width = ink.style.height = size + "px";
+        ink.style.left = e.clientX - rect.left - size / 2 + "px";
+        ink.style.top = e.clientY - rect.top - size / 2 + "px";
+        btn.appendChild(ink);
+        setTimeout(() => ink.remove(), 650);
+    });
+
+    /* Делегований обробник для гамбургера у прев’ю */
+    document.addEventListener("click", (e) => {
+        const t = e.target.closest("[data-nav-toggle]");
+        if (!t) return;
+        const hdr = t.closest(".nav");
+        if (!hdr) return;
+        const isOpen = hdr.classList.toggle("open");
+        t.setAttribute("aria-expanded", String(isOpen));
+        e.preventDefault();
+    });
+
+    /* На ресайз закриваємо меню, якщо повернулись на десктоп */
+    let _lastW = innerWidth;
+    addEventListener("resize", () => {
+        if (innerWidth === _lastW) return;
+        _lastW = innerWidth;
+        document.querySelectorAll(".std-demo .nav.open").forEach((n) => {
+            if (innerWidth >= 900) {
+                n.classList.remove("open");
+                const btn = n.querySelector("[data-nav-toggle]");
+                if (btn) btn.setAttribute("aria-expanded", "false");
+            }
+        });
+    });
+
+    /* ===================== STANDARD COMPONENTS ===================== */
+
+    // ------- 1) HEADER / NAVBAR (3 варіанти) -------
+    /* ---------------- 1) HEADER / NAVBAR ----------------- */
+    const HEAD_HTML = `
+<!-- 01. Minimal -->
+<header class="nav nav-minimal">
+  <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
+
+  <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="links" role="navigation">
+    <a href="#">Politics</a>
+    <a href="#">Video</a>
+    <a href="#">Entertainments</a>
+    <a href="#">Sports</a>
+    <a href="#">Lefestyle</a>
+    <a class="current" href="#">World News</a>
+    <a href="#">Blogs</a>
+    <a href="#">Stories</a>
+  </nav>
+
+  <a class="btn cta-buy ripple" href="#">Subscribe</a>
+</header>
+
+<!-- 02. Centered -->
+<header class="nav nav-centered">
+  <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
+
+  <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="links" role="navigation">
+    <a href="#">Overview</a><a href="#">Benefits</a><a href="#">Reviews</a><a href="#">FAQ</a>
+  </nav>
+
+  <a class="btn outline" href="#">Learn More</a>
+</header>
+
+<!-- 03. Split + badge -->
+<header class="nav nav-split">
+  <div class="left">
+    <div class="brand"><span class="logo">📣</span> <strong>News</strong> <span class="badge">New</span></div>
+  </div>
+
+  <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="links" role="navigation">
+    <a href="#">Diet</a><a href="#">Fitness</a><a href="#">Beauty</a>
+  </nav>
+
+  <div class="right"><a class="btn cta-buy ripple" href="#">Buy Now</a></div>
+</header>
+
+<!-- 04. Compact (гамбургер/оф-канвас) -->
+<header class="nav nav-compact">
+  <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
+
+  <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <nav class="links" role="navigation">
+    <a href="#">Home</a>
+    <a href="#">Politics</a>
+    <a href="#">Video</a>
+    <a href="#">Entertainments</a>
+    <a href="#">Sports</a>
+    <a href="#">Lifestyle</a>
+    <a class="current" href="#">World News</a>
+    <a href="#">Blogs</a>
+    <a href="#">Stories</a>
+  </nav>
+</header>
+`;
+
+    const HEAD_CSS = `
+/* ==== Header / Navbar (01–04) — responsive >=320px ==== */
+:root { --nav-accent:#b71c1c; }
+.std-demo .nav{
+  position:relative;display:flex;align-items:center;gap:12px;
+  justify-content:space-between;padding:10px 14px;margin:0 0 12px;
+  border:1px solid rgba(0,0,0,.12);border-radius:12px;background:#fff
+}
+body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,.08)}
+.std-demo .nav .brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.02em}
+.std-demo .nav .brand .logo{font-size:20px;color:var(--nav-accent)}
+.std-demo .nav .links{display:flex;gap:16px;flex-wrap:wrap}
+.std-demo .nav .links a{padding:6px 10px;border-radius:8px;color:inherit;text-decoration:none;opacity:.95}
+.std-demo .nav .links a:hover{background:rgba(28,36,48,.06)}
+.std-demo .nav .links a.current{background:var(--nav-accent);color:#fff}
+.std-demo .nav .btn{white-space:nowrap}
+
+/* розмітка для center/split */
+.std-demo .nav-centered{justify-content:center}
+.std-demo .nav-centered .brand{margin-right:auto}
+.std-demo .nav-centered .links{margin-right:auto}
+.std-demo .nav-split{gap:8px}
+.std-demo .nav-split .left{display:flex;align-items:center;gap:12px}
+.std-demo .nav-split .right{display:flex;align-items:center}
+
+/* гамбургер-кнопка */
+.std-demo .nav .nav-toggle{
+  display:none;position:relative;margin-left:auto; width:36px;height:28px;
+  border:0;background:transparent;cursor:pointer
+}
+.std-demo .nav .nav-toggle span{
+  display:block;height:3px;margin:5px 0;background:var(--nav-accent);border-radius:3px;transition:.2s
+}
+
+/* ===== мобільний режим (<= 900px) ===== */
+@media (max-width:900px){
+  .std-demo .nav{padding:10px 12px}
+  .std-demo .nav .nav-toggle{display:inline-block}
+  .std-demo .nav .links{
+    position:absolute;z-index:30;left:10px;right:10px;top:100%;
+    display:flex;flex-direction:column;gap:0;background:#fff;
+    border:1px solid rgba(0,0,0,.12);border-radius:12px;
+    max-height:0;overflow:hidden;transition:max-height .25s ease; margin-top:8px
+  }
+  body.theme-dark .std-demo .nav .links{background:#12141a;border-color:rgba(255,255,255,.08)}
+  .std-demo .nav .links a{padding:14px 16px;border-top:1px solid rgba(0,0,0,.06);border-radius:0;text-align:center}
+  .std-demo .nav .links a:first-child{border-top:none}
+  .std-demo .nav.open .links{max-height:70vh}
+}
+
+/* нижня червона лінія як у макеті */
+.std-demo .nav{box-shadow:inset 0 -2px 0 var(--nav-accent)}
+`;
+
+    const HEAD_JS = `// Header / Navbar: гамбургер
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('[data-nav-toggle]');
+  if (!t) return;
+  const header = t.closest('.nav');
+  const isOpen = header.classList.toggle('open');
+  t.setAttribute('aria-expanded', String(isOpen));
+  e.preventDefault();
+});
+window.addEventListener('resize', () => {
+  if (innerWidth >= 900) {
+    document.querySelectorAll('.nav.open').forEach((n) => {
+      n.classList.remove('open');
+      const btn = n.querySelector('[data-nav-toggle]');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    });
+  }
+});`;
+
+    /* ---------------- 2) BREADCRUMBS ----------------- */
+    const CRUMBS_HTML = `
+<!-- 01. Slash -->
+<nav class="crumbs sep-slash" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Nutrition</a></li>
+    <li><a href="#">Keto</a></li>
+    <li class="current" aria-current="page">Ultimate Guide</li>
+  </ol>
+</nav>
+
+<!-- 02. Chevrons + pill -->
+<nav class="crumbs sep-chevron pill" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#">⌂ Home</a></li>
+    <li><a href="#">Programs</a></li>
+    <li class="current" aria-current="page">30-Day Challenge</li>
+  </ol>
+</nav>
+
+<!-- 03. Micro / uppercase -->
+<nav class="crumbs micro sep-slash" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#">HOME</a></li>
+    <li><a href="#">BEAUTY</a></li>
+    <li class="current" aria-current="page">FACE CARE</li>
+  </ol>
+</nav>
+
+<!-- 04. Scrollable (на вузьких екранах) -->
+<nav class="crumbs scroll sep-chevron" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Section</a></li>
+    <li><a href="#">Subsection</a></li>
+    <li class="current" aria-current="page">Very long current page</li>
+  </ol>
+</nav>
+`;
+
+    const CRUMBS_CSS = `
+/* ==== Breadcrumbs (01–04) ==== */
+.std-demo .crumbs{font-size:13px;margin:0 0 12px}
+.std-demo .crumbs ol{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.std-demo .crumbs a{color:inherit;text-decoration:none;opacity:.85}
+.std-demo .crumbs a:hover{text-decoration:underline}
+.std-demo .crumbs .current{font-weight:700}
+/* separators */
+.std-demo .sep-slash li+li::before{content:"/";opacity:.35;margin:0 6px}
+.std-demo .sep-chevron li+li::before{content:"›";opacity:.5;margin:0 6px}
+/* pill */
+.std-demo .pill a{background:#f2f4f8;padding:4px 8px;border-radius:999px}
+body.theme-dark .std-demo .pill a{background:#0e1015}
+/* micro */
+.std-demo .crumbs.micro{font-size:11px;letter-spacing:.06em}
+/* 04 scrollable */
+.std-demo .crumbs.scroll ol{flex-wrap:nowrap;overflow:auto;scrollbar-width:thin}
+.std-demo .crumbs.scroll li{white-space:nowrap}
+`;
+    const CRUMBS_JS = `// Breadcrumbs не потребують JS.`;
+
+    /* ---------------- 3) FOOTER + MODALS ----------------- */
+    const FOOT_HTML = `
+<!-- 01. Columns -->
+<footer class="foot foot-cols">
+  <div class="col">
+    <h4>Company</h4>
+    <a href="#">About</a><a href="#">Careers</a><a href="#" data-modal-open="press">Press</a>
+  </div>
+  <div class="col">
+    <h4>Resources</h4>
+    <a href="#">Blog</a><a href="#">Guides</a><a href="#">Support</a>
+  </div>
+  <div class="col">
+    <h4>Legal</h4>
+    <a href="#" data-modal-open="terms">Terms</a><a href="#" data-modal-open="privacy">Privacy</a>
+  </div>
+</footer>
+
+<!-- 02. Minimal bar -->
+<footer class="foot foot-bar">
+  <small>© 2025 Brand. All rights reserved.</small>
+  <nav><a href="#" data-modal-open="disclosure">Disclosure</a> • <a href="#" data-modal-open="terms">Terms</a> • <a href="#" data-modal-open="privacy">Privacy</a></nav>
+</footer>
+
+<!-- 03. Centered links -->
+<footer class="foot foot-center">
+  <nav><a href="#" data-modal-open="terms">Terms</a> · <a href="#" data-modal-open="privacy">Privacy</a> · <a href="#" data-modal-open="disclosure">Disclosure</a></nav>
+</footer>
+
+<!-- Modals -->
+<div class="modal" data-modal="terms" hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-box">
+    <button class="modal-x" aria-label="Close" data-modal-close>×</button>
+    <h3>Terms & Conditions</h3>
+    <p>Short sample terms for demo preview. Replace with your policy.</p>
+  </div>
+</div>
+<div class="modal" data-modal="privacy" hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-box">
+    <button class="modal-x" aria-label="Close" data-modal-close>×</button>
+    <h3>Privacy Policy</h3>
+    <p>We respect your privacy. This is a placeholder modal.</p>
+  </div>
+</div>
+<div class="modal" data-modal="disclosure" hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-box">
+    <button class="modal-x" aria-label="Close" data-modal-close>×</button>
+    <h3>Affiliate Disclosure</h3>
+    <p>We may earn commissions from qualifying purchases.</p>
+  </div>
+</div>
+<div class="modal" data-modal="press" hidden>
+  <div class="modal-backdrop" data-modal-close></div>
+  <div class="modal-box">
+    <button class="modal-x" aria-label="Close" data-modal-close>×</button>
+    <h3>Press Kit</h3>
+    <p>Brand assets and guidelines. Replace with your content.</p>
+  </div>
+</div>
+`;
+
+    const FOOT_CSS = `
+/* ==== Footer (01–03) ==== */
+.std-demo .foot{border:1px solid rgba(0,0,0,.12);border-radius:12px;background:#fff;margin:0 0 12px;padding:14px}
+body.theme-dark .std-demo .foot{background:#12141a;border-color:rgba(255,255,255,.08)}
+/* 01. columns */
+.std-demo .foot-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.std-demo .foot-cols .col{display:flex;flex-direction:column;gap:6px}
+.std-demo .foot-cols h4{margin:0 0 4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6b7686}
+body.theme-dark .std-demo .foot-cols h4{color:#9aa3b2}
+.std-demo .foot a{color:inherit;text-decoration:none;opacity:.9}
+.std-demo .foot a:hover{text-decoration:underline}
+/* 02. bar */
+.std-demo .foot-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.std-demo .foot-bar small{opacity:.7}
+/* 03. centered */
+.std-demo .foot-center{display:flex;justify-content:center}
+.std-demo .foot-center nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* Modals */
+.std-demo .modal{position:fixed;inset:0;display:grid;place-items:center}
+.std-demo .modal[hidden]{display:none}
+.std-demo .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.std-demo .modal-box{position:relative;background:#fff;color:#1c2430;border-radius:12px;padding:16px;max-width:520px;width:min(92vw,520px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.std-demo .modal-x{position:absolute;top:8px;right:10px;border:0;background:transparent;font-size:20px;cursor:pointer}
+body.theme-dark .std-demo .modal-box{background:#12141a;color:#e6e8ee}
+`;
+    const FOOT_JS = `// Відкриття/закриття модалок
+document.addEventListener('click', (e) => {
+  const open = e.target.closest('[data-modal-open]');
+  if (open) {
+    const name = open.getAttribute('data-modal-open');
+    const m = document.querySelector('.modal[data-modal=\"' + name + '\"]');
+    if (m) m.hidden = false;
+    e.preventDefault();
+  }
+  if (e.target.closest('[data-modal-close]')) {
+    const m = e.target.closest('.modal');
+    if (m) m.hidden = true;
+    e.preventDefault();
+  }
+});`;
+
+    /* ---------------- 4) ADVERTISEMENT / DISCLOSURE ----------------- */
+    const ADS_HTML = `
+<!-- 01. Top ad bar -->
+<div class="adbar">
+  <span class="ad-badge">Ad</span> This article contains affiliate links. We may earn a commission at no cost to you.
+</div>
+
+<!-- 02. Disclosure card -->
+<div class="disclosure">
+  <div class="icon">ℹ</div>
+  <div class="text"><strong>Advertising Disclosure:</strong> Our content is reader-supported. Purchases through links help this site.</div>
+</div>
+
+<!-- 03. Sponsored tag on image -->
+<div class="sponsored-card">
+  <span class="sponsored-tag">Sponsored</span>
+  <img src="https://picsum.photos/id/1025/640/320" alt="sample">
+</div>
+
+<!-- 04. Sticky bottom bar (мобільний) -->
+<div class="adbar sticky">
+  <span class="ad-badge">Ad</span> Limited offer — up to 40% off today.
+</div>
+`;
+
+    const ADS_CSS = `
+/* ==== Advertisement / Disclosure (01–04) ==== */
+.std-demo .adbar{background:#fff3cd;color:#3b2f05;border:1px solid #ffe08a;border-radius:12px;padding:10px 12px;margin:0 0 12px}
+.std-demo .adbar.sticky{position:sticky;bottom:0;z-index:5}
+.std-demo .ad-badge{display:inline-block;background:#f59e0b;color:#1c2430;border-radius:6px;padding:2px 6px;margin-right:8px;font-weight:700}
+.std-demo .disclosure{display:flex;gap:10px;align-items:flex-start;background:#f1f4f8;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:12px;margin:0 0 12px}
+body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+.std-demo .disclosure .icon{width:28px;height:28px;display:grid;place-items:center;background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,.1)}
+.std-demo .sponsored-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);margin:0 0 12px}
+.std-demo .sponsored-card img{width:100%;display:block}
+.std-demo .sponsored-tag{position:absolute;top:10px;left:10px;background:#111;color:#fff;border-radius:6px;padding:4px 8px;opacity:.9}
+`;
+    const ADS_JS = `// Ads / Disclosure — JS не потрібний.`;
+
+    /* ---------------- 5) IMAGES (hero/product/avatar) ----------------- */
+    const IMGS_HTML = `
+<!-- 01. Hero image with overlay -->
+<section class="hero">
+  <img src="https://picsum.photos/id/1015/1200/480" alt="Hero">
+  <div class="hero-caption">
+    <h2>Summer Shape Program</h2>
+    <p>Scientifically-backed plan to kickstart your routine.</p>
+    <a class="btn cta-trial" href="#">Start Free Trial</a>
+  </div>
+</section>
+
+<!-- 02. Product card -->
+<article class="product">
+  <img class="product-img" src="https://picsum.photos/id/1060/640/480" alt="Product">
+  <div class="product-body">
+    <h3>Omega-3 Complex</h3>
+    <div class="rating">★★★★★ <small>(124)</small></div>
+    <div class="price">$24.90</div>
+    <a class="btn cta-cart" href="#">Add to Cart</a>
+  </div>
+</article>
+
+<!-- 03. Avatars group -->
+<div class="avatars">
+  <img src="https://i.pravatar.cc/64?img=5" alt="">
+  <img src="https://i.pravatar.cc/64?img=12" alt="">
+  <img src="https://i.pravatar.cc/64?img=32" alt="">
+  <span class="more">+42</span>
+</div>
+
+<!-- 04. Product (compact, мобільний-френдлі) -->
+<article class="product compact">
+  <img class="product-img" src="https://picsum.photos/id/1011/640/480" alt="Product">
+  <div class="product-body">
+    <h3>Vitamin D3</h3>
+    <div class="rating">★★★★☆ <small>(87)</small></div>
+    <div class="price">$14.50</div>
+    <a class="btn cta-cart" href="#">Add to Cart</a>
+  </div>
+</article>
+`;
+
+    const IMGS_CSS = `
+/* ==== Images (hero/product/avatar) ==== */
+.std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12)}
+.std-demo .hero img{width:100%;display:block}
+.std-demo .hero-caption{position:absolute;inset:auto 16px 16px 16px;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.55));color:#fff;border-radius:12px;padding:14px}
+.std-demo .product{display:grid;grid-template-columns:180px 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);border-radius:12px;overflow:hidden;margin:0 0 12px;background:#fff}
+body.theme-dark .std-demo .product{background:#12141a;border-color:rgba(255,255,255,.08)}
+.std-demo .product-img{width:100%;height:100%;object-fit:cover}
+.std-demo .product-body{padding:10px}
+.std-demo .product .rating{color:#f59e0b;margin:.25em 0}
+.std-demo .product .price{font-size:20px;font-weight:800;margin:.2em 0 .6em}
+.std-demo .avatars{display:flex;align-items:center;gap:6px}
+.std-demo .avatars img{width:36px;height:36px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1)}
+.std-demo .avatars .more{background:#f2f4f8;border-radius:999px;padding:6px 10px;font-weight:700}
+body.theme-dark .std-demo .avatars .more{background:#0e1015}
+
+/* мобільні фікси (320+) */
+@media (max-width:540px){
+  .std-demo .product{grid-template-columns:1fr}
+  .std-demo .product-img{height:200px}
+}
+`;
+    const IMGS_JS = `// Images — JS не потрібний.`;
+
+    /* ---- Рендер та підключення стилів/JS у вкладки ---- */
+    function buildStandardGroups() {
+        mountStdGroup(
+            HEAD_CSS,
+            HEAD_HTML,
+            HEAD_JS,
+            "headDemo",
+            "headCssOutput",
+            "headHtmlOutput",
+            "headJsOutput"
+        );
+        mountStdGroup(
+            CRUMBS_CSS,
+            CRUMBS_HTML,
+            CRUMBS_JS,
+            "crumbsDemo",
+            "crumbsCssOutput",
+            "crumbsHtmlOutput",
+            "crumbsJsOutput"
+        );
+        mountStdGroup(
+            FOOT_CSS,
+            FOOT_HTML,
+            FOOT_JS,
+            "footDemo",
+            "footCssOutput",
+            "footHtmlOutput",
+            "footJsOutput"
+        );
+        mountStdGroup(
+            ADS_CSS,
+            ADS_HTML,
+            ADS_JS,
+            "adsDemo",
+            "adsCssOutput",
+            "adsHtmlOutput",
+            "adsJsOutput"
+        );
+        mountStdGroup(
+            IMGS_CSS,
+            IMGS_HTML,
+            IMGS_JS,
+            "imgsDemo",
+            "imgsCssOutput",
+            "imgsHtmlOutput",
+            "imgsJsOutput"
+        );
+    }
+
+    /* Перемикач груп у Standard-секті */
+    const stdMap = {
+        sbHeader: { id: "std-header", css: HEAD_CSS },
+        sbBreadcrumbs: { id: "std-crumbs", css: CRUMBS_CSS },
+        sbFooter: { id: "std-footer", css: FOOT_CSS },
+        sbAds: { id: "std-ads", css: ADS_CSS },
+        sbImages: { id: "std-images", css: IMGS_CSS },
+        sbButtons: { id: "std-buttons", css: "" },
+    };
+
+    /* Копі-кнопки для JS вкладок */
+    document
+        .getElementById("copyHeadJsBtn")
+        ?.addEventListener("click", () => copyFrom("headJsOutput"));
+    document
+        .getElementById("copyCrumbsJsBtn")
+        ?.addEventListener("click", () => copyFrom("crumbsJsOutput"));
+    document
+        .getElementById("copyFootJsBtn")
+        ?.addEventListener("click", () => copyFrom("footJsOutput"));
+    document
+        .getElementById("copyAdsJsBtn")
+        ?.addEventListener("click", () => copyFrom("adsJsOutput"));
+    document
+        .getElementById("copyImgsJsBtn")
+        ?.addEventListener("click", () => copyFrom("imgsJsOutput"));
+
+    // ---- Rендери + установники стилів ----
+    function mountStdGroup(
+        css,
+        html,
+        js,
+        demoId,
+        cssOutId,
+        htmlOutId,
+        jsOutId
+    ) {
+        const demo = document.getElementById(demoId);
+        const cssBox = document.getElementById(cssOutId);
+        const htmlBox = document.getElementById(htmlOutId);
+        const jsBox = jsOutId ? document.getElementById(jsOutId) : null;
+
+        if (demo) demo.innerHTML = html.trim();
+        if (cssBox) cssBox.textContent = css.trim();
+        if (htmlBox) htmlBox.textContent = html.trim();
+        if (jsBox) jsBox.textContent = (js || "").trim();
+    }
+
+    // Ініціалізуємо контент груп
+    function buildStandardGroups() {
+        // Header має JS-вкладку → пишемо і JS
+        mountStdGroup(
+            HEAD_CSS,
+            HEAD_HTML,
+            HEAD_JS,
+            "headDemo",
+            "headCssOutput",
+            "headHtmlOutput",
+            "headJsOutput"
+        );
+
+        // У решти JS-вкладки може не бути — mountStdGroup сам перевіряє наявність контейнера
+        mountStdGroup(
+            CRUMBS_CSS,
+            CRUMBS_HTML,
+            CRUMBS_JS,
+            "crumbsDemo",
+            "crumbsCssOutput",
+            "crumbsHtmlOutput",
+            "crumbsJsOutput"
+        );
+        mountStdGroup(
+            FOOT_CSS,
+            FOOT_HTML,
+            FOOT_JS,
+            "footDemo",
+            "footCssOutput",
+            "footHtmlOutput",
+            "footJsOutput"
+        );
+        mountStdGroup(
+            ADS_CSS,
+            ADS_HTML,
+            ADS_JS,
+            "adsDemo",
+            "adsCssOutput",
+            "adsHtmlOutput",
+            "adsJsOutput"
+        );
+        mountStdGroup(
+            IMGS_CSS,
+            IMGS_HTML,
+            IMGS_JS,
+            "imgsDemo",
+            "imgsCssOutput",
+            "imgsHtmlOutput",
+            "imgsJsOutput"
+        );
+    }
+
+    // одна єдина версія
+    function showStdGroup(btnId) {
+        document
+            .querySelectorAll("#standardSidebar .list button")
+            .forEach((b) => b.classList.toggle("active", b.id === btnId));
+
+        document
+            .querySelectorAll("#standardMain .std-group")
+            .forEach((g) => (g.hidden = true));
+
+        const target = stdMap[btnId];
+        if (!target) return;
+
+        const groupEl = document.getElementById(target.id);
+        if (groupEl) groupEl.hidden = false; // не ламаємось, якщо елемент випадково відсутній
+
+        document.getElementById("stdStyle").textContent = target.css || "";
+        equalizeCodeHeights();
+    }
+
+    // Навішуємо кліки на сайдбар Standard
+    [
+        "sbHeader",
+        "sbBreadcrumbs",
+        "sbFooter",
+        "sbAds",
+        "sbImages",
+        "sbButtons",
+    ].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("click", () => showStdGroup(id));
+    });
+
+    // Копі-кнопки для базових груп
+    document
+        .getElementById("copyHeadCssBtn")
+        ?.addEventListener("click", () => copyFrom("headCssOutput"));
+    document
+        .getElementById("copyHeadHtmlBtn")
+        ?.addEventListener("click", () => copyFrom("headHtmlOutput"));
+    document
+        .getElementById("copyCrumbsCssBtn")
+        ?.addEventListener("click", () => copyFrom("crumbsCssOutput"));
+    document
+        .getElementById("copyCrumbsHtmlBtn")
+        ?.addEventListener("click", () => copyFrom("crumbsHtmlOutput"));
+    document
+        .getElementById("copyFootCssBtn")
+        ?.addEventListener("click", () => copyFrom("footCssOutput"));
+    document
+        .getElementById("copyFootHtmlBtn")
+        ?.addEventListener("click", () => copyFrom("footHtmlOutput"));
+    document
+        .getElementById("copyAdsCssBtn")
+        ?.addEventListener("click", () => copyFrom("adsCssOutput"));
+    document
+        .getElementById("copyAdsHtmlBtn")
+        ?.addEventListener("click", () => copyFrom("adsHtmlOutput"));
+    document
+        .getElementById("copyImgsCssBtn")
+        ?.addEventListener("click", () => copyFrom("imgsCssOutput"));
+    document
+        .getElementById("copyImgsHtmlBtn")
+        ?.addEventListener("click", () => copyFrom("imgsHtmlOutput"));
+
+    // Відкриття/закриття модалок (делегування, не ламає інше)
+    document.addEventListener("click", (e) => {
+        const open = e.target.closest("[data-modal-open]");
+        if (open) {
+            const name = open.getAttribute("data-modal-open");
+            const m = document.querySelector(
+                '.std-demo .modal[data-modal="' + name + '"]'
+            );
+            if (m) {
+                m.hidden = false;
+            }
+            e.preventDefault();
+        }
+        if (e.target.closest("[data-modal-close]")) {
+            const modal = e.target.closest(".modal");
+            if (modal) modal.hidden = true;
+            e.preventDefault();
+        }
+    });
+
     // ===== Ініціалізація =====
     function init() {
         // Заповнення контролів
@@ -1140,49 +1844,8 @@ img { max-width: 100%; height: auto; display: block; }`;
         renderButtonsCSS();
         renderButtonsHTML();
         equalizeCodeHeights();
+        buildStandardGroups(); // заповнює прев’ю/код базових компонентів
+        showStdGroup("sbButtons"); // за замовчуванням показує Buttons (як і раніше)
     }
     init();
-
-    // Ripple для кнопок із класом .ripple
-    document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".btn.ripple");
-        if (!btn) return;
-        const rect = btn.getBoundingClientRect();
-        const ink = document.createElement("span");
-        ink.className = "ripple-ink";
-        const size = Math.max(rect.width, rect.height);
-        ink.style.width = ink.style.height = size + "px";
-        ink.style.left = e.clientX - rect.left - size / 2 + "px";
-        ink.style.top = e.clientY - rect.top - size / 2 + "px";
-        btn.appendChild(ink);
-        setTimeout(() => ink.remove(), 650);
-    });
-    // Ripple для кнопок із класом .ripple
-    document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".btn.ripple");
-        if (!btn) return;
-        const rect = btn.getBoundingClientRect();
-        const ink = document.createElement("span");
-        ink.className = "ripple-ink";
-        const size = Math.max(rect.width, rect.height);
-        ink.style.width = ink.style.height = size + "px";
-        ink.style.left = e.clientX - rect.left - size / 2 + "px";
-        ink.style.top = e.clientY - rect.top - size / 2 + "px";
-        btn.appendChild(ink);
-        setTimeout(() => ink.remove(), 650);
-    });
-    // Ripple для кнопок із класом .ripple
-    document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".btn.ripple");
-        if (!btn) return;
-        const rect = btn.getBoundingClientRect();
-        const ink = document.createElement("span");
-        ink.className = "ripple-ink";
-        const size = Math.max(rect.width, rect.height);
-        ink.style.width = ink.style.height = size + "px";
-        ink.style.left = e.clientX - rect.left - size / 2 + "px";
-        ink.style.top = e.clientY - rect.top - size / 2 + "px";
-        btn.appendChild(ink);
-        setTimeout(() => ink.remove(), 650);
-    });
 });
