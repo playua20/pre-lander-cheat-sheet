@@ -1,5 +1,9 @@
-// app.js;
+// app.js
 document.addEventListener("DOMContentLoaded", () => {
+    // ===== УТИЛІТИ ДЛЯ "РОБОЧОГО" ЕКСПОРТУ (без .std-demo) =====
+    const UNSCOPE_RE = /\.std-demo\s+/g; // прибирає лише префікс-прев'ю
+    const unscope = (code = "") => code.replace(UNSCOPE_RE, "");
+
     // ===== Пресети (Verdana попереду) =====
     const PRESETS = [
         {
@@ -249,6 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.hidden = k !== key;
             });
             equalizeCodeHeights();
+            addComponentNumbers();
         });
     });
 
@@ -459,8 +464,8 @@ document.addEventListener("DOMContentLoaded", () => {
 .content ul{ list-style:none; padding-left:0 }
 .content ul li{ position:relative; padding-left:28px }
 .content ul li::before{
-  content:""; position: absolute;top: 50%;left: 0;transform: translateY(-50%); width:18px; height:18px;
-  background:url('${ICON_URL}') no-repeat center / 18px 18px; /* Змініть картинку на свою */
+  content:""; position:absolute; top:50%; left:0; transform:translateY(-50%); width:18px; height:18px;
+  background:url('${ICON_URL}') no-repeat center / 18px 18px;
 }`;
         } else {
             css += `
@@ -632,7 +637,7 @@ document.addEventListener("DOMContentLoaded", () => {
 .preview .content blockquote{ color:${c.bqText}; background:${c.bqBg}; border-left-color:${c.bqBorder}; }`;
     }
 
-    // Рандомні кольори з безпечних палітр (контраст гарантований)
+    // Рандомні кольори (корисні утиліти)
     function clamp(v, min, max) {
         return Math.max(min, Math.min(max, v));
     }
@@ -641,7 +646,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return n.toString(16).padStart(2, "0");
     }
     function lighten(col, amt) {
-        // amt -1..1
         const r = parseInt(col.slice(1, 3), 16),
             g = parseInt(col.slice(3, 5), 16),
             b = parseInt(col.slice(5, 7), 16);
@@ -728,7 +732,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { bg: "#1a1d23", text: "#e8e8e8", link: "#4aa0e9" },
         { bg: "#1f1b29", text: "#e9e6ec", link: "#d4af37" },
         { bg: "#0c0f16", text: "#ececec", link: "#a78bfa" },
-        { bg: "#2b2b2b", text: "#e0e0e0", link: "#c04a44" },
+        { bg: "#2b2b2b", text: "#e0e00", link: "#c04a44" },
         { bg: "#111827", text: "#f9fafb", link: "#60a5fa" },
         { bg: "#171717", text: "#f3f4f6", link: "#fbbf24" },
         { bg: "#1e1b4b", text: "#e0e7ff", link: "#a78bfa" },
@@ -736,19 +740,16 @@ document.addEventListener("DOMContentLoaded", () => {
         { bg: "#2c1a1d", text: "#fecaca", link: "#f43f5e" },
     ];
 
-    function randomFrom(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
+    const randomFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
     function randomizeColors() {
-        const useDark = Math.random() < 0.35; // частіше світлі
+        const useDark = Math.random() < 0.35;
         const s = useDark
             ? randomFrom(DARK_SCHEMES)
             : randomFrom(LIGHT_SCHEMES);
         const baseText = s.text;
         const accent = s.link;
         colorOverrides.previewBg = s.bg;
-        // Заголовки трохи контрастніші
         colorOverrides.h1 = darken(baseText, useDark ? -0.2 : 0.2);
         colorOverrides.h2 = darken(baseText, useDark ? -0.15 : 0.15);
         colorOverrides.h3 = baseText;
@@ -770,20 +771,25 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("randomizeColorsBtn")
         .addEventListener("click", randomizeColors);
 
-    // ===== Внутрішні вкладки (типографіка + кнопки) =====
+    // ===== Внутрішні вкладки (типографіка + всі std-групи) — СКОПЛЕНО =====
     document.body.addEventListener("click", (e) => {
         const btn = e.target.closest(".inner-tab");
         if (!btn) return;
-        const section = btn.closest("section");
-        if (!section) return;
-        section
+
+        // працюємо тільки в межах поточної групи або панелі типографіки
+        const scope = btn.closest(".std-group") || btn.closest(".panel");
+        if (!scope) return;
+
+        scope
             .querySelectorAll(".inner-tab")
             .forEach((b) => b.setAttribute("aria-selected", "false"));
         btn.setAttribute("aria-selected", "true");
+
         const key = btn.dataset.inner;
-        section.querySelectorAll("[data-inner-panel]").forEach((p) => {
-            p.hidden = p.dataset.innerPanel !== key;
-        });
+        scope
+            .querySelectorAll("[data-inner-panel]")
+            .forEach((p) => (p.hidden = p.dataset.innerPanel !== key));
+
         equalizeCodeHeights();
     });
 
@@ -812,9 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
         .getElementById("copyHtmlBtn")
         .addEventListener("click", () => copyFrom("htmlOutput"));
 
-    // ===== Експорт CSS/HTML =====
+    // ===== Експорт CSS/HTML (типографіка) =====
     function renderCSS() {
-        // Базові стилі з підстановкою вибраного Background у body
         const baseStyles = `/* Базові стилі: */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -898,7 +903,6 @@ img { max-width: 100%; height: auto; display: block; }`;
 
     // ===== Кнопки (набір) =====
     const BUTTONS = [
-        // 01–10 (радіусні)
         { cls: "btn primary", label: "Get Offer" },
         { cls: "btn outline", label: "Learn More" },
         { cls: "btn ghost", label: "View Details" },
@@ -909,8 +913,6 @@ img { max-width: 100%; height: auto; display: block; }`;
         { cls: "btn link", label: "Read Story" },
         { cls: "btn success", label: "Download Guide" },
         { cls: "btn warning", label: "Limited Time" },
-
-        // 11–20 (квадратні)
         { cls: "btn square primary", label: "Add to Cart" },
         { cls: "btn square outline", label: "Compare Plans" },
         { cls: "btn square dashed", label: "More Info" },
@@ -921,8 +923,6 @@ img { max-width: 100%; height: auto; display: block; }`;
         { cls: "btn square glass", label: "Frosted CTA" },
         { cls: "btn square icon-left", label: "Try Demo" },
         { cls: "btn square icon-right", label: "Next Step" },
-
-        // 21–30 (нові сучасні CTA)
         { cls: "btn cta-offer", label: "Get Offer Now" },
         { cls: "btn cta-buy ripple", label: "Buy Now" },
         { cls: "btn cta-discount", label: "Claim Discount" },
@@ -1088,18 +1088,18 @@ img { max-width: 100%; height: auto; display: block; }`;
 .btn.cta-sample::before{ content:""; position:absolute; inset:-40%; transform:translateX(-120%) rotate(12deg); background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.6) 50%, rgba(255,255,255,0) 100%); }
 .btn.cta-sample:hover::before{ transform:translateX(60%) rotate(12deg); transition:transform .6s ease; }
 
-/* Тач-фідбек для пристроїв без hover */
+/* Тач-фідбек */
 @media (hover:none){
-  .btn:hover{ transform:none; box-shadow:none; }     /* без hover-станів */
-  .btn:active{ transform:scale(.98); }               /* відчуття натиску */
+  .btn:hover{ transform:none; box-shadow:none; }
+  .btn:active{ transform:scale(.98); }
 }
 
-/* Повага до reduce-motion */
+/* reduce-motion */
 @media (prefers-reduced-motion:reduce){
   .btn, .btn::before, .btn::after{ transition:none !important; animation:none !important; }
 }`;
         document.getElementById("btnsCssOutput").textContent = css;
-        document.getElementById("btnKitStyle").textContent = css; // стилізує прев’ю
+        document.getElementById("btnKitStyle").textContent = css; // для прев’ю
     }
 
     function renderButtonsHTML() {
@@ -1120,7 +1120,7 @@ img { max-width: 100%; height: auto; display: block; }`;
         .getElementById("copyBtnsHtmlBtn")
         .addEventListener("click", () => copyFrom("btnsHtmlOutput"));
 
-    // Ripple для кнопок із класом .ripple
+    // Ripple для кнопок із класом .ripple (прев’ю + ваші сторінки, якщо додасте цей шматок)
     document.addEventListener("click", (e) => {
         const btn = e.target.closest(".btn.ripple");
         if (!btn) return;
@@ -1146,7 +1146,7 @@ img { max-width: 100%; height: auto; display: block; }`;
         e.preventDefault();
     });
 
-    /* На ресайз закриваємо меню, якщо повернулись на десктоп */
+    /* На ресайз закриваємо меню, якщо повернулись на десктоп (прев’ю) */
     let _lastW = innerWidth;
     addEventListener("resize", () => {
         if (innerWidth === _lastW) return;
@@ -1162,8 +1162,7 @@ img { max-width: 100%; height: auto; display: block; }`;
 
     /* ===================== STANDARD COMPONENTS ===================== */
 
-    // ------- 1) HEADER / NAVBAR (3 варіанти) -------
-    /* ---------------- 1) HEADER / NAVBAR ----------------- */
+    // ------- 1) HEADER / NAVBAR -------
     const HEAD_HTML = `
 <!-- 01. Minimal -->
 <header class="nav nav-minimal">
@@ -1205,7 +1204,7 @@ img { max-width: 100%; height: auto; display: block; }`;
   <div class="right"><a class="btn cta-buy ripple" href="#">Buy Now</a></div>
 </header>
 
-<!-- 04. Compact (гамбургер/оф-канвас) -->
+<!-- 04. Compact -->
 <header class="nav nav-compact">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
@@ -1218,7 +1217,7 @@ img { max-width: 100%; height: auto; display: block; }`;
   </nav>
 </header>
 
-<!-- 05. Tabs-news (без меню, як на скрінах) -->
+<!-- 05. Tabs-news -->
 <header class="nav nav-tabs-news">
   <div class="brand brand-indo">
     <span class="block">Indo-</span><span class="tail">Network</span>
@@ -1234,7 +1233,7 @@ img { max-width: 100%; height: auto; display: block; }`;
   </nav>
 </header>
 
-<!-- 06. Magazine stack (логотип + лінійка розділів) -->
+<!-- 06. Magazine -->
 <header class="nav nav-magazine">
   <div class="top">
     <div class="brand"><strong>Daily Journal</strong></div>
@@ -1247,7 +1246,7 @@ img { max-width: 100%; height: auto; display: block; }`;
   </nav>
 </header>
 
-<!-- 07. Underline links (класичний прес-лендер бар) -->
+<!-- 07. Underline -->
 <header class="nav nav-underline">
   <div class="brand"><strong>Wellness</strong></div>
   <nav class="links" role="navigation">
@@ -1277,6 +1276,16 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 .std-demo .nav .links a:hover{background:rgba(28,36,48,.06)}
 .std-demo .nav .links a.current{background:var(--nav-accent);color:#fff}
 .std-demo .nav .btn{white-space:nowrap}
+.std-demo .nav .btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 14px; font-weight:700; border-radius:10px;
+  border:1px solid rgba(0,0,0,.12); background:#f2f4f8; color:#1c2430;
+  text-decoration:none; cursor:pointer; user-select:none;
+  transition:background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+body.theme-dark .std-demo .nav .btn{ background:#0e1015; color:#e6e8ee; border-color:rgba(255,255,255,.08); }
+.std-demo .nav .btn:hover{ background:rgba(28,36,48,.06); }
+
 
 /* center / split */
 .std-demo .nav-centered{justify-content:center}
@@ -1306,7 +1315,7 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
   .std-demo .nav.open .links{max-height:70vh}
 }
 
-/* ===== 05. Tabs-news (без меню) ===== */
+/* ===== 05. Tabs-news ===== */
 .std-demo .nav.nav-tabs-news{display:block;box-shadow:none;border-color:rgba(0,0,0,.12)}
 .std-demo .nav.nav-tabs-news .brand{font-size:28px}
 .std-demo .nav.nav-tabs-news .brand-indo .block{background:#e11d2b;color:#fff;padding:2px 8px;border-radius:2px;margin-right:4px}
@@ -1319,7 +1328,7 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 body.theme-dark .std-demo .nav.nav-tabs-news .tabs .pill{background:#0e1015;color:#e6e8ee}
 .std-demo .nav.nav-tabs-news .tabs .active-red{background:#e11d2b;color:#fff}
 
-/* ===== 06. Magazine stack ===== */
+/* ===== 06. Magazine ===== */
 .std-demo .nav.nav-magazine{display:block;box-shadow:none}
 .std-demo .nav.nav-magazine .top{display:flex;align-items:center;justify-content:space-between}
 .std-demo .nav.nav-magazine .catbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -1329,7 +1338,7 @@ body.theme-dark .std-demo .nav.nav-tabs-news .tabs .pill{background:#0e1015;colo
 .std-demo .nav.nav-magazine .catbar .tag.current{background:#1c2430;color:#fff}
 body.theme-dark .std-demo .nav.nav-magazine .catbar .tag{background:#0e1015;color:#e6e8ee}
 
-/* ===== 07. Underline links ===== */
+/* ===== 07. Underline ===== */
 .std-demo .nav.nav-underline{box-shadow:none}
 .std-demo .nav.nav-underline .links a{padding:8px 0;border-radius:0;border-bottom:3px solid transparent}
 .std-demo .nav.nav-underline .links a:hover{border-bottom-color:rgba(28,36,48,.25);background:transparent}
@@ -1355,7 +1364,7 @@ window.addEventListener('resize', () => {
   }
 });`;
 
-    /* ---------------- 2) BREADCRUMBS ----------------- */
+    // ------- 2) BREADCRUMBS -------
     const CRUMBS_HTML = `
 <!-- 01. Slash -->
 <nav class="crumbs sep-slash" aria-label="Breadcrumb">
@@ -1385,7 +1394,7 @@ window.addEventListener('resize', () => {
   </ol>
 </nav>
 
-<!-- 04. Scrollable (на вузьких екранах) -->
+<!-- 04. Scrollable -->
 <nav class="crumbs scroll sep-chevron" aria-label="Breadcrumb">
   <ol>
     <li><a href="#">Home</a></li>
@@ -1417,7 +1426,7 @@ body.theme-dark .std-demo .pill a{background:#0e1015}
 `;
     const CRUMBS_JS = `// Breadcrumbs не потребують JS.`;
 
-    /* ---------------- 3) FOOTER + MODALS ----------------- */
+    // ------- 3) FOOTER + MODALS -------
     const FOOT_HTML = `
 <!-- 01. Columns -->
 <footer class="foot foot-cols">
@@ -1512,7 +1521,7 @@ document.addEventListener('click', (e) => {
   const open = e.target.closest('[data-modal-open]');
   if (open) {
     const name = open.getAttribute('data-modal-open');
-    const m = document.querySelector('.modal[data-modal=\"' + name + '\"]');
+    const m = document.querySelector('.modal[data-modal="' + name + '"]');
     if (m) m.hidden = false;
     e.preventDefault();
   }
@@ -1523,7 +1532,7 @@ document.addEventListener('click', (e) => {
   }
 });`;
 
-    /* ---------------- 4) ADVERTISEMENT / DISCLOSURE ----------------- */
+    // ------- 4) ADVERTISEMENT / DISCLOSURE -------
     const ADS_HTML = `
 <!-- 01. Top ad bar -->
 <div class="adbar">
@@ -1542,7 +1551,7 @@ document.addEventListener('click', (e) => {
   <img src="https://picsum.photos/id/1025/640/320" alt="sample">
 </div>
 
-<!-- 04. Sticky bottom bar (мобільний) -->
+<!-- 04. Sticky bottom bar -->
 <div class="adbar sticky">
   <span class="ad-badge">Ad</span> Limited offer — up to 40% off today.
 </div>
@@ -1562,7 +1571,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
 `;
     const ADS_JS = `// Ads / Disclosure — JS не потрібний.`;
 
-    /* ---------------- 5) IMAGES (hero/product/avatar) ----------------- */
+    // ------- 5) IMAGES / HERO -------
     const IMGS_HTML = `
 <!-- HERO 01 — Overlay -->
 <section class="hero hero-01">
@@ -1574,7 +1583,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </section>
 
-<!-- HERO 02 — News bar (pre-lander style) -->
+<!-- HERO 02 — News bar -->
 <section class="hero hero-02 hero-news">
   <img src="https://picsum.photos/id/1005/1200/520" alt="Hero 02">
   <div class="hero-caption">
@@ -1593,7 +1602,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   <img src="https://picsum.photos/id/1024/1200/700" alt="Hero 03">
 </section>
 
-<!-- HERO 04 — Pre-lander gradient CTA -->
+<!-- HERO 04 — Gradient CTA -->
 <section class="hero hero-04">
   <img src="https://picsum.photos/id/1035/1400/700" alt="Hero 04">
   <div class="hero-caption">
@@ -1608,7 +1617,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </section>
 
-<!-- HERO 05 — Pre-lander author/story -->
+<!-- HERO 05 — Author/story -->
 <section class="hero hero-05">
   <img src="https://picsum.photos/id/1011/1400/700" alt="Hero 05">
   <div class="hero-caption">
@@ -1621,7 +1630,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </section>
 
-<!-- PRODUCT  — не чіпав -->
+<!-- PRODUCT -->
 <article class="product">
   <img class="product-img" src="https://picsum.photos/id/1060/640/480" alt="Product">
   <div class="product-body">
@@ -1632,7 +1641,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </article>
 
-<!-- AVATARS — не чіпав -->
+<!-- AVATARS -->
 <div class="avatars">
   <img src="https://i.pravatar.cc/64?img=5" alt="">
   <img src="https://i.pravatar.cc/64?img=12" alt="">
@@ -1640,7 +1649,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   <span class="more">+42</span>
 </div>
 
-<!-- STORY CARDS — не чіпав -->
+<!-- STORY CARDS -->
 <figure class="story-card bar-pink">
   <img src="https://picsum.photos/id/1003/880/540" alt="Story">
   <figcaption>Discours de Mona à la conférence</figcaption>
@@ -1657,7 +1666,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
 `;
 
     const IMGS_CSS = `
-/* ==== Images / Hero / Product / Avatars (з нумерацією HERO 01–05) ==== */
+/* ==== Images / Hero / Product / Avatars ==== */
 
 /* Базові утиліти */
 .std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12);background:#fff;display:grid}
@@ -1667,46 +1676,43 @@ body.theme-dark .std-demo .hero{background:#12141a;border-color:rgba(255,255,255
 .std-demo .hero .hero-caption h2{margin:0 0 .25em;text-wrap:balance}
 .std-demo .hero .hero-caption .eyebrow{display:block;opacity:.85;letter-spacing:.06em;margin-bottom:4px}
 
-/* Клас для "підрізання" заголовків, додається JS */
+/* clamp для заголовків */
 .std-demo .hero .hero-caption h2.clamp-2{
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
 }
 
-/* ---------------- HERO 01 — Overlay ---------------- */
+/* HERO 01 */
 .std-demo .hero-01 .hero-caption{background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.6))}
 @media (max-width:450px){
   .std-demo .hero-01{display:block}
   .std-demo .hero-01 .hero-caption{position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a}
 }
-/* Режим для 350–490px та/або коли накладається (додає JS) */
 .std-demo .hero-01.is-compact .hero-caption,
 .std-demo .hero-01.shift-out .hero-caption{
   position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a
 }
 .std-demo .hero-01.is-compact .hero-caption h2{font-size:20px}
 
-/* ---------------- HERO 02 — News bar ---------------- */
+/* HERO 02 */
 .std-demo .hero-02 .hero-caption{background:rgba(231,72,86,.9);border-radius:0;inset:auto 0 0 0;color:#fff;margin:0;padding:12px 16px}
 .std-demo .hero-02 .hero-caption h2{margin:2px 0 0}
-/* Для 350–490px переносимо підпис під зображення (JS виставляє .is-compact/.shift-out) */
 .std-demo .hero-02.is-compact .hero-caption,
 .std-demo .hero-02.shift-out .hero-caption{
   position:static;inset:auto;background:#e74856;color:#fff;border-radius:0 0 14px 14px
 }
 .std-demo .hero-02.is-compact .hero-caption h2{font-size:18px}
 
-/* ---------------- HERO 03 — Split editorial ---------------- */
+/* HERO 03 — split */
 .std-demo .hero-03.hero-split{
   grid-template-columns:1.15fr 1fr;gap:12px;align-items:center
 }
 .std-demo .hero-03.hero-split .copy{padding:16px}
 .std-demo .hero-03.hero-split img{width:100%;height:100%;object-fit:cover;min-height:260px}
 @media (max-width:700px){ .std-demo .hero-03.hero-split{grid-template-columns:1fr} }
-/* У вузькому проміжку ущільнюємо типографіку */
 .std-demo .hero-03.is-compact .copy h2{font-size:22px}
 .std-demo .hero-03.is-compact .copy p{font-size:14px}
 
-/* ---------------- HERO 04 — Pre-lander gradient CTA ---------------- */
+/* HERO 04 */
 .std-demo .hero-04 > img{filter:contrast(1.05) saturate(1.05)}
 .std-demo .hero-04 .hero-caption{
   align-self:center;justify-self:start;max-width:min(620px,92%);background:
@@ -1718,7 +1724,7 @@ body.theme-dark .std-demo .hero{background:#12141a;border-color:rgba(255,255,255
 .std-demo .hero-04.is-compact .hero-caption h2{font-size:20px}
 .std-demo .hero-04.is-compact .trust{gap:6px}
 
-/* ---------------- HERO 05 — Pre-lander author/story ---------------- */
+/* HERO 05 */
 .std-demo .hero-05 .hero-caption{
   align-self:end;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.7));padding:16px
 }
@@ -1726,12 +1732,8 @@ body.theme-dark .std-demo .hero{background:#12141a;border-color:rgba(255,255,255
 .std-demo .hero-05 .avatar{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.8)}
 .std-demo .hero-05.is-compact .hero-caption h2{font-size:19px}
 
-/* Точковий діапазон 350–490px: легке зменшення відступів для всіх hero */
-@media (min-width:350px) and (max-width:490px){
-  .std-demo .hero .hero-caption{padding:12px}
-}
-
-/* ===== Далі — без змін: PRODUCT / AVATARS / STORY CARDS ===== */
+/* Спільні фікси */
+@media (min-width:350px) and (max-width:490px){ .std-demo .hero .hero-caption{padding:12px} }
 
 /* PRODUCT */
 .std-demo .product{display:grid;grid-template-columns:180px 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);border-radius:12px;overflow:hidden;margin:0 0 12px;background:#fff}
@@ -1766,15 +1768,14 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
 .std-demo .story-card.polaroid img{border:8px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.12);border-radius:4px}
 .std-demo .story-card.polaroid figcaption{font-style:italic;text-align:center;color:#374151}
 
-/* мобільні фікси (<=540px) */
+/* мобільні фікси */
 @media (max-width:540px){
   .std-demo .product{grid-template-columns:1fr}
   .std-demo .product-img{height:200px}
 }
 `;
 
-    const IMGS_JS = `/* HERO JS (01–05) — керування компактним режимом у проміжку 350–490px,
-   підрізання заголовків і автоматичне винесення підпису під зображення при тісноті. */
+    const IMGS_JS = `/* HERO JS (01–05) */
 (function(){
   const MID_MIN = 350, MID_MAX = 490;
   const Q = (s, r = document) => r.querySelector(s);
@@ -1786,10 +1787,8 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
     const cap = Q('.hero-caption', el);
     const img = Q('img', el);
 
-    // 1) Глобальний компакт у вузькому діапазоні
     el.classList.toggle('is-compact', mid);
 
-    // 2) Довгі заголовки — clamp до 2 рядків
     if (cap){
       const h2 = Q('h2', cap);
       if (h2){
@@ -1798,7 +1797,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
       }
     }
 
-    // 3) Якщо підпис займає >48% висоти зображення — виносимо під (shift-out)
     if (cap && img){
       const needShift = mid && (cap.scrollHeight > (img.clientHeight * 0.48));
       el.classList.toggle('shift-out', !!needShift);
@@ -1810,90 +1808,13 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
       .forEach(tuneHero);
   }
 
-  // Ініціалізація і повторні перерахунки
   window.addEventListener('resize', tuneAll, { passive: true });
   if (document.fonts && document.fonts.ready){ document.fonts.ready.then(tuneAll); }
   window.addEventListener('load', tuneAll);
   setTimeout(tuneAll, 0);
 })();`;
 
-    /* ---- Рендер та підключення стилів/JS у вкладки ---- */
-    function buildStandardGroups() {
-        mountStdGroup(
-            HEAD_CSS,
-            HEAD_HTML,
-            HEAD_JS,
-            "headDemo",
-            "headCssOutput",
-            "headHtmlOutput",
-            "headJsOutput"
-        );
-        mountStdGroup(
-            CRUMBS_CSS,
-            CRUMBS_HTML,
-            CRUMBS_JS,
-            "crumbsDemo",
-            "crumbsCssOutput",
-            "crumbsHtmlOutput",
-            "crumbsJsOutput"
-        );
-        mountStdGroup(
-            FOOT_CSS,
-            FOOT_HTML,
-            FOOT_JS,
-            "footDemo",
-            "footCssOutput",
-            "footHtmlOutput",
-            "footJsOutput"
-        );
-        mountStdGroup(
-            ADS_CSS,
-            ADS_HTML,
-            ADS_JS,
-            "adsDemo",
-            "adsCssOutput",
-            "adsHtmlOutput",
-            "adsJsOutput"
-        );
-        mountStdGroup(
-            IMGS_CSS,
-            IMGS_HTML,
-            IMGS_JS,
-            "imgsDemo",
-            "imgsCssOutput",
-            "imgsHtmlOutput",
-            "imgsJsOutput"
-        );
-    }
-
-    /* Перемикач груп у Standard-секті */
-    const stdMap = {
-        sbHeader: { id: "std-header", css: HEAD_CSS },
-        sbBreadcrumbs: { id: "std-crumbs", css: CRUMBS_CSS },
-        sbFooter: { id: "std-footer", css: FOOT_CSS },
-        sbAds: { id: "std-ads", css: ADS_CSS },
-        sbImages: { id: "std-images", css: IMGS_CSS },
-        sbButtons: { id: "std-buttons", css: "" },
-    };
-
-    /* Копі-кнопки для JS вкладок */
-    document
-        .getElementById("copyHeadJsBtn")
-        ?.addEventListener("click", () => copyFrom("headJsOutput"));
-    document
-        .getElementById("copyCrumbsJsBtn")
-        ?.addEventListener("click", () => copyFrom("crumbsJsOutput"));
-    document
-        .getElementById("copyFootJsBtn")
-        ?.addEventListener("click", () => copyFrom("footJsOutput"));
-    document
-        .getElementById("copyAdsJsBtn")
-        ?.addEventListener("click", () => copyFrom("adsJsOutput"));
-    document
-        .getElementById("copyImgsJsBtn")
-        ?.addEventListener("click", () => copyFrom("imgsJsOutput"));
-
-    // ---- Rендери + установники стилів ----
+    /* ---- Рендери + кодбокси (прев’ю з .std-demo, копія — без .std-demo) ---- */
     function mountStdGroup(
         css,
         html,
@@ -1909,14 +1830,12 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         const jsBox = jsOutId ? document.getElementById(jsOutId) : null;
 
         if (demo) demo.innerHTML = html.trim();
-        if (cssBox) cssBox.textContent = css.trim();
+        if (cssBox) cssBox.textContent = unscope(css.trim()); // робочий CSS
         if (htmlBox) htmlBox.textContent = html.trim();
-        if (jsBox) jsBox.textContent = (js || "").trim();
+        if (jsBox) jsBox.textContent = unscope((js || "").trim()); // робочий JS
     }
 
-    // Ініціалізуємо контент груп
     function buildStandardGroups() {
-        // Header має JS-вкладку → пишемо і JS
         mountStdGroup(
             HEAD_CSS,
             HEAD_HTML,
@@ -1926,8 +1845,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             "headHtmlOutput",
             "headJsOutput"
         );
-
-        // У решти JS-вкладки може не бути — mountStdGroup сам перевіряє наявність контейнера
         mountStdGroup(
             CRUMBS_CSS,
             CRUMBS_HTML,
@@ -1966,7 +1883,16 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         );
     }
 
-    // одна єдина версія
+    // Перемикач груп у Standard-секті (прев’ю-стилі лишаються зі .std-demo)
+    const stdMap = {
+        sbHeader: { id: "std-header", css: HEAD_CSS },
+        sbBreadcrumbs: { id: "std-crumbs", css: CRUMBS_CSS },
+        sbFooter: { id: "std-footer", css: FOOT_CSS },
+        sbAds: { id: "std-ads", css: ADS_CSS },
+        sbImages: { id: "std-images", css: IMGS_CSS },
+        sbButtons: { id: "std-buttons", css: "" },
+    };
+
     function showStdGroup(btnId) {
         document
             .querySelectorAll("#standardSidebar .list button")
@@ -1980,8 +1906,9 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         if (!target) return;
 
         const groupEl = document.getElementById(target.id);
-        if (groupEl) groupEl.hidden = false; // не ламаємось, якщо елемент випадково відсутній
+        if (groupEl) groupEl.hidden = false;
 
+        // у прев’ю підключаємо scoped-версію (з .std-demo)
         document.getElementById("stdStyle").textContent = target.css || "";
         equalizeCodeHeights();
     }
@@ -2000,39 +1927,24 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         el.addEventListener("click", () => showStdGroup(id));
     });
 
-    // Копі-кнопки для базових груп
+    // Копі-кнопки для JS вкладок компонентів
     document
-        .getElementById("copyHeadCssBtn")
-        ?.addEventListener("click", () => copyFrom("headCssOutput"));
+        .getElementById("copyHeadJsBtn")
+        ?.addEventListener("click", () => copyFrom("headJsOutput"));
     document
-        .getElementById("copyHeadHtmlBtn")
-        ?.addEventListener("click", () => copyFrom("headHtmlOutput"));
+        .getElementById("copyCrumbsJsBtn")
+        ?.addEventListener("click", () => copyFrom("crumbsJsOutput"));
     document
-        .getElementById("copyCrumbsCssBtn")
-        ?.addEventListener("click", () => copyFrom("crumbsCssOutput"));
+        .getElementById("copyFootJsBtn")
+        ?.addEventListener("click", () => copyFrom("footJsOutput"));
     document
-        .getElementById("copyCrumbsHtmlBtn")
-        ?.addEventListener("click", () => copyFrom("crumbsHtmlOutput"));
+        .getElementById("copyAdsJsBtn")
+        ?.addEventListener("click", () => copyFrom("adsJsOutput"));
     document
-        .getElementById("copyFootCssBtn")
-        ?.addEventListener("click", () => copyFrom("footCssOutput"));
-    document
-        .getElementById("copyFootHtmlBtn")
-        ?.addEventListener("click", () => copyFrom("footHtmlOutput"));
-    document
-        .getElementById("copyAdsCssBtn")
-        ?.addEventListener("click", () => copyFrom("adsCssOutput"));
-    document
-        .getElementById("copyAdsHtmlBtn")
-        ?.addEventListener("click", () => copyFrom("adsHtmlOutput"));
-    document
-        .getElementById("copyImgsCssBtn")
-        ?.addEventListener("click", () => copyFrom("imgsCssOutput"));
-    document
-        .getElementById("copyImgsHtmlBtn")
-        ?.addEventListener("click", () => copyFrom("imgsHtmlOutput"));
+        .getElementById("copyImgsJsBtn")
+        ?.addEventListener("click", () => copyFrom("imgsJsOutput"));
 
-    // Відкриття/закриття модалок (делегування, не ламає інше)
+    // Відкриття/закриття модалок (тільки для прев’ю, не впливає на експорт)
     document.addEventListener("click", (e) => {
         const open = e.target.closest("[data-modal-open]");
         if (open) {
@@ -2052,13 +1964,12 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         }
     });
 
-    /* ===== Preview badges: H01–H.. для hero та IMG01– для зображень ===== */
+    /* ===== Preview badges (тільки прев’ю) ===== */
     function ensurePreviewBadgesCSS() {
         if (document.getElementById("previewBadgesStyle")) return;
         const st = document.createElement("style");
         st.id = "previewBadgesStyle";
         st.textContent = `
-  /* стилі діють лише в прев'ю */
   .preview .dev-badge{
     position:absolute;top:8px;left:8px;z-index:5;
     background:#111;color:#fff;border-radius:999px;padding:4px 8px;
@@ -2073,12 +1984,9 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
     }
     function addHeroAndImageNumbers() {
         ensurePreviewBadgesCSS();
-        // прибрати старі бейджі (на випадок перерендеру)
         document
             .querySelectorAll(".preview .dev-badge")
             .forEach((n) => n.remove());
-
-        // Hero → H01, H02...
         const heroes = Array.from(
             document.querySelectorAll(".std-demo section.hero")
         );
@@ -2088,8 +1996,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             b.textContent = "H" + String(i + 1).padStart(2, "0");
             el.appendChild(b);
         });
-
-        // Інші зображення → IMG01, IMG02... (пропускаємо ті, що всередині hero)
         const imgs = Array.from(
             document.querySelectorAll(".std-demo img")
         ).filter((img) => !img.closest(".hero"));
@@ -2101,9 +2007,52 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         });
     }
 
+    function ensurePreviewNumbersCSS() {
+        if (document.getElementById("previewNumsStyle")) return;
+        const st = document.createElement("style");
+        st.id = "previewNumsStyle";
+        st.textContent = `
+    .comp-num{
+      font:700 12px/1 ui-sans-serif,system-ui;
+      color:#6b7686; margin:12px 0 6px; opacity:.9;
+    }
+    body.theme-dark .comp-num{ color:#9aa3b2 }
+  `;
+        document.head.appendChild(st);
+    }
+
+    function addComponentNumbers() {
+        ensurePreviewNumbersCSS();
+        // при перемиканні груп/вкладок — чистимо старі
+        document.querySelectorAll(".comp-num").forEach((n) => n.remove());
+        const add = (demoId, selector) => {
+            const demo = document.getElementById(demoId);
+            if (!demo) return;
+            const list = demo.querySelectorAll(selector);
+            list.forEach((el, i) => {
+                const num = document.createElement("div");
+                num.className = "comp-num";
+                num.textContent = String(i + 1).padStart(2, "0");
+                el.insertAdjacentElement("beforebegin", num);
+            });
+        };
+        // Header / Navbar
+        add("headDemo", ".nav");
+        // Breadcrumbs
+        add("crumbsDemo", ".crumbs");
+        // Footer
+        add("footDemo", ".foot");
+        // Advertisement / Disclosure
+        add("adsDemo", ".adbar, .disclosure, .sponsored-card");
+        // Images (hero/product/avatar/cards)
+        add(
+            "imgsDemo",
+            "section.hero, article.product, .avatars, figure.story-card"
+        );
+    }
+
     // ===== Ініціалізація =====
     function init() {
-        // Заповнення контролів
         document.querySelectorAll("[data-key]").forEach((sel) => {
             if (sel.dataset.key.includes(".size"))
                 fillSelect(sel, sizeOptions, 1.0);
@@ -2122,11 +2071,11 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         renderButtonsCSS();
         renderButtonsHTML();
         equalizeCodeHeights();
-        buildStandardGroups(); // заповнює прев’ю/код базових компонентів
         buildStandardGroups();
         addHeroAndImageNumbers();
+        addComponentNumbers();
 
-        showStdGroup("sbHeader"); // за замовчуванням показує Buttons (як і раніше)
+        showStdGroup("sbHeader"); // стартуємо з Header
     }
     init();
 });
