@@ -1928,22 +1928,29 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         el.addEventListener("click", () => showStdGroup(id));
     });
 
-    // Копі-кнопки для JS вкладок компонентів
-    document
-        .getElementById("copyHeadJsBtn")
-        ?.addEventListener("click", () => copyFrom("headJsOutput"));
-    document
-        .getElementById("copyCrumbsJsBtn")
-        ?.addEventListener("click", () => copyFrom("crumbsJsOutput"));
-    document
-        .getElementById("copyFootJsBtn")
-        ?.addEventListener("click", () => copyFrom("footJsOutput"));
-    document
-        .getElementById("copyAdsJsBtn")
-        ?.addEventListener("click", () => copyFrom("adsJsOutput"));
-    document
-        .getElementById("copyImgsJsBtn")
-        ?.addEventListener("click", () => copyFrom("imgsJsOutput"));
+    // ===== Копіювання коду для всіх вкладок (типографіка + компоненти) =====
+    [
+        ["copyCssBtn", "cssOutput"],
+        ["copyHtmlBtn", "htmlOutput"],
+
+        ["copyHeadCssBtn", "headCssOutput"],
+        ["copyHeadHtmlBtn", "headHtmlOutput"],
+        ["copyHeadJsBtn", "headJsOutput"],
+        ["copyCrumbsCssBtn", "crumbsCssOutput"],
+        ["copyCrumbsHtmlBtn", "crumbsHtmlOutput"],
+        ["copyFootCssBtn", "footCssOutput"],
+        ["copyFootHtmlBtn", "footHtmlOutput"],
+        ["copyAdsCssBtn", "adsCssOutput"],
+        ["copyAdsHtmlBtn", "adsHtmlOutput"],
+        ["copyImgsCssBtn", "imgsCssOutput"],
+        ["copyImgsHtmlBtn", "imgsHtmlOutput"],
+        ["copyImgsJsBtn", "imgsJsOutput"],
+        ["copyBtnsCssBtn", "btnsCssOutput"],
+        ["copyBtnsHtmlBtn", "btnsHtmlOutput"],
+    ].forEach(([btnId, boxId]) => {
+        const b = document.getElementById(btnId);
+        if (b) b.addEventListener("click", () => copyFrom(boxId));
+    });
 
     // Відкриття/закриття модалок (тільки для прев’ю, не впливає на експорт)
     document.addEventListener("click", (e) => {
@@ -2052,6 +2059,32 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         );
     }
 
+    function appendIncludeNote(previewId) {
+        const host = document.getElementById(previewId);
+        if (!host || host.querySelector(".include-note")) return;
+        const note = document.createElement("div");
+        note.className = "notice include-note";
+        note.innerHTML = `
+    Не забудь підключити:<br>
+    <code>&lt;link rel="stylesheet" href="style.css" /&gt;</code><br>
+    <code>&lt;script src="script.js"&gt;&lt;/script&gt;</code>
+  `;
+        host.appendChild(note);
+    }
+
+    // Викликати після buildStandardGroups() і showStdGroup()
+    function addNotesToAllPreviews() {
+        [
+            "typoPreview",
+            "headPreview",
+            "crumbsPreview",
+            "footPreview",
+            "adsPreview",
+            "imgsPreview",
+            "btnsPreview",
+        ].forEach(appendIncludeNote);
+    }
+
     // ===== Ініціалізація =====
     function init() {
         document.querySelectorAll("[data-key]").forEach((sel) => {
@@ -2075,6 +2108,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         buildStandardGroups();
         addHeroAndImageNumbers();
         addComponentNumbers();
+        addNotesToAllPreviews();
 
         showStdGroup("sbHeader"); // стартуємо з Header
     }
