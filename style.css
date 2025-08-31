@@ -93,7 +93,7 @@ body.theme-dark .content small{ color:#9aa3b2; }
 body.theme-dark .content blockquote{ background:rgba(255,255,255,.03); border-left-color:#3a4150; }
 
 /* Code / HTML boxes */
-.codebox{ background:#10131a; border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:12px; position:relative; font-family:"Courier New", Courier, "Lucida Console", Monaco, monospace; font-size:13px; line-height:1.5; color:#dfe3ea; white-space:pre; overflow:auto; min-height:620px; max-height:none; }
+.codebox{ background:#10131a; border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:12px; position:relative; font-family:"Courier New", Courier, "Lucida Console", Monaco, monospace; font-size:13px; line-height:1.5; color:#dfe3ea; white-space:break-spaces; overflow:auto; min-height:620px; max-height:none; }
 body.theme-light .codebox{ background:#0a0c11; border-color:rgba(0,0,0,.2); color:#dfe3ea; }
 .copybar{ display:flex; justify-content:flex-end; gap:8px; margin:8px 0; }
 .notice{ color:#6b7686; font-size:12px; }
@@ -144,3 +144,7 @@ body.theme-dark .notice{ color:#9aa3b2; }
 .btn.neon{ background:#111; color:#5bd1a8; text-shadow:0 0 8px #5bd1a8; border-color:#333; }
 .btn.icon-left::before{ content:"↗"; }
 .btn.icon-right::after{ content:"→"; }
+
+/* #headCSS .codebox {
+    white-space: break-spaces;
+} */
