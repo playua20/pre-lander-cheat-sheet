@@ -1167,6 +1167,7 @@ img { max-width: 100%; height: auto; display: block; }`;
 <!-- 01. Minimal -->
 <header class="nav nav-minimal">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
+  <a class="btn cta-buy ripple" href="#">Subscribe</a>
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -1175,19 +1176,18 @@ img { max-width: 100%; height: auto; display: block; }`;
     <a href="#">Sports</a><a href="#">Lefestyle</a><a class="current" href="#">World News</a>
     <a href="#">Blogs</a><a href="#">Stories</a>
   </nav>
-  <a class="btn cta-buy ripple" href="#">Subscribe</a>
 </header>
 
 <!-- 02. Centered -->
 <header class="nav nav-centered">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
+  <a class="btn outline" href="#">Learn More</a>
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <nav class="links" role="navigation">
     <a href="#">Overview</a><a href="#">Benefits</a><a href="#">Reviews</a><a href="#">FAQ</a>
   </nav>
-  <a class="btn outline" href="#">Learn More</a>
 </header>
 
 <!-- 03. Split + badge -->
@@ -1195,13 +1195,13 @@ img { max-width: 100%; height: auto; display: block; }`;
   <div class="left">
     <div class="brand"><span class="logo">📣</span> <strong>News</strong> <span class="badge">New</span></div>
   </div>
+  <div class="right"><a class="btn cta-buy ripple" href="#">Buy Now</a></div>
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <nav class="links" role="navigation">
     <a href="#">Diet</a><a href="#">Fitness</a><a href="#">Beauty</a>
   </nav>
-  <div class="right"><a class="btn cta-buy ripple" href="#">Buy Now</a></div>
 </header>
 
 <!-- 04. Compact -->
@@ -1296,7 +1296,8 @@ body.theme-dark .std-demo .nav .btn{ background:#0e1015; color:#e6e8ee; border-c
 .std-demo .nav-split .right{display:flex;align-items:center}
 
 /* hamburger */
-.std-demo .nav .nav-toggle{display:none;position:relative;margin-left:auto; width:36px;height:28px;border:0;background:transparent;cursor:pointer}
+.std-demo .nav .nav-toggle{display:none;position:relative; width:36px;height:28px;border:0;background:transparent;cursor:pointer}
+.std-demo .nav .btn{margin:0 auto;}
 .std-demo .nav .nav-toggle span{display:block;height:3px;margin:5px 0;background:var(--nav-accent);border-radius:3px;transition:.2s}
 
 /* ===== мобільний режим (<= 900px) для варіантів 01–04 ===== */
