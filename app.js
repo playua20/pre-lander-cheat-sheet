@@ -1168,37 +1168,26 @@ img { max-width: 100%; height: auto; display: block; }`;
 <!-- 01. Minimal -->
 <header class="nav nav-minimal">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
-
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-
   <nav class="links" role="navigation">
-    <a href="#">Politics</a>
-    <a href="#">Video</a>
-    <a href="#">Entertainments</a>
-    <a href="#">Sports</a>
-    <a href="#">Lefestyle</a>
-    <a class="current" href="#">World News</a>
-    <a href="#">Blogs</a>
-    <a href="#">Stories</a>
+    <a href="#">Politics</a><a href="#">Video</a><a href="#">Entertainments</a>
+    <a href="#">Sports</a><a href="#">Lefestyle</a><a class="current" href="#">World News</a>
+    <a href="#">Blogs</a><a href="#">Stories</a>
   </nav>
-
   <a class="btn cta-buy ripple" href="#">Subscribe</a>
 </header>
 
 <!-- 02. Centered -->
 <header class="nav nav-centered">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
-
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-
   <nav class="links" role="navigation">
     <a href="#">Overview</a><a href="#">Benefits</a><a href="#">Reviews</a><a href="#">FAQ</a>
   </nav>
-
   <a class="btn outline" href="#">Learn More</a>
 </header>
 
@@ -1207,47 +1196,78 @@ img { max-width: 100%; height: auto; display: block; }`;
   <div class="left">
     <div class="brand"><span class="logo">📣</span> <strong>News</strong> <span class="badge">New</span></div>
   </div>
-
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-
   <nav class="links" role="navigation">
     <a href="#">Diet</a><a href="#">Fitness</a><a href="#">Beauty</a>
   </nav>
-
   <div class="right"><a class="btn cta-buy ripple" href="#">Buy Now</a></div>
 </header>
 
 <!-- 04. Compact (гамбургер/оф-канвас) -->
 <header class="nav nav-compact">
   <div class="brand"><span class="logo">📣</span> <strong>News</strong></div>
-
   <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
-
   <nav class="links" role="navigation">
-    <a href="#">Home</a>
-    <a href="#">Politics</a>
-    <a href="#">Video</a>
-    <a href="#">Entertainments</a>
-    <a href="#">Sports</a>
-    <a href="#">Lifestyle</a>
-    <a class="current" href="#">World News</a>
-    <a href="#">Blogs</a>
-    <a href="#">Stories</a>
+    <a href="#">Home</a><a href="#">Politics</a><a href="#">Video</a><a href="#">Entertainments</a>
+    <a href="#">Sports</a><a href="#">Lifestyle</a><a class="current" href="#">World News</a>
+    <a href="#">Blogs</a><a href="#">Stories</a>
+  </nav>
+</header>
+
+<!-- 05. Tabs-news (без меню, як на скрінах) -->
+<header class="nav nav-tabs-news">
+  <div class="brand brand-indo">
+    <span class="block">Indo-</span><span class="tail">Network</span>
+  </div>
+  <nav class="tabs" role="navigation" aria-label="Sections">
+    <a class="pill active-red" href="#">KESEHATAN</a>
+    <a class="pill" href="#">FOKUS</a>
+    <a class="pill" href="#">BISNIS</a>
+    <a class="pill" href="#">POLITIK</a>
+    <a class="pill" href="#">GAYA HIDUP</a>
+    <a class="pill" href="#">INTERNASIONAL</a>
+    <a class="pill" href="#">BUDAYA</a>
+  </nav>
+</header>
+
+<!-- 06. Magazine stack (логотип + лінійка розділів) -->
+<header class="nav nav-magazine">
+  <div class="top">
+    <div class="brand"><strong>Daily Journal</strong></div>
+    <a class="btn cta-waitlist" href="#">Newsletter</a>
+  </div>
+  <nav class="catbar" role="navigation">
+    <a class="tag current" href="#">HEALTH</a><a class="tag" href="#">SCIENCE</a>
+    <a class="tag" href="#">WORLD</a><a class="tag" href="#">LIFESTYLE</a>
+    <a class="tag" href="#">TECH</a><a class="tag" href="#">OPINION</a>
+  </nav>
+</header>
+
+<!-- 07. Underline links (класичний прес-лендер бар) -->
+<header class="nav nav-underline">
+  <div class="brand"><strong>Wellness</strong></div>
+  <nav class="links" role="navigation">
+    <a class="current" href="#">Top Stories</a>
+    <a href="#">Research</a>
+    <a href="#">Workouts</a>
+    <a href="#">Nutrition</a>
+    <a href="#">Beauty</a>
   </nav>
 </header>
 `;
 
     const HEAD_CSS = `
-/* ==== Header / Navbar (01–04) — responsive >=320px ==== */
+/* ==== Header / Navbar (01–07) — responsive >=320px ==== */
 :root { --nav-accent:#b71c1c; }
 .std-demo .nav{
   position:relative;display:flex;align-items:center;gap:12px;
   justify-content:space-between;padding:10px 14px;margin:0 0 12px;
-  border:1px solid rgba(0,0,0,.12);border-radius:12px;background:#fff
+  border:1px solid rgba(0,0,0,.12);border-radius:12px;background:#fff;
+  box-shadow:inset 0 -2px 0 var(--nav-accent);
 }
 body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,.08)}
 .std-demo .nav .brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.02em}
@@ -1258,7 +1278,7 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 .std-demo .nav .links a.current{background:var(--nav-accent);color:#fff}
 .std-demo .nav .btn{white-space:nowrap}
 
-/* розмітка для center/split */
+/* center / split */
 .std-demo .nav-centered{justify-content:center}
 .std-demo .nav-centered .brand{margin-right:auto}
 .std-demo .nav-centered .links{margin-right:auto}
@@ -1266,16 +1286,11 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 .std-demo .nav-split .left{display:flex;align-items:center;gap:12px}
 .std-demo .nav-split .right{display:flex;align-items:center}
 
-/* гамбургер-кнопка */
-.std-demo .nav .nav-toggle{
-  display:none;position:relative;margin-left:auto; width:36px;height:28px;
-  border:0;background:transparent;cursor:pointer
-}
-.std-demo .nav .nav-toggle span{
-  display:block;height:3px;margin:5px 0;background:var(--nav-accent);border-radius:3px;transition:.2s
-}
+/* hamburger */
+.std-demo .nav .nav-toggle{display:none;position:relative;margin-left:auto; width:36px;height:28px;border:0;background:transparent;cursor:pointer}
+.std-demo .nav .nav-toggle span{display:block;height:3px;margin:5px 0;background:var(--nav-accent);border-radius:3px;transition:.2s}
 
-/* ===== мобільний режим (<= 900px) ===== */
+/* ===== мобільний режим (<= 900px) для варіантів 01–04 ===== */
 @media (max-width:900px){
   .std-demo .nav{padding:10px 12px}
   .std-demo .nav .nav-toggle{display:inline-block}
@@ -1291,8 +1306,34 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
   .std-demo .nav.open .links{max-height:70vh}
 }
 
-/* нижня червона лінія як у макеті */
-.std-demo .nav{box-shadow:inset 0 -2px 0 var(--nav-accent)}
+/* ===== 05. Tabs-news (без меню) ===== */
+.std-demo .nav.nav-tabs-news{display:block;box-shadow:none;border-color:rgba(0,0,0,.12)}
+.std-demo .nav.nav-tabs-news .brand{font-size:28px}
+.std-demo .nav.nav-tabs-news .brand-indo .block{background:#e11d2b;color:#fff;padding:2px 8px;border-radius:2px;margin-right:4px}
+.std-demo .nav.nav-tabs-news .brand-indo .tail{font-weight:700}
+.std-demo .nav.nav-tabs-news .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.std-demo .nav.nav-tabs-news .tabs .pill{
+  background:#e5e7eb;color:#111;padding:6px 10px;border-radius:6px;
+  text-transform:uppercase;font-weight:800;font-size:12px;letter-spacing:.04em
+}
+body.theme-dark .std-demo .nav.nav-tabs-news .tabs .pill{background:#0e1015;color:#e6e8ee}
+.std-demo .nav.nav-tabs-news .tabs .active-red{background:#e11d2b;color:#fff}
+
+/* ===== 06. Magazine stack ===== */
+.std-demo .nav.nav-magazine{display:block;box-shadow:none}
+.std-demo .nav.nav-magazine .top{display:flex;align-items:center;justify-content:space-between}
+.std-demo .nav.nav-magazine .catbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.std-demo .nav.nav-magazine .catbar .tag{
+  background:#f2f4f8;padding:6px 10px;border-radius:8px;font-weight:700;letter-spacing:.04em
+}
+.std-demo .nav.nav-magazine .catbar .tag.current{background:#1c2430;color:#fff}
+body.theme-dark .std-demo .nav.nav-magazine .catbar .tag{background:#0e1015;color:#e6e8ee}
+
+/* ===== 07. Underline links ===== */
+.std-demo .nav.nav-underline{box-shadow:none}
+.std-demo .nav.nav-underline .links a{padding:8px 0;border-radius:0;border-bottom:3px solid transparent}
+.std-demo .nav.nav-underline .links a:hover{border-bottom-color:rgba(28,36,48,.25);background:transparent}
+.std-demo .nav.nav-underline .links a.current{border-bottom-color:var(--nav-accent);background:transparent;color:inherit}
 `;
 
     const HEAD_JS = `// Header / Navbar: гамбургер
@@ -1533,6 +1574,25 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </section>
 
+<!-- 01b. Hero — news bar (pre-lander style) -->
+<section class="hero hero-news">
+  <img src="https://picsum.photos/id/1005/1200/520" alt="Hero">
+  <div class="hero-caption">
+    <small class="eyebrow">FEATURED • HEALTH</small>
+    <h2>Doctors Reveal: 3 Morning Habits That Boost Metabolism</h2>
+  </div>
+</section>
+
+<!-- 01c. Hero — split editorial -->
+<section class="hero-split">
+  <div class="copy">
+    <h2>Real Results, Backed by Research</h2>
+    <p>Lose up to 6kg in 30 days with our structured routine and diet plan.</p>
+    <a class="btn cta-offer" href="#">Get Offer Now</a>
+  </div>
+  <img src="https://picsum.photos/id/1024/1200/700" alt="Program">
+</section>
+
 <!-- 02. Product card -->
 <article class="product">
   <img class="product-img" src="https://picsum.photos/id/1060/640/480" alt="Product">
@@ -1552,40 +1612,100 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   <span class="more">+42</span>
 </div>
 
-<!-- 04. Product (compact, мобільний-френдлі) -->
-<article class="product compact">
-  <img class="product-img" src="https://picsum.photos/id/1011/640/480" alt="Product">
-  <div class="product-body">
-    <h3>Vitamin D3</h3>
-    <div class="rating">★★★★☆ <small>(87)</small></div>
-    <div class="price">$14.50</div>
-    <a class="btn cta-cart" href="#">Add to Cart</a>
-  </div>
-</article>
+<!-- 04. Story image — caption bar (замість другого продукту) -->
+<figure class="story-card bar-pink">
+  <img src="https://picsum.photos/id/1003/880/540" alt="Story">
+  <figcaption>Discours de Mona à la conférence</figcaption>
+</figure>
+
+<!-- 05. Story image — corner ribbon -->
+<figure class="story-card ribbon">
+  <img src="https://picsum.photos/id/1011/880/540" alt="Story">
+  <figcaption>Exclusive: Nutritionist explains the “Keto Window”</figcaption>
+  <span class="ribbon-tag">Sponsored</span>
+</figure>
+
+<!-- 06. Story image — polaroid -->
+<figure class="story-card polaroid">
+  <img src="https://picsum.photos/id/1027/880/540" alt="Story">
+  <figcaption>Before/After — 8 Weeks Journal</figcaption>
+</figure>
 `;
 
     const IMGS_CSS = `
-/* ==== Images (hero/product/avatar) ==== */
-.std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12)}
-.std-demo .hero img{width:100%;display:block}
-.std-demo .hero-caption{position:absolute;inset:auto 16px 16px 16px;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.55));color:#fff;border-radius:12px;padding:14px}
+/* ==== Images / Hero / Product / Avatars ==== */
+
+/* HERO (overlay) */
+.std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12);display:grid}
+.std-demo .hero > img{width:100%;height:auto;display:block;grid-area:1/1;object-fit:cover}
+.std-demo .hero-caption{grid-area:1/1;align-self:end;margin:0 16px 16px 16px;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.6));color:#fff;border-radius:12px;padding:14px}
+
+/* Mobile fix: caption стає звичайним блоком, тому секція розтягується контентом */
+@media (max-width:450px){
+  .std-demo .hero{display:block}
+  .std-demo .hero-caption{position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a;color:#fff}
+}
+
+/* HERO — варіант news bar */
+.std-demo .hero.hero-news .hero-caption{
+  background:rgba(231,72,86,.9);border-radius:0;inset:auto 0 0 0;color:#fff;margin:0;padding:12px 16px
+}
+.std-demo .hero.hero-news .eyebrow{display:block;opacity:.85;letter-spacing:.06em}
+
+/* HERO split editorial */
+.std-demo .hero-split{
+  display:grid;grid-template-columns:1.15fr 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);
+  border-radius:14px;overflow:hidden;background:#fff;margin:0 0 12px;align-items:center
+}
+body.theme-dark .std-demo .hero-split{background:#12141a;border-color:rgba(255,255,255,.08)}
+.std-demo .hero-split .copy{padding:16px}
+.std-demo .hero-split img{width:100%;height:100%;object-fit:cover;min-height:260px}
+@media (max-width:700px){ .std-demo .hero-split{grid-template-columns:1fr} }
+
+/* PRODUCT */
 .std-demo .product{display:grid;grid-template-columns:180px 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);border-radius:12px;overflow:hidden;margin:0 0 12px;background:#fff}
 body.theme-dark .std-demo .product{background:#12141a;border-color:rgba(255,255,255,.08)}
 .std-demo .product-img{width:100%;height:100%;object-fit:cover}
 .std-demo .product-body{padding:10px}
 .std-demo .product .rating{color:#f59e0b;margin:.25em 0}
 .std-demo .product .price{font-size:20px;font-weight:800;margin:.2em 0 .6em}
+
+/* AVATARS */
 .std-demo .avatars{display:flex;align-items:center;gap:6px}
 .std-demo .avatars img{width:36px;height:36px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1)}
 .std-demo .avatars .more{background:#f2f4f8;border-radius:999px;padding:6px 10px;font-weight:700}
 body.theme-dark .std-demo .avatars .more{background:#0e1015}
 
-/* мобільні фікси (320+) */
+/* STORY CARDS — 3 pre-lander типи */
+.std-demo .story-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);margin:0 0 12px;background:#fff}
+.std-demo .story-card img{width:100%;display:block}
+.std-demo .story-card figcaption{padding:10px 12px}
+
+/* 04. Caption bar (як у прикладі з "Discours de Mona") */
+.std-demo .story-card.bar-pink figcaption{
+  background:#f8b4c7;color:#1c2430;font-weight:800;text-align:center
+}
+
+/* 05. Ribbon */
+.std-demo .story-card.ribbon{--r:#111;--txt:#fff}
+.std-demo .story-card.ribbon .ribbon-tag{
+  position:absolute;top:10px;left:-40px;transform:rotate(-15deg);
+  background:var(--r);color:var(--txt);padding:6px 56px;font-weight:800;letter-spacing:.06em
+}
+.std-demo .story-card.ribbon figcaption{background:#f2f4f8}
+
+/* 06. Polaroid */
+.std-demo .story-card.polaroid{padding:10px;background:#fff}
+.std-demo .story-card.polaroid img{border:8px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.12);border-radius:4px}
+.std-demo .story-card.polaroid figcaption{font-style:italic;text-align:center;color:#374151}
+
+/* мобільні фікси (<=540px) */
 @media (max-width:540px){
   .std-demo .product{grid-template-columns:1fr}
   .std-demo .product-img{height:200px}
 }
 `;
+
     const IMGS_JS = `// Images — JS не потрібний.`;
 
     /* ---- Рендер та підключення стилів/JS у вкладки ---- */
