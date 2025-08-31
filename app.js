@@ -878,7 +878,7 @@ img { max-width: 100%; height: auto; display: block; }`;
 
     function renderHTML() {
         const scope = document.getElementById("previewScope").cloneNode(true);
-        scope.querySelectorAll(".badge").forEach((n) => n.remove());
+        scope.querySelectorAll(".badge, .dev-badge").forEach((n) => n.remove());
         const html = `<div class="content">
     ${scope.innerHTML.trim()}
 </div>`;
@@ -1564,9 +1564,9 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
 
     /* ---------------- 5) IMAGES (hero/product/avatar) ----------------- */
     const IMGS_HTML = `
-<!-- 01. Hero image with overlay -->
-<section class="hero">
-  <img src="https://picsum.photos/id/1015/1200/480" alt="Hero">
+<!-- HERO 01 — Overlay -->
+<section class="hero hero-01">
+  <img src="https://picsum.photos/id/1015/1200/480" alt="Hero 01">
   <div class="hero-caption">
     <h2>Summer Shape Program</h2>
     <p>Scientifically-backed plan to kickstart your routine.</p>
@@ -1574,26 +1574,54 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </section>
 
-<!-- 01b. Hero — news bar (pre-lander style) -->
-<section class="hero hero-news">
-  <img src="https://picsum.photos/id/1005/1200/520" alt="Hero">
+<!-- HERO 02 — News bar (pre-lander style) -->
+<section class="hero hero-02 hero-news">
+  <img src="https://picsum.photos/id/1005/1200/520" alt="Hero 02">
   <div class="hero-caption">
     <small class="eyebrow">FEATURED • HEALTH</small>
     <h2>Doctors Reveal: 3 Morning Habits That Boost Metabolism</h2>
   </div>
 </section>
 
-<!-- 01c. Hero — split editorial -->
-<section class="hero-split">
+<!-- HERO 03 — Split editorial -->
+<section class="hero hero-03 hero-split">
   <div class="copy">
     <h2>Real Results, Backed by Research</h2>
     <p>Lose up to 6kg in 30 days with our structured routine and diet plan.</p>
     <a class="btn cta-offer" href="#">Get Offer Now</a>
   </div>
-  <img src="https://picsum.photos/id/1024/1200/700" alt="Program">
+  <img src="https://picsum.photos/id/1024/1200/700" alt="Hero 03">
 </section>
 
-<!-- 02. Product card -->
+<!-- HERO 04 — Pre-lander gradient CTA -->
+<section class="hero hero-04">
+  <img src="https://picsum.photos/id/1035/1400/700" alt="Hero 04">
+  <div class="hero-caption">
+    <small class="eyebrow">EXCLUSIVE • WELLNESS</small>
+    <h2>New 10-min Routine That Burns More Than a 5k Run</h2>
+    <ul class="trust">
+      <li>✓ 250k+ readers</li>
+      <li>✓ Clinically reviewed</li>
+      <li>✓ No equipment</li>
+    </ul>
+    <a class="btn cta-buy ripple" href="#">Try Today</a>
+  </div>
+</section>
+
+<!-- HERO 05 — Pre-lander author/story -->
+<section class="hero hero-05">
+  <img src="https://picsum.photos/id/1011/1400/700" alt="Hero 05">
+  <div class="hero-caption">
+    <div class="byline">
+      <img class="avatar" src="https://i.pravatar.cc/48?img=32" alt="">
+      <span><strong>Monica Ruiz</strong> • Investigative Health Writer</span>
+    </div>
+    <h2>“I tested the 30-day metabolic reset. Here’s what actually works.”</h2>
+    <a class="btn cta-sample" href="#">Read My Journal</a>
+  </div>
+</section>
+
+<!-- PRODUCT  — не чіпав -->
 <article class="product">
   <img class="product-img" src="https://picsum.photos/id/1060/640/480" alt="Product">
   <div class="product-body">
@@ -1604,7 +1632,7 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   </div>
 </article>
 
-<!-- 03. Avatars group -->
+<!-- AVATARS — не чіпав -->
 <div class="avatars">
   <img src="https://i.pravatar.cc/64?img=5" alt="">
   <img src="https://i.pravatar.cc/64?img=12" alt="">
@@ -1612,20 +1640,16 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
   <span class="more">+42</span>
 </div>
 
-<!-- 04. Story image — caption bar (замість другого продукту) -->
+<!-- STORY CARDS — не чіпав -->
 <figure class="story-card bar-pink">
   <img src="https://picsum.photos/id/1003/880/540" alt="Story">
   <figcaption>Discours de Mona à la conférence</figcaption>
 </figure>
-
-<!-- 05. Story image — corner ribbon -->
 <figure class="story-card ribbon">
   <img src="https://picsum.photos/id/1011/880/540" alt="Story">
   <figcaption>Exclusive: Nutritionist explains the “Keto Window”</figcaption>
   <span class="ribbon-tag">Sponsored</span>
 </figure>
-
-<!-- 06. Story image — polaroid -->
 <figure class="story-card polaroid">
   <img src="https://picsum.photos/id/1027/880/540" alt="Story">
   <figcaption>Before/After — 8 Weeks Journal</figcaption>
@@ -1633,34 +1657,81 @@ body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-co
 `;
 
     const IMGS_CSS = `
-/* ==== Images / Hero / Product / Avatars ==== */
+/* ==== Images / Hero / Product / Avatars (з нумерацією HERO 01–05) ==== */
 
-/* HERO (overlay) */
-.std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12);display:grid}
+/* Базові утиліти */
+.std-demo .hero{position:relative;border-radius:14px;overflow:hidden;margin:0 0 12px;border:1px solid rgba(0,0,0,.12);background:#fff;display:grid}
+body.theme-dark .std-demo .hero{background:#12141a;border-color:rgba(255,255,255,.08)}
 .std-demo .hero > img{width:100%;height:auto;display:block;grid-area:1/1;object-fit:cover}
-.std-demo .hero-caption{grid-area:1/1;align-self:end;margin:0 16px 16px 16px;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.6));color:#fff;border-radius:12px;padding:14px}
+.std-demo .hero .hero-caption{grid-area:1/1;align-self:end;margin:0 16px 16px 16px;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.6));color:#fff;border-radius:12px;padding:14px}
+.std-demo .hero .hero-caption h2{margin:0 0 .25em;text-wrap:balance}
+.std-demo .hero .hero-caption .eyebrow{display:block;opacity:.85;letter-spacing:.06em;margin-bottom:4px}
 
-/* Mobile fix: caption стає звичайним блоком, тому секція розтягується контентом */
+/* Клас для "підрізання" заголовків, додається JS */
+.std-demo .hero .hero-caption h2.clamp-2{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
+}
+
+/* ---------------- HERO 01 — Overlay ---------------- */
+.std-demo .hero-01 .hero-caption{background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.6))}
 @media (max-width:450px){
-  .std-demo .hero{display:block}
-  .std-demo .hero-caption{position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a;color:#fff}
+  .std-demo .hero-01{display:block}
+  .std-demo .hero-01 .hero-caption{position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a}
+}
+/* Режим для 350–490px та/або коли накладається (додає JS) */
+.std-demo .hero-01.is-compact .hero-caption,
+.std-demo .hero-01.shift-out .hero-caption{
+  position:static;margin:0;border-radius:0 0 14px 14px;background:#0f172a
+}
+.std-demo .hero-01.is-compact .hero-caption h2{font-size:20px}
+
+/* ---------------- HERO 02 — News bar ---------------- */
+.std-demo .hero-02 .hero-caption{background:rgba(231,72,86,.9);border-radius:0;inset:auto 0 0 0;color:#fff;margin:0;padding:12px 16px}
+.std-demo .hero-02 .hero-caption h2{margin:2px 0 0}
+/* Для 350–490px переносимо підпис під зображення (JS виставляє .is-compact/.shift-out) */
+.std-demo .hero-02.is-compact .hero-caption,
+.std-demo .hero-02.shift-out .hero-caption{
+  position:static;inset:auto;background:#e74856;color:#fff;border-radius:0 0 14px 14px
+}
+.std-demo .hero-02.is-compact .hero-caption h2{font-size:18px}
+
+/* ---------------- HERO 03 — Split editorial ---------------- */
+.std-demo .hero-03.hero-split{
+  grid-template-columns:1.15fr 1fr;gap:12px;align-items:center
+}
+.std-demo .hero-03.hero-split .copy{padding:16px}
+.std-demo .hero-03.hero-split img{width:100%;height:100%;object-fit:cover;min-height:260px}
+@media (max-width:700px){ .std-demo .hero-03.hero-split{grid-template-columns:1fr} }
+/* У вузькому проміжку ущільнюємо типографіку */
+.std-demo .hero-03.is-compact .copy h2{font-size:22px}
+.std-demo .hero-03.is-compact .copy p{font-size:14px}
+
+/* ---------------- HERO 04 — Pre-lander gradient CTA ---------------- */
+.std-demo .hero-04 > img{filter:contrast(1.05) saturate(1.05)}
+.std-demo .hero-04 .hero-caption{
+  align-self:center;justify-self:start;max-width:min(620px,92%);background:
+  linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.55)), 
+  linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.0) 65%);
+  padding:18px
+}
+.std-demo .hero-04 .trust{display:flex;gap:10px;flex-wrap:wrap;margin:.4em 0 1em 0;padding:0;list-style:none}
+.std-demo .hero-04.is-compact .hero-caption h2{font-size:20px}
+.std-demo .hero-04.is-compact .trust{gap:6px}
+
+/* ---------------- HERO 05 — Pre-lander author/story ---------------- */
+.std-demo .hero-05 .hero-caption{
+  align-self:end;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.7));padding:16px
+}
+.std-demo .hero-05 .byline{display:flex;align-items:center;gap:8px;margin-bottom:6px;opacity:.92}
+.std-demo .hero-05 .avatar{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.8)}
+.std-demo .hero-05.is-compact .hero-caption h2{font-size:19px}
+
+/* Точковий діапазон 350–490px: легке зменшення відступів для всіх hero */
+@media (min-width:350px) and (max-width:490px){
+  .std-demo .hero .hero-caption{padding:12px}
 }
 
-/* HERO — варіант news bar */
-.std-demo .hero.hero-news .hero-caption{
-  background:rgba(231,72,86,.9);border-radius:0;inset:auto 0 0 0;color:#fff;margin:0;padding:12px 16px
-}
-.std-demo .hero.hero-news .eyebrow{display:block;opacity:.85;letter-spacing:.06em}
-
-/* HERO split editorial */
-.std-demo .hero-split{
-  display:grid;grid-template-columns:1.15fr 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);
-  border-radius:14px;overflow:hidden;background:#fff;margin:0 0 12px;align-items:center
-}
-body.theme-dark .std-demo .hero-split{background:#12141a;border-color:rgba(255,255,255,.08)}
-.std-demo .hero-split .copy{padding:16px}
-.std-demo .hero-split img{width:100%;height:100%;object-fit:cover;min-height:260px}
-@media (max-width:700px){ .std-demo .hero-split{grid-template-columns:1fr} }
+/* ===== Далі — без змін: PRODUCT / AVATARS / STORY CARDS ===== */
 
 /* PRODUCT */
 .std-demo .product{display:grid;grid-template-columns:180px 1fr;gap:12px;border:1px solid rgba(0,0,0,.12);border-radius:12px;overflow:hidden;margin:0 0 12px;background:#fff}
@@ -1676,24 +1747,20 @@ body.theme-dark .std-demo .product{background:#12141a;border-color:rgba(255,255,
 .std-demo .avatars .more{background:#f2f4f8;border-radius:999px;padding:6px 10px;font-weight:700}
 body.theme-dark .std-demo .avatars .more{background:#0e1015}
 
-/* STORY CARDS — 3 pre-lander типи */
+/* STORY CARDS */
 .std-demo .story-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);margin:0 0 12px;background:#fff}
 .std-demo .story-card img{width:100%;display:block}
 .std-demo .story-card figcaption{padding:10px 12px}
 
-/* 04. Caption bar (як у прикладі з "Discours de Mona") */
-.std-demo .story-card.bar-pink figcaption{
-  background:#f8b4c7;color:#1c2430;font-weight:800;text-align:center
-}
-
+/* 04. Caption bar */
+.std-demo .story-card.bar-pink figcaption{background:#f8b4c7;color:#1c2430;font-weight:800;text-align:center}
 /* 05. Ribbon */
 .std-demo .story-card.ribbon{--r:#111;--txt:#fff}
 .std-demo .story-card.ribbon .ribbon-tag{
-  position:absolute;top:10px;left:-40px;transform:rotate(-15deg);
+  position:absolute;top:10px;left:-55px;transform:rotate(-30deg);
   background:var(--r);color:var(--txt);padding:6px 56px;font-weight:800;letter-spacing:.06em
 }
 .std-demo .story-card.ribbon figcaption{background:#f2f4f8}
-
 /* 06. Polaroid */
 .std-demo .story-card.polaroid{padding:10px;background:#fff}
 .std-demo .story-card.polaroid img{border:8px solid #fff;box-shadow:0 10px 20px rgba(0,0,0,.12);border-radius:4px}
@@ -1706,7 +1773,49 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
 }
 `;
 
-    const IMGS_JS = `// Images — JS не потрібний.`;
+    const IMGS_JS = `/* HERO JS (01–05) — керування компактним режимом у проміжку 350–490px,
+   підрізання заголовків і автоматичне винесення підпису під зображення при тісноті. */
+(function(){
+  const MID_MIN = 350, MID_MAX = 490;
+  const Q = (s, r = document) => r.querySelector(s);
+  const QA = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const isMid = () => innerWidth >= MID_MIN && innerWidth <= MID_MAX;
+
+  function tuneHero(el){
+    const mid = isMid();
+    const cap = Q('.hero-caption', el);
+    const img = Q('img', el);
+
+    // 1) Глобальний компакт у вузькому діапазоні
+    el.classList.toggle('is-compact', mid);
+
+    // 2) Довгі заголовки — clamp до 2 рядків
+    if (cap){
+      const h2 = Q('h2', cap);
+      if (h2){
+        const long = (h2.textContent || '').trim().length > 62;
+        h2.classList.toggle('clamp-2', mid && long);
+      }
+    }
+
+    // 3) Якщо підпис займає >48% висоти зображення — виносимо під (shift-out)
+    if (cap && img){
+      const needShift = mid && (cap.scrollHeight > (img.clientHeight * 0.48));
+      el.classList.toggle('shift-out', !!needShift);
+    }
+  }
+
+  function tuneAll(){
+    QA('.std-demo .hero-01, .std-demo .hero-02, .std-demo .hero-03, .std-demo .hero-04, .std-demo .hero-05')
+      .forEach(tuneHero);
+  }
+
+  // Ініціалізація і повторні перерахунки
+  window.addEventListener('resize', tuneAll, { passive: true });
+  if (document.fonts && document.fonts.ready){ document.fonts.ready.then(tuneAll); }
+  window.addEventListener('load', tuneAll);
+  setTimeout(tuneAll, 0);
+})();`;
 
     /* ---- Рендер та підключення стилів/JS у вкладки ---- */
     function buildStandardGroups() {
@@ -1943,6 +2052,55 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         }
     });
 
+    /* ===== Preview badges: H01–H.. для hero та IMG01– для зображень ===== */
+    function ensurePreviewBadgesCSS() {
+        if (document.getElementById("previewBadgesStyle")) return;
+        const st = document.createElement("style");
+        st.id = "previewBadgesStyle";
+        st.textContent = `
+  /* стилі діють лише в прев'ю */
+  .preview .dev-badge{
+    position:absolute;top:8px;left:8px;z-index:5;
+    background:#111;color:#fff;border-radius:999px;padding:4px 8px;
+    font:700 12px/1.1 ui-sans-serif,system-ui;opacity:.92;
+    box-shadow:0 2px 6px rgba(0,0,0,.25)
+  }
+  .preview .dev-badge.img{ left:auto; right:8px; top:8px }
+  .std-demo .hero{ position:relative }
+  .std-demo figure, .std-demo article, .std-demo .avatars img{ position:relative }
+  `;
+        document.head.appendChild(st);
+    }
+    function addHeroAndImageNumbers() {
+        ensurePreviewBadgesCSS();
+        // прибрати старі бейджі (на випадок перерендеру)
+        document
+            .querySelectorAll(".preview .dev-badge")
+            .forEach((n) => n.remove());
+
+        // Hero → H01, H02...
+        const heroes = Array.from(
+            document.querySelectorAll(".std-demo section.hero")
+        );
+        heroes.forEach((el, i) => {
+            const b = document.createElement("span");
+            b.className = "dev-badge";
+            b.textContent = "H" + String(i + 1).padStart(2, "0");
+            el.appendChild(b);
+        });
+
+        // Інші зображення → IMG01, IMG02... (пропускаємо ті, що всередині hero)
+        const imgs = Array.from(
+            document.querySelectorAll(".std-demo img")
+        ).filter((img) => !img.closest(".hero"));
+        imgs.forEach((img, i) => {
+            const b = document.createElement("span");
+            b.className = "dev-badge img";
+            b.textContent = "IMG" + String(i + 1).padStart(2, "0");
+            (img.parentElement || img).appendChild(b);
+        });
+    }
+
     // ===== Ініціалізація =====
     function init() {
         // Заповнення контролів
@@ -1965,7 +2123,10 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         renderButtonsHTML();
         equalizeCodeHeights();
         buildStandardGroups(); // заповнює прев’ю/код базових компонентів
-        showStdGroup("sbButtons"); // за замовчуванням показує Buttons (як і раніше)
+        buildStandardGroups();
+        addHeroAndImageNumbers();
+
+        showStdGroup("sbHeader"); // за замовчуванням показує Buttons (як і раніше)
     }
     init();
 });

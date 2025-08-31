@@ -234,7 +234,6 @@
     </section>
 
     <!-- STANDARD TAB -->
-    <!-- STANDARD TAB -->
     <section class="shell tab" id="tab-standard" aria-label="Базові компоненти" hidden>
       <aside class="sidebar" id="standardSidebar">
         <h4>Базові</h4>
@@ -349,20 +348,34 @@
           <div class="inner-tabs" role="tablist" aria-label="Images inner tabs">
             <button class="inner-tab" role="tab" aria-selected="true" data-inner="imgs-preview">Preview</button>
             <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-css">CSS</button>
+            <!-- ⬇️ ДОДАНО: кнопка JS -->
+            <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-js" id="imgsJsTab">JS</button>
             <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-html">HTML</button>
           </div>
+
           <div id="imgsPreview" class="preview" data-inner-panel="imgs-preview">
             <div class="std-demo" id="imgsDemo"></div>
           </div>
+
           <div id="imgsCSS" data-inner-panel="imgs-css" hidden>
             <div class="copybar"><button class="btn" id="copyImgsCssBtn">Copy CSS</button></div>
             <div id="imgsCssOutput" class="codebox"></div>
           </div>
+
+          <!-- ⬇️ ДОДАНО: панель JS -->
+          <div id="imgsJS" data-inner-panel="imgs-js" hidden>
+            <div class="copybar"><button class="btn" id="copyImgsJsBtn">Copy JS</button></div>
+            <div id="imgsJsOutput" class="codebox"></div>
+            <p class="notice">Цей JS керує “вузьким” діапазоном 350–490px (is-compact/shift-out) і підрізає довгі
+              заголовки.</p>
+          </div>
+
           <div id="imgsHTML" data-inner-panel="imgs-html" hidden>
             <div class="copybar"><button class="btn" id="copyImgsHtmlBtn">Copy HTML</button></div>
             <div id="imgsHtmlOutput" class="codebox"></div>
           </div>
         </div>
+
 
         <!-- ===== GROUP: BUTTONS (існуючий блок, просто обгорнули) ===== -->
         <div class="std-group" id="std-buttons">
