@@ -691,29 +691,34 @@ document.addEventListener("DOMContentLoaded", () => {
 .highlight-20{ background:#fff3e0; border-radius:4px; box-shadow: inset 0 0 0 1px #ffb74d }
 `;
 
-function ensureHighlightStyle() {
-    let st = document.getElementById("highlightStyle");
-    if (!st) {
-        st = document.createElement("style");
-        st.id = "highlightStyle";
-        document.head.appendChild(st);
+    function ensureHighlightStyle() {
+        let st = document.getElementById("highlightStyle");
+        if (!st) {
+            st = document.createElement("style");
+            st.id = "highlightStyle";
+            document.head.appendChild(st);
+        }
+        st.textContent = HIGHLIGHT_CSS;
     }
-    st.textContent = HIGHLIGHT_CSS;
-}
 
-    function filterCssByHtml(css, html) {
-        css = String(css || "").replace(/\/\*[\s\S]*?\*\//g, ""); // прибрати коментарі
+    function filterCssByHtml(css, html, opts = {}) {
+        css = String(css || "").replace(/\/\*[\s\S]*?\*\//g, "");
         const host = document.createElement("div");
         host.innerHTML = String(html || "");
+        const keepScope = !!opts.keepScope;
 
         const usedAnimations = new Set();
         const keyframesMap = new Map();
 
         const stripScope = (sel) => {
-            // прибрати .std-demo, .content; .preview — дропаємо
-            let s = sel
-                .replace(/(^|[\s>+~])\.std-demo(?=[\s>+~.#[:]|$)/g, "$1")
-                .replace(/(^|[\s>+~])\.content(?=[\s>+~.#[:]|$)/g, "$1")
+            // якщо keepScope=true — НЕ знімаємо .std-demo/.content; прибираємо лише .preview
+            let s = sel;
+            if (!keepScope) {
+                s = s
+                    .replace(/(^|[\s>+~])\.std-demo(?=[\s>+~.#[:]|$)/g, "$1")
+                    .replace(/(^|[\s>+~])\.content(?=[\s>+~.#[:]|$)/g, "$1");
+            }
+            s = s
                 .replace(/(^|[\s>+~])\.preview(?=[\s>+~.#[:]|$)/g, "$1__DROP__")
                 .replace(/\s+/g, " ")
                 .replace(/^[>+~]\s*/, "")
@@ -883,6 +888,85 @@ function ensureHighlightStyle() {
             .join("\n");
     }
 
+    // Залишає лише селектори, що містять хоча б один з "root" токенів (.nav, .crumbs, ...)
+    function restrictCssToRoots(css, roots = []) {
+        if (!roots || !roots.length) return css;
+        const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        const keepSel = (sel) => {
+            const s = sel.trim();
+            if (!s) return false;
+            // дозволяємо глобальні речі, якщо лишилися (рідко)
+            if (/^@/.test(s)) return true;
+            // хоча б один root-токен у селекторі
+            return roots.some((token) => {
+                const re = new RegExp(
+                    `(^|[\\s>+~.,#\\[])+${esc(token)}(?=$|[\\s>+~.,#:\\[])`
+                );
+                return re.test(s);
+            });
+        };
+
+        // легкий парсер: @-блоки обробляємо рекурсивно
+        function pass(seg) {
+            let i = 0,
+                out = "",
+                n = seg.length;
+            const readBlock = () => {
+                let depth = 0,
+                    start = i;
+                while (i < n) {
+                    const ch = seg[i++];
+                    if (ch === "{") depth++;
+                    else if (ch === "}" && --depth === 0) break;
+                }
+                return seg.slice(start + 1, i - 1);
+            };
+            while (i < n) {
+                while (/\s/.test(seg[i] || "")) i++;
+                if (i >= n) break;
+
+                if (seg[i] === "@") {
+                    const m = seg.slice(i).match(/^@([a-zA-Z-]+)/);
+                    if (!m) {
+                        i++;
+                        continue;
+                    }
+                    const at = m[1];
+                    i += m[0].length;
+                    const preludeStart = i;
+                    while (i < n && seg[i] !== "{" && seg[i] !== ";") i++;
+                    const prelude = seg.slice(preludeStart, i).trim();
+                    if (seg[i] === ";") {
+                        i++;
+                        continue;
+                    }
+                    const inner = readBlock();
+                    if (/keyframes$/i.test(at)) {
+                        // keyframes пропускаємо як є (ми вже відсікли зайве до цього)
+                        out += `@${at} ${prelude}{${inner}}\n`;
+                    } else {
+                        const filtered = pass(inner).trim();
+                        if (filtered)
+                            out += `@${at} ${prelude}{\n${filtered}\n}\n`;
+                    }
+                } else {
+                    const selStart = i;
+                    while (i < n && seg[i] !== "{") i++;
+                    const sels = seg.slice(selStart, i).trim();
+                    const body = readBlock();
+                    if (!sels || !body) continue;
+                    const kept = sels
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(keepSel);
+                    if (kept.length) out += `${kept.join(", ")}{${body}}\n`;
+                }
+            }
+            return out;
+        }
+        return pass(css);
+    }
 
     const LIGHT_SCHEMES = [
         { bg: "#ffffff", text: "#1c2430", link: "#0a7c5e" },
@@ -1170,9 +1254,6 @@ img { max-width: 100%; height: auto; display: block; }`;
             );
         });
     }
-
-
-
 
     // Корисно повторно чіпляти після змін типографіки (бо CSS міняється)
     function refreshTypographyChips() {
@@ -2192,8 +2273,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             .replace(/,\s+/g, ", ");
     }
 
-
-
     // створює кнопку-чип і навішує клік
     function attachCopyChip(targetEl, buildText, label = "Copy") {
         // загортаємо елемент, щоб мати відносне позиціювання
@@ -2291,6 +2370,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: HEAD_JS,
                 itemSel: "header.nav",
                 label: "Copy Header",
+                roots: [".nav"],
             },
             {
                 root: "#crumbsDemo",
@@ -2298,6 +2378,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: "",
                 itemSel: "nav.crumbs",
                 label: "Copy Breadcrumbs",
+                roots: [".crumbs"],
             },
             {
                 root: "#footDemo",
@@ -2305,6 +2386,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: FOOT_JS,
                 itemSel: ".foot",
                 label: "Copy Footer",
+                roots: [".foot"],
             },
             {
                 root: "#adsDemo",
@@ -2312,6 +2394,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: "",
                 itemSel: ".adbar,.disclosure,.sponsored-card",
                 label: "Copy Block",
+                roots: [".adbar", ".disclosure", ".sponsored-card"],
             },
             {
                 root: "#imgsDemo",
@@ -2319,6 +2402,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: IMGS_JS,
                 itemSel: ".hero,.product,.avatars,.story-card",
                 label: "Copy Block",
+                roots: [".hero", ".product", ".avatars", ".story-card"],
             },
             {
                 root: "#btnsGrid",
@@ -2326,14 +2410,13 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 js: "",
                 itemSel: "a.btn",
                 label: "Copy",
+                roots: [".btn"],
             },
         ];
 
         groups.forEach((g) => {
             const root = document.querySelector(g.root);
             if (!root) return;
-
-            // гігієна: не дублюємо чіпи при повторному виклику
             root.querySelectorAll(".copy-chip").forEach((n) => n.remove());
 
             root.querySelectorAll(g.itemSel).forEach((node) => {
@@ -2341,10 +2424,42 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                     node,
                     () => {
                         const html = node.outerHTML.trim();
-                        const cssRaw = unscopeCss(g.css || "");
-                        const css = filterCssByHtml(cssRaw, html);
-                        const js = unscopeCss(g.js || ""); // ← JS теж в копію
-                        return bundleSnippet(html, css, js);
+
+                        // 1) даємо фільтру "контейнер прев’ю", щоб селектори з .std-demo матчились строго
+                        const scopedHtml = `<div class="std-demo">${html}</div>`;
+
+                        // 2) беремо CSS прямо з активного прев’ю (або з запасного g.css)
+                        const cssSource =
+                            document.getElementById("stdStyle")?.textContent ||
+                            g.css ||
+                            "";
+
+                        // 3) фільтруємо БЕЗ зняття .std-demo (keepScope: true)
+                        const cssFilteredScoped = filterCssByHtml(
+                            cssSource,
+                            scopedHtml,
+                            { keepScope: true }
+                        );
+
+                        // 4) тепер розскоплюємо і додатково звужуємо до "root"-токенів групи
+                        const cssUnscoped = unscopeCss(cssFilteredScoped);
+                        // 1) лишаємо правила, що містять хоч один клас КОНКРЕТНО цього елемента
+                        const classTokens = [...node.classList].map(
+                            (c) => "." + c
+                        );
+                        const cssByClass = restrictCssToRoots(
+                            cssUnscoped,
+                            classTokens
+                        );
+                        // 2) додатково звужуємо до “коренів” групи (.nav / .crumbs / .hero ...)
+                        const cssTight = restrictCssToRoots(
+                            cssByClass,
+                            g.roots || []
+                        );
+
+                        const js = unscopeCss(g.js || "");
+
+                        return bundleSnippet(html, cssTight, js);
                     },
                     g.label
                 );
@@ -2355,7 +2470,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
     function refreshStandardChips() {
         wireStandardCopyChips();
     }
-
 
     // Перемикач груп у Standard-секті (прев’ю-стилі лишаються зі .std-demo)
     const stdMap = {
@@ -2385,7 +2499,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         // у прев’ю підключаємо scoped-версію (з .std-demo)
         document.getElementById("stdStyle").textContent = target.css || "";
         equalizeCodeHeights();
-        refreshStandardChips(); 
+        refreshStandardChips();
     }
 
     // Навішуємо кліки на сайдбар Standard
@@ -2577,7 +2691,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         renderButtonsCSS();
         renderButtonsHTML();
         refreshStandardChips();
-        equalizeCodeHeights();
         buildStandardGroups();
         wireStandardCopyChips();
         addHeroAndImageNumbers();
@@ -2585,6 +2698,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         addNotesToAllPreviews();
 
         showStdGroup("sbHeader"); // стартуємо з Header
+        equalizeCodeHeights();
     }
     init();
 });
