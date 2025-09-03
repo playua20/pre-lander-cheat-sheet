@@ -702,54 +702,187 @@ function ensureHighlightStyle() {
 }
 
     function filterCssByHtml(css, html) {
-        // вирізаємо @-блоки як є (media/keyframes) і повертаємо наприкінці
-        const atBlocks = [];
-        css = (css || "").replace(AT_RULE_RE, (m) => {
-            atBlocks.push(m);
-            return "";
-        });
-
+        css = String(css || "").replace(/\/\*[\s\S]*?\*\//g, ""); // прибрати коментарі
         const host = document.createElement("div");
-        host.innerHTML = html; // тут наш <div class="content">...</div>
+        host.innerHTML = String(html || "");
 
-        const kept = [];
-        css.replace(/([^{}]+)\{([^}]*)\}/g, (m, sel, body) => {
-            sel = sel.trim();
-            if (!sel || sel.startsWith("@")) return;
+        const usedAnimations = new Set();
+        const keyframesMap = new Map();
 
-            const selectors = sel
-                .split(",")
-                .map((s) => s.trim())
-                .filter(Boolean);
+        const stripScope = (sel) => {
+            // прибрати .std-demo, .content; .preview — дропаємо
+            let s = sel
+                .replace(/(^|[\s>+~])\.std-demo(?=[\s>+~.#[:]|$)/g, "$1")
+                .replace(/(^|[\s>+~])\.content(?=[\s>+~.#[:]|$)/g, "$1")
+                .replace(/(^|[\s>+~])\.preview(?=[\s>+~.#[:]|$)/g, "$1__DROP__")
+                .replace(/\s+/g, " ")
+                .replace(/^[>+~]\s*/, "")
+                .trim();
+            return s;
+        };
 
-            const filtered = selectors.filter((s) => {
-                if (s.includes(".preview")) return false; // не беремо прев’ю-стилі
-                // "голе" .content (без нащадків) — відсіюємо
-                if (s.includes(".content") && !/[\s>+~]/.test(s)) return false;
+        const selectorMatches = (sel) => {
+            const q = stripScope(sel);
+            if (!q || q.includes("__DROP__")) return false;
+            try {
+                return host.querySelector(q) !== null;
+            } catch {
+                return false; // некоректні селектори пропускаємо
+            }
+        };
 
-                try {
-                    const matches = host.querySelectorAll(s);
-                    if (!matches.length) return false;
-
-                    // якщо матчиться лише кореневий .content (і більше нічого) — також відсіюємо
-                    const onlyRootContent =
-                        matches.length === 1 &&
-                        matches[0].classList &&
-                        matches[0].classList.contains("content") &&
-                        matches[0] === host.querySelector(".content");
-
-                    return !onlyRootContent;
-                } catch {
-                    // некоректні або надскладні селектори — пропускаємо
-                    return false;
+        const collectAnimations = (body) => {
+            const scan = (prop) => {
+                let m;
+                const re = new RegExp(prop + "\\s*:\\s*([^;]+);", "g");
+                while ((m = re.exec(body))) {
+                    const chunk = m[1];
+                    chunk.split(",").forEach((part) => {
+                        part.trim()
+                            .split(/\s+/)
+                            .forEach((t) => {
+                                if (
+                                    /^[a-zA-Z_][\w-]*$/.test(t) && // схоже на ім'я
+                                    !/^(none|infinite|normal|reverse|alternate|forwards|backwards|both|running|paused|ease|linear|ease-in|ease-out|ease-in-out|initial|inherit|unset|revert)$/i.test(
+                                        t
+                                    ) &&
+                                    !/^\d+m?s$/.test(t) &&
+                                    !/^\d+(\.\d+)?$/.test(t) &&
+                                    !/(steps|cubic-bezier|var)\(/.test(t)
+                                ) {
+                                    usedAnimations.add(t);
+                                }
+                            });
+                    });
                 }
-            });
+            };
+            scan("animation");
+            scan("animation-name");
+        };
 
-            if (filtered.length) kept.push(`${filtered.join(", ")}{${body}}`);
+        const processSegment = (seg) => {
+            let i = 0;
+            const n = seg.length;
+            const out = [];
+
+            const readBlock = () => {
+                if (seg[i] !== "{") return "";
+                let depth = 0;
+                const start = i;
+                while (i < n) {
+                    const ch = seg[i++];
+                    if (ch === "{") depth++;
+                    else if (ch === "}") {
+                        depth--;
+                        if (depth === 0) break;
+                    }
+                }
+                return seg.slice(start + 1, i - 1);
+            };
+
+            while (i < n) {
+                // пропустити пробіли
+                while (i < n && /\s/.test(seg[i])) i++;
+                if (i >= n) break;
+
+                if (seg[i] === "@") {
+                    const m = seg.slice(i).match(/^@([a-zA-Z-]+)/);
+                    if (!m) {
+                        i++;
+                        continue;
+                    }
+                    const at = m[1];
+                    i += m[0].length;
+
+                    // прелюдія (умова) до блоку
+                    const preludeStart = i;
+                    while (i < n && seg[i] !== "{" && seg[i] !== ";") i++;
+                    const prelude = seg.slice(preludeStart, i).trim();
+
+                    if (seg[i] === ";") {
+                        i++;
+                        continue;
+                    }
+                    if (seg[i] === "{") {
+                        const inner = readBlock();
+
+                        if (/keyframes$/i.test(at)) {
+                            const name =
+                                (prelude.match(/([a-zA-Z_][\w-]*)/) || [])[1] ||
+                                prelude;
+                            keyframesMap.set(
+                                name,
+                                `@${at} ${prelude}{${inner}}`
+                            );
+                        } else if (at === "media" || at === "supports") {
+                            const filteredInner = processSegment(inner);
+                            if (filteredInner.trim()) {
+                                out.push(
+                                    `@${at} ${prelude}{\n${filteredInner}\n}`
+                                );
+                            }
+                        } else if (at === "font-face" || at === "page") {
+                            // залишаємо як є (може знадобитись)
+                            out.push(`@${at} ${prelude}{${inner}}`);
+                        } else {
+                            // інші @-блоки — теж як є
+                            out.push(`@${at} ${prelude}{${inner}}`);
+                        }
+                    }
+                } else {
+                    // звичайне правило
+                    const selStart = i;
+                    while (i < n && seg[i] !== "{") i++;
+                    const selectors = seg.slice(selStart, i).trim();
+                    const body = readBlock();
+                    if (!selectors || !body) continue;
+
+                    const kept = [];
+                    selectors
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                        .forEach((s) => {
+                            if (s.includes(".preview")) return;
+                            if (selectorMatches(s)) {
+                                const outSel = stripScope(s);
+                                if (outSel && outSel !== "__DROP__")
+                                    kept.push(outSel);
+                            }
+                        });
+
+                    if (kept.length) {
+                        collectAnimations(body);
+                        out.push(
+                            `${Array.from(new Set(kept)).join(", ")}{${body}}`
+                        );
+                    }
+                }
+            }
+
+            return out.join("\n");
+        };
+
+        const filteredCore = processSegment(css);
+
+        // додати :root якщо у відібраному CSS є var(--...)
+        let rootBlock = "";
+        const rootMatch = css.match(/:root\s*\{([\s\S]*?)\}/);
+        if (rootMatch && /var\(--/.test(filteredCore)) {
+            rootBlock = `:root{${rootMatch[1]}}`;
+        }
+
+        // додати лише потрібні keyframes
+        const kfOut = [];
+        usedAnimations.forEach((name) => {
+            if (keyframesMap.has(name)) kfOut.push(keyframesMap.get(name));
         });
 
-        return [...atBlocks, ...kept].join("\n");
+        return [rootBlock, filteredCore, kfOut.join("\n")]
+            .filter(Boolean)
+            .join("\n");
     }
+
 
     const LIGHT_SCHEMES = [
         { bg: "#ffffff", text: "#1c2430", link: "#0a7c5e" },
@@ -2049,6 +2182,16 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         if (js && js.trim()) parts.push(`/* JS */\n${js.trim()}`);
         return parts.join("\n\n"); // без «Не забудь підключити...»
     }
+
+    function stripContentScope(css) {
+        // прибирає токен .content у селекторах, зберігаючи комбінації
+        return (css || "")
+            .replace(/(^|[,\s>+~])\.content(?=$|[,\s>+~.#:\[])/g, "$1")
+            .replace(/\s{2,}/g, " ")
+            .replace(/\s*([>+~,])\s*/g, "$1 ")
+            .replace(/,\s+/g, ", ");
+    }
+
 
 
     // створює кнопку-чип і навішує клік
