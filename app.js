@@ -665,6 +665,92 @@ document.addEventListener("DOMContentLoaded", () => {
         return "#" + hex(r * k) + hex(g * k) + hex(b * k);
     }
 
+    // ---- Highlight variants (в окремому стилі для прев’ю і копіювання)
+    const HIGHLIGHT_CSS = `
+/* Highlight variants */
+.highlight{ padding:0 .25em }
+.highlight-1{ background:linear-gradient(180deg,rgba(255,255,255,.0) 60%, rgba(255,239,120,.9) 60%) }
+.highlight-2{ background:#ffeb3b; border-radius:4px }
+.highlight-3{ box-shadow:inset 0 -8px 0 rgba(91,209,168,.35) }
+.highlight-4{ outline:2px solid #5bd1a8; border-radius:6px }
+.highlight-5{ text-decoration:underline wavy #ff6d6d 2px }
+.highlight-6{ background:#c8e6c9; border-radius:999px; padding:.1em .5em }
+.highlight-7{ background:#ffe0b2; border:1px dashed #ff9800; border-radius:6px; padding:.05em .3em }
+.highlight-8{ background:linear-gradient(90deg, rgba(91,209,168,.25), rgba(91,209,168,.05)) }
+.highlight-9{ background:linear-gradient(180deg, transparent 70%, rgba(0,0,0,.12) 0%) }
+.highlight-10{ text-shadow:0 1px 0 #fff; background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.3)); border-radius:4px }
+.highlight-11{ background:#e3f2fd; border-left:3px solid #2196f3; padding:.05em .35em }
+.highlight-12{ box-shadow: inset 0 -6px 0 rgba(255,105,180,.35) }
+.highlight-13{ background:#fff59d; border:1px dotted #fbc02d }
+.highlight-14{ outline:2px dashed #9c27b0; border-radius:8px }
+.highlight-15{ text-decoration: underline double #00897b 2px }
+.highlight-16{ background:linear-gradient(90deg, rgba(33,150,243,.15), rgba(33,150,243,0)) }
+.highlight-17{ background:#fce4ec; border:1px solid #f48fb1; border-radius:6px }
+.highlight-18{ box-shadow:inset 0 -10px 0 rgba(76,175,80,.25) }
+.highlight-19{ background:linear-gradient(180deg, transparent 65%, rgba(0,0,0,.08) 0%) }
+.highlight-20{ background:#fff3e0; border-radius:4px; box-shadow: inset 0 0 0 1px #ffb74d }
+`;
+
+function ensureHighlightStyle() {
+    let st = document.getElementById("highlightStyle");
+    if (!st) {
+        st = document.createElement("style");
+        st.id = "highlightStyle";
+        document.head.appendChild(st);
+    }
+    st.textContent = HIGHLIGHT_CSS;
+}
+
+    function filterCssByHtml(css, html) {
+        // вирізаємо @-блоки як є (media/keyframes) і повертаємо наприкінці
+        const atBlocks = [];
+        css = (css || "").replace(AT_RULE_RE, (m) => {
+            atBlocks.push(m);
+            return "";
+        });
+
+        const host = document.createElement("div");
+        host.innerHTML = html; // тут наш <div class="content">...</div>
+
+        const kept = [];
+        css.replace(/([^{}]+)\{([^}]*)\}/g, (m, sel, body) => {
+            sel = sel.trim();
+            if (!sel || sel.startsWith("@")) return;
+
+            const selectors = sel
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+
+            const filtered = selectors.filter((s) => {
+                if (s.includes(".preview")) return false; // не беремо прев’ю-стилі
+                // "голе" .content (без нащадків) — відсіюємо
+                if (s.includes(".content") && !/[\s>+~]/.test(s)) return false;
+
+                try {
+                    const matches = host.querySelectorAll(s);
+                    if (!matches.length) return false;
+
+                    // якщо матчиться лише кореневий .content (і більше нічого) — також відсіюємо
+                    const onlyRootContent =
+                        matches.length === 1 &&
+                        matches[0].classList &&
+                        matches[0].classList.contains("content") &&
+                        matches[0] === host.querySelector(".content");
+
+                    return !onlyRootContent;
+                } catch {
+                    // некоректні або надскладні селектори — пропускаємо
+                    return false;
+                }
+            });
+
+            if (filtered.length) kept.push(`${filtered.join(", ")}{${body}}`);
+        });
+
+        return [...atBlocks, ...kept].join("\n");
+    }
+
     const LIGHT_SCHEMES = [
         { bg: "#ffffff", text: "#1c2430", link: "#0a7c5e" },
         { bg: "#f6f7fb", text: "#101623", link: "#2563eb" },
@@ -732,7 +818,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { bg: "#1a1d23", text: "#e8e8e8", link: "#4aa0e9" },
         { bg: "#1f1b29", text: "#e9e6ec", link: "#d4af37" },
         { bg: "#0c0f16", text: "#ececec", link: "#a78bfa" },
-        { bg: "#2b2b2b", text: "#e0e00", link: "#c04a44" },
+        { bg: "#2b2b2b", text: "#e0e0e0", link: "#c04a44" },
         { bg: "#111827", text: "#f9fafb", link: "#60a5fa" },
         { bg: "#171717", text: "#f3f4f6", link: "#fbbf24" },
         { bg: "#1e1b4b", text: "#e0e7ff", link: "#a78bfa" },
@@ -811,12 +897,59 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
-    document
-        .getElementById("copyCssBtn")
-        .addEventListener("click", () => copyFrom("cssOutput"));
-    document
-        .getElementById("copyHtmlBtn")
-        .addEventListener("click", () => copyFrom("htmlOutput"));
+    // ===== Копіювання з фідбеком =====
+    async function copyTextWithFeedback(text, btn) {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (e) {
+            const t = document.createElement("textarea");
+            t.value = text;
+            document.body.appendChild(t);
+            t.select();
+            try {
+                document.execCommand("copy");
+            } finally {
+                document.body.removeChild(t);
+            }
+        }
+        if (btn) {
+            const prev = btn.innerHTML;
+            btn.dataset.state = "copied";
+            btn.innerHTML = "✓ Скопійовано";
+            setTimeout(() => {
+                btn.dataset.state = "";
+                btn.innerHTML = prev;
+            }, 1100);
+        }
+    }
+
+    // Прив’язка існуючих кнопок "Copy CSS/HTML/JS" з фідбеком
+    function bindCopy(btnId, boxId) {
+        const b = document.getElementById(btnId);
+        if (!b) return;
+        b.addEventListener("click", () => {
+            const el = document.getElementById(boxId);
+            copyTextWithFeedback(el?.textContent || "", b);
+        });
+    }
+    [
+        ["copyCssBtn", "cssOutput"],
+        ["copyHtmlBtn", "htmlOutput"],
+        ["copyHeadCssBtn", "headCssOutput"],
+        ["copyHeadHtmlBtn", "headHtmlOutput"],
+        ["copyHeadJsBtn", "headJsOutput"],
+        ["copyCrumbsCssBtn", "crumbsCssOutput"],
+        ["copyCrumbsHtmlBtn", "crumbsHtmlOutput"],
+        ["copyFootCssBtn", "footCssOutput"],
+        ["copyFootHtmlBtn", "footHtmlOutput"],
+        ["copyAdsCssBtn", "adsCssOutput"],
+        ["copyAdsHtmlBtn", "adsHtmlOutput"],
+        ["copyImgsCssBtn", "imgsCssOutput"],
+        ["copyImgsHtmlBtn", "imgsHtmlOutput"],
+        ["copyImgsJsBtn", "imgsJsOutput"],
+        ["copyBtnsCssBtn", "btnsCssOutput"],
+        ["copyBtnsHtmlBtn", "btnsHtmlOutput"],
+    ].forEach(([b, o]) => bindCopy(b, o));
 
     // ===== Експорт CSS/HTML (типографіка) =====
     function renderCSS() {
@@ -846,29 +979,7 @@ img { max-width: 100%; height: auto; display: block; }`;
 .content blockquote{ color:${c.bqText}; background:${c.bqBg}; border-left-color:${c.bqBorder}; }`;
         })();
 
-        const highlights = `
-/* Highlight variants */
-.highlight{ padding:0 .25em }
-.highlight-1{ background:linear-gradient(180deg,rgba(255,255,255,.0) 60%, rgba(255,239,120,.9) 60%) }
-.highlight-2{ background:#ffeb3b; border-radius:4px }
-.highlight-3{ box-shadow:inset 0 -8px 0 rgba(91,209,168,.35) }
-.highlight-4{ outline:2px solid #5bd1a8; border-radius:6px }
-.highlight-5{ text-decoration:underline wavy #ff6d6d 2px }
-.highlight-6{ background:#c8e6c9; border-radius:999px; padding:.1em .5em }
-.highlight-7{ background:#ffe0b2; border:1px dashed #ff9800; border-radius:6px; padding:.05em .3em }
-.highlight-8{ background:linear-gradient(90deg, rgba(91,209,168,.25), rgba(91,209,168,.05)) }
-.highlight-9{ background:linear-gradient(180deg, transparent 70%, rgba(0,0,0,.12) 0%) }
-.highlight-10{ text-shadow:0 1px 0 #fff; background:linear-gradient(180deg,rgba(255,255,255,.65),rgba(255,255,255,.3)); border-radius:4px }
-.highlight-11{ background:#e3f2fd; border-left:3px solid #2196f3; padding:.05em .35em }
-.highlight-12{ box-shadow: inset 0 -6px 0 rgba(255,105,180,.35) }
-.highlight-13{ background:#fff59d; border:1px dotted #fbc02d }
-.highlight-14{ outline:2px dashed #9c27b0; border-radius:8px }
-.highlight-15{ text-decoration: underline double #00897b 2px }
-.highlight-16{ background:linear-gradient(90deg, rgba(33,150,243,.15), rgba(33,150,243,0)) }
-.highlight-17{ background:#fce4ec; border:1px solid #f48fb1; border-radius:6px }
-.highlight-18{ box-shadow:inset 0 -10px 0 rgba(76,175,80,.25) }
-.highlight-19{ background:linear-gradient(180deg, transparent 65%, rgba(0,0,0,.08) 0%) }
-.highlight-20{ background:#fff3e0; border-radius:4px; box-shadow: inset 0 0 0 1px #ffb74d }`;
+        const highlights = HIGHLIGHT_CSS;
 
         const css =
             baseStyles +
@@ -880,6 +991,66 @@ img { max-width: 100%; height: auto; display: block; }`;
             highlights;
         document.getElementById("cssOutput").textContent = css;
     }
+
+    function wireTypographyCopyChips() {
+        const content = document.querySelector("#typoPreview .content");
+        if (!content) return;
+
+        const getCssRaw = (isHighlight) => {
+            const typoCss =
+                document.getElementById("typoStyle")?.textContent || "";
+            const hlCss =
+                document.getElementById("highlightStyle")?.textContent || "";
+            return isHighlight ? hlCss : typoCss + "\n" + hlCss;
+        };
+
+        const targets = "h1,h2,h3,h4,h5,h6,p,ul,ol,blockquote,span.highlight";
+        content.querySelectorAll(targets).forEach((el) => {
+            el.classList.add("copy-target");
+
+            attachCopyChip(
+                el,
+                () => {
+                    const clone = el.cloneNode(true);
+                    clone
+                        .querySelectorAll(".badge,.dev-badge")
+                        .forEach((n) => n.remove());
+
+                    const isHighlight = el.matches(
+                        "span.highlight, .highlight"
+                    );
+
+                    // HTML: для хайлайта — тільки <span>; для решти — елемент у .content
+                    const html = isHighlight
+                        ? clone.outerHTML.trim()
+                        : `<div class="content">\n  ${clone.outerHTML.trim()}\n</div>`;
+
+                    // CSS: для хайлайта — лише highlight CSS; для решти — типографіка + highlight
+                    const cssRaw = getCssRaw(isHighlight);
+                    const css = filterCssByHtml(cssRaw, html);
+
+                    return bundleSnippet(html, css, "");
+                },
+                "Copy"
+            );
+        });
+    }
+
+
+
+    // Корисно повторно чіпляти після змін типографіки (бо CSS міняється)
+    function refreshTypographyChips() {
+        document
+            .querySelectorAll("#typoPreview .copy-chip")
+            .forEach((n) => n.remove());
+        wireTypographyCopyChips();
+    }
+    // Викличи refreshTypographyChips() наприкінці renderCSS()/applyStyles() де в тебе зручно:
+    const _renderCSS = renderCSS;
+    renderCSS = function () {
+        _renderCSS();
+        refreshTypographyChips();
+    };
 
     function renderHTML() {
         const scope = document.getElementById("previewScope").cloneNode(true);
@@ -1815,6 +1986,89 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
   setTimeout(tuneAll, 0);
 })();`;
 
+    /* ===== УТИЛІТИ ДЛЯ ПОБУДОВИ ПАКЕТУ (html+css+js) ===== */
+    const AT_RULE_RE = /@[\s\S]*?\{[\s\S]*?\}/g; // дуже спрощено: @media/@keyframes тощо
+    function unscopeCss(css) {
+        return (css || "").replace(/\.std-demo\s+/g, "");
+    }
+
+    // Витяг класів/тегів з HTML (для фільтрації CSS)
+    function extractClassSetFromHtml(html) {
+        const set = new Set();
+        const re = /class=["']([^"']+)["']/g;
+        let m;
+        while ((m = re.exec(html)))
+            m[1]
+                .trim()
+                .split(/\s+/)
+                .forEach((c) => set.add(c));
+        return set;
+    }
+    function extractTagSetFromHtml(html) {
+        const set = new Set();
+        const re = /<\s*([a-zA-Z0-9-]+)/g;
+        let m;
+        while ((m = re.exec(html))) set.add(m[1].toLowerCase());
+        return set;
+    }
+
+    // Дуже легка фільтрація CSS: лишаємо правила, що містять потрібні класи/теги
+    // Дуже легка фільтрація (залишено на майбутнє, НЕ використовується)
+    // Дуже легка фільтрація (залишено на майбутнє, НЕ використовується)
+    function filterCssByHtmlLoose(css, html) {
+        const classes = extractClassSetFromHtml(html);
+        const tags = extractTagSetFromHtml(html);
+        const keepBlocks = [];
+        (css.match(AT_RULE_RE) || []).forEach((x) => keepBlocks.push(x));
+        css.replace(/([^{}]+)\{([^}]*)\}/g, (m, sel, body) => {
+            if (sel.trim().startsWith("@")) return;
+            const selectors = sel.split(",").map((s) => s.trim());
+            const has = selectors.some((s) => {
+                for (const c of classes) if (s.includes("." + c)) return true;
+                for (const t of tags)
+                    if (
+                        new RegExp(
+                            `(^|[\\s>:+~\\.,\\[#])${t}(?=$|[\\s>:+~\\.,\\[#])`
+                        ).test(s)
+                    )
+                        return true;
+                return false;
+            });
+            if (has) keepBlocks.push(`${sel}{${body}}`);
+        });
+        return keepBlocks.join("\n");
+    }
+
+    function bundleSnippet(html, css, js) {
+        let out = "";
+        if (html) out += `<!-- HTML -->\n${html.trim()}\n`;
+        if (css) out += `\n/* CSS */\n${css.trim()}\n`;
+        if (js) out += `\n/* JS */\n${js.trim()}\n`;
+        out += `\n/* Не забудь підключити у проєкті:\n<link rel="stylesheet" href="style.css" />\n<script src="script.js"></script>\n*/`;
+        return out.trim();
+    }
+
+    // створює кнопку-чип і навішує клік
+    function attachCopyChip(targetEl, buildText, label = "Copy") {
+        // загортаємо елемент, щоб мати відносне позиціювання
+        let wrap = targetEl.closest(".comp-wrap");
+        if (!wrap) {
+            wrap = document.createElement("div");
+            wrap.className = "comp-wrap";
+            targetEl.parentNode.insertBefore(wrap, targetEl);
+            wrap.appendChild(targetEl);
+        }
+        const chip = document.createElement("button");
+        chip.className = "copy-chip";
+        chip.innerHTML = label;
+        wrap.appendChild(chip);
+
+        chip.addEventListener("click", async () => {
+            const text = buildText();
+            await copyTextWithFeedback(text, chip);
+        });
+    }
+
     /* ---- Рендери + кодбокси (прев’ю з .std-demo, копія — без .std-demo) ---- */
     function mountStdGroup(
         css,
@@ -1883,6 +2137,76 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             "imgsJsOutput"
         );
     }
+    function wireStandardCopyChips() {
+        const groups = [
+            {
+                root: "#headDemo",
+                css: HEAD_CSS,
+                js: HEAD_JS,
+                itemSel: "header.nav",
+                label: "Copy Header",
+            },
+            {
+                root: "#crumbsDemo",
+                css: CRUMBS_CSS,
+                js: "",
+                itemSel: "nav.crumbs",
+                label: "Copy Breadcrumbs",
+            },
+            {
+                root: "#footDemo",
+                css: FOOT_CSS,
+                js: FOOT_JS,
+                itemSel: ".foot",
+                label: "Copy Footer",
+            },
+            {
+                root: "#adsDemo",
+                css: ADS_CSS,
+                js: "",
+                itemSel: ".adbar,.disclosure,.sponsored-card",
+                label: "Copy Block",
+            },
+            {
+                root: "#imgsDemo",
+                css: IMGS_CSS,
+                js: IMGS_JS,
+                itemSel: ".hero,.product,.avatars,.story-card",
+                label: "Copy Block",
+            },
+            {
+                root: "#btnsGrid",
+                css: document.getElementById("btnKitStyle").textContent,
+                js: "",
+                itemSel: "a.btn",
+                label: "Copy",
+            },
+        ];
+
+        groups.forEach((g) => {
+            const root = document.querySelector(g.root);
+            if (!root) return;
+            root.querySelectorAll(g.itemSel).forEach((node) => {
+                attachCopyChip(
+                    node,
+                    () => {
+                        // 1) HTML конкретного елемента
+                        const html = node.outerHTML.trim();
+
+                        // 2) CSS — беремо груповий, знімаємо .std-demo і фільтруємо під HTML
+                        const cssRaw = unscopeCss(g.css || "");
+                        const css = filterCssByHtml(cssRaw, html);
+
+                        // 3) JS — груповий (для header/images потрібен), теж без .std-demo
+                        const js = unscopeCss(g.js || "");
+
+                        return bundleSnippet(html, css, js);
+                    },
+                    g.label
+                );
+            });
+        });
+    }
 
     // Перемикач груп у Standard-секті (прев’ю-стилі лишаються зі .std-demo)
     const stdMap = {
@@ -1930,9 +2254,6 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
 
     // ===== Копіювання коду для всіх вкладок (типографіка + компоненти) =====
     [
-        ["copyCssBtn", "cssOutput"],
-        ["copyHtmlBtn", "htmlOutput"],
-
         ["copyHeadCssBtn", "headCssOutput"],
         ["copyHeadHtmlBtn", "headHtmlOutput"],
         ["copyHeadJsBtn", "headJsOutput"],
@@ -2095,6 +2416,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             else if (sel.dataset.key.includes(".lh"))
                 fillSelect(sel, lhOptions, 1.3);
         });
+        ensureHighlightStyle();
         syncControls();
         applyStyles();
         applyColors();
@@ -2106,6 +2428,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         renderButtonsHTML();
         equalizeCodeHeights();
         buildStandardGroups();
+        wireStandardCopyChips();
         addHeroAndImageNumbers();
         addComponentNumbers();
         addNotesToAllPreviews();

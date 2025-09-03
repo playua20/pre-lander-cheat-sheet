@@ -148,3 +148,20 @@ body.theme-dark .notice{ color:#9aa3b2; }
 /* #headCSS .codebox {
     white-space: break-spaces;
 } */
+
+/* === Copy-chip біля компонентів/елементів === */
+.comp-wrap { position: relative; }
+#std-buttons .copy-chip{ top:-23px}
+.copy-chip{
+  position:absolute; right:8px; top:8px; z-index:3;
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 8px; border-radius:999px;
+  border:1px solid rgba(0,0,0,.12); background:#fff; color:#1c2430;
+  font-size:12px; cursor:pointer; user-select:none;
+}
+.copy-chip[data-state="copied"]{ outline:2px solid #5bd1a8; background:#eafff6; }
+body.theme-dark .copy-chip{ background:#0e1015; color:#e6e8ee; border-color:rgba(255,255,255,.08); }
+
+/* Для типографіки — щоб чип стояв біля елемента */
+.copy-target{ position:relative; }
+.copy-target .copy-chip{ top:-10px; right:-10px; }
