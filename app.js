@@ -993,6 +993,8 @@ img { max-width: 100%; height: auto; display: block; }`;
     }
 
     function wireTypographyCopyChips() {
+        ensureHighlightStyle(); // про всяк випадок
+
         const content = document.querySelector("#typoPreview .content");
         if (!content) return;
 
@@ -1016,25 +1018,26 @@ img { max-width: 100%; height: auto; display: block; }`;
                         .querySelectorAll(".badge,.dev-badge")
                         .forEach((n) => n.remove());
 
-                    const isHighlight = el.matches(
+                    const isHighlight = clone.matches(
                         "span.highlight, .highlight"
                     );
+                    const htmlOut = clone.outerHTML.trim(); // ← у копію йде «чистий» елемент
 
-                    // HTML: для хайлайта — тільки <span>; для решти — елемент у .content
-                    const html = isHighlight
-                        ? clone.outerHTML.trim()
-                        : `<div class="content">\n  ${clone.outerHTML.trim()}\n</div>`;
+                    // для фільтра — підмінимо тільки контекст
+                    const htmlForFilter = isHighlight
+                        ? htmlOut
+                        : `<div class="content">\n  ${htmlOut}\n</div>`;
 
-                    // CSS: для хайлайта — лише highlight CSS; для решти — типографіка + highlight
                     const cssRaw = getCssRaw(isHighlight);
-                    const css = filterCssByHtml(cssRaw, html);
+                    const css = filterCssByHtml(cssRaw, htmlForFilter);
 
-                    return bundleSnippet(html, css, "");
+                    return bundleSnippet(htmlOut, css, "");
                 },
                 "Copy"
             );
         });
     }
+
 
 
 
@@ -2040,13 +2043,13 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
     }
 
     function bundleSnippet(html, css, js) {
-        let out = "";
-        if (html) out += `<!-- HTML -->\n${html.trim()}\n`;
-        if (css) out += `\n/* CSS */\n${css.trim()}\n`;
-        if (js) out += `\n/* JS */\n${js.trim()}\n`;
-        out += `\n/* Не забудь підключити у проєкті:\n<link rel="stylesheet" href="style.css" />\n<script src="script.js"></script>\n*/`;
-        return out.trim();
+        const parts = [];
+        if (html && html.trim()) parts.push(`<!-- HTML -->\n${html.trim()}`);
+        if (css && css.trim()) parts.push(`/* CSS */\n${css.trim()}`);
+        if (js && js.trim()) parts.push(`/* JS */\n${js.trim()}`);
+        return parts.join("\n\n"); // без «Не забудь підключити...»
     }
+
 
     // створює кнопку-чип і навішує клік
     function attachCopyChip(targetEl, buildText, label = "Copy") {
@@ -2186,20 +2189,18 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         groups.forEach((g) => {
             const root = document.querySelector(g.root);
             if (!root) return;
+
+            // гігієна: не дублюємо чіпи при повторному виклику
+            root.querySelectorAll(".copy-chip").forEach((n) => n.remove());
+
             root.querySelectorAll(g.itemSel).forEach((node) => {
                 attachCopyChip(
                     node,
                     () => {
-                        // 1) HTML конкретного елемента
                         const html = node.outerHTML.trim();
-
-                        // 2) CSS — беремо груповий, знімаємо .std-demo і фільтруємо під HTML
                         const cssRaw = unscopeCss(g.css || "");
                         const css = filterCssByHtml(cssRaw, html);
-
-                        // 3) JS — груповий (для header/images потрібен), теж без .std-demo
-                        const js = unscopeCss(g.js || "");
-
+                        const js = unscopeCss(g.js || ""); // ← JS теж в копію
                         return bundleSnippet(html, css, js);
                     },
                     g.label
@@ -2207,6 +2208,11 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             });
         });
     }
+
+    function refreshStandardChips() {
+        wireStandardCopyChips();
+    }
+
 
     // Перемикач груп у Standard-секті (прев’ю-стилі лишаються зі .std-demo)
     const stdMap = {
@@ -2236,6 +2242,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         // у прев’ю підключаємо scoped-версію (з .std-demo)
         document.getElementById("stdStyle").textContent = target.css || "";
         equalizeCodeHeights();
+        refreshStandardChips(); 
     }
 
     // Навішуємо кліки на сайдбар Standard
@@ -2426,6 +2433,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         renderButtons();
         renderButtonsCSS();
         renderButtonsHTML();
+        refreshStandardChips();
         equalizeCodeHeights();
         buildStandardGroups();
         wireStandardCopyChips();
