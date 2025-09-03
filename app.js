@@ -1662,7 +1662,7 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 .std-demo .nav .links{display:flex;gap:16px;flex-wrap:wrap}
 .std-demo .nav .links a{padding:6px 10px;border-radius:8px;color:inherit;text-decoration:none;opacity:.95}
 .std-demo .nav .links a:hover{background:rgba(28,36,48,.06)}
-.std-demo .nav .links a.current{background:var(--nav-accent);color:#fff}
+.std-demo .nav .links a.current{background:var(--nav-accent);}
 .std-demo .nav .btn{white-space:nowrap}
 .std-demo .nav .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -1686,15 +1686,18 @@ body.theme-dark .std-demo .nav .btn{ background:#0e1015; color:#e6e8ee; border-c
 /* hamburger */
 .std-demo .nav .nav-toggle{display:none;position:relative; width:36px;height:28px;border:0;background:transparent;cursor:pointer}
 .std-demo .nav .btn{margin:0 auto;}
-.std-demo .nav .nav-toggle span{display:block;height:3px;margin:5px 0;background:var(--nav-accent);border-radius:3px;transition:.2s}
+.std-demo .nav .nav-toggle span{display:block;height:3px;margin:5px 0;background:#1c2430;border-radius:3px;transition:.2s}
 
 /* ===== мобільний режим (<= 900px) для варіантів 01–04 ===== */
 @media (max-width:900px){
+  .std-demo .nav .links {display: none;}
+  .std-demo .nav.open .links {display: flex;}
   .std-demo .nav{padding:10px 12px}
+  .std-demo .nav.open .links {max-height: fit-content;}
   .std-demo .nav .nav-toggle{display:inline-block}
   .std-demo .nav .links{
     position:absolute;z-index:30;left:10px;right:10px;top:100%;
-    display:flex;flex-direction:column;gap:0;background:#fff;
+    flex-direction:column;gap:0;background:#fff;
     border:1px solid rgba(0,0,0,.12);border-radius:12px;
     max-height:0;overflow:hidden;transition:max-height .25s ease; margin-top:8px
   }
