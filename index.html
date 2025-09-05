@@ -247,7 +247,8 @@
         </ul>
         <h4>Контент</h4>
         <ul class="list">
-          <li class="disabled">Callout/Alert</li>
+          <li><button id="sbCallouts">Callouts / Alerts</button></li>
+          <!-- <li class="disabled">Callout/Alert</li> -->
           <li class="disabled">FAQ</li>
           <li class="disabled">Testimonials</li>
           <li class="disabled">Comments</li>
@@ -398,6 +399,39 @@
         </div>
       </main>
     </section>
+
+    <section class="std-group" id="std-callouts" hidden>
+      <aside class="preview" id="calloutsPreview">
+        <div class="std-demo" id="calloutsDemo"></div>
+      </aside>
+    
+      <div class="code cols-3">
+        <div class="code-box">
+          <div class="code-head">
+            <strong>CSS</strong>
+            <button id="copyCalloutsCssBtn" class="copy-btn">Copy CSS</button>
+          </div>
+          <pre class="code-pre" id="calloutsCssOutput"></pre>
+        </div>
+    
+        <div class="code-box">
+          <div class="code-head">
+            <strong>HTML</strong>
+            <button id="copyCalloutsHtmlBtn" class="copy-btn">Copy HTML</button>
+          </div>
+          <pre class="code-pre" id="calloutsHtmlOutput"></pre>
+        </div>
+    
+        <div class="code-box">
+          <div class="code-head">
+            <strong>JS</strong>
+            <button id="copyCalloutsJsBtn" class="copy-btn">Copy JS</button>
+          </div>
+          <pre class="code-pre" id="calloutsJsOutput"></pre>
+        </div>
+      </div>
+    </section>
+
 
 
     <!-- INTERACTIVE TAB -->

@@ -700,6 +700,57 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         st.textContent = HIGHLIGHT_CSS;
     }
+    // Витяг усіх імен --vars із CSS
+    function extractVarNames(css) {
+        const set = new Set();
+        const re = /var\(\s*--([a-zA-Z0-9_-]+)/g;
+        let m;
+        while ((m = re.exec(css))) set.add(m[1]);
+        return set;
+    }
+
+    // Прочитати значення змінної з контексту елемента (врахує тему/каскад)
+    function readVarValue(name, ctxEl) {
+        const tryEls = [ctxEl, document.body, document.documentElement].filter(
+            Boolean
+        );
+        for (const el of tryEls) {
+            const v = getComputedStyle(el).getPropertyValue(`--${name}`).trim();
+            if (v) return v;
+        }
+        return "";
+    }
+
+    // Витяг уже наявних у CSS :root-змінних, щоб не дублювати
+    function extractExistingRootVars(css) {
+        const have = new Set();
+        const rootRe = /:root\s*\{([\s\S]*?)\}/g;
+        const declRe = /--([a-zA-Z0-9_-]+)\s*:/g;
+        let m, block;
+        while ((block = rootRe.exec(css))) {
+            let d;
+            while ((d = declRe.exec(block[1]))) have.add(d[1]);
+        }
+        return have;
+    }
+
+    // Додати зверху лише потрібні змінні (які використовуються у css та відсутні у :root)
+    function prependUsedVars(css, ctxEl) {
+        const used = extractVarNames(css);
+        if (!used.size) return css;
+
+        const already = extractExistingRootVars(css);
+        let defs = "";
+        used.forEach((name) => {
+            if (already.has(name)) return; // вже є у :root в самому css
+            const val = readVarValue(name, ctxEl);
+            if (val) defs += `  --${name}: ${val};\n`;
+        });
+
+        if (!defs) return css; // нічого додавати
+
+        return `:root{\n${defs}}\n\n` + css;
+    }
 
     function filterCssByHtml(css, html, opts = {}) {
         css = String(css || "").replace(/\/\*[\s\S]*?\*\//g, "");
@@ -896,9 +947,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const keepSel = (sel) => {
             const s = sel.trim();
             if (!s) return false;
-            // дозволяємо глобальні речі, якщо лишилися (рідко)
             if (/^@/.test(s)) return true;
-            // хоча б один root-токен у селекторі
+            if (/^:root\b/.test(s)) return true; // ⬅️ ЗБЕРІГАТИ :root
+            if (/^(html|body)\b/.test(s)) return true; // (опційно) глобальні селектори
             return roots.some((token) => {
                 const re = new RegExp(
                     `(^|[\\s>+~.,#\\[])+${esc(token)}(?=$|[\\s>+~.,#:\\[])`
@@ -1166,6 +1217,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ["copyImgsJsBtn", "imgsJsOutput"],
         ["copyBtnsCssBtn", "btnsCssOutput"],
         ["copyBtnsHtmlBtn", "btnsHtmlOutput"],
+        ["copyCalloutsCssBtn", "calloutsCssOutput"],
+        ["copyCalloutsHtmlBtn", "calloutsHtmlOutput"],
+        ["copyCalloutsJsBtn", "calloutsJsOutput"],
     ].forEach(([b, o]) => bindCopy(b, o));
 
     // ===== Експорт CSS/HTML (типографіка) =====
@@ -1246,9 +1300,9 @@ img { max-width: 100%; height: auto; display: block; }`;
                         : `<div class="content">\n  ${htmlOut}\n</div>`;
 
                     const cssRaw = getCssRaw(isHighlight);
-                    const css = filterCssByHtml(cssRaw, htmlForFilter);
-
-                    return bundleSnippet(htmlOut, css, "");
+                    const cssFiltered = filterCssByHtml(cssRaw, htmlForFilter);
+                    const cssWithVars = prependUsedVars(cssFiltered, el); // ⬅️ додали :root з потрібними --vars
+                    return bundleSnippet(htmlOut, cssWithVars, "");
                 },
                 "Copy"
             );
@@ -1281,12 +1335,17 @@ img { max-width: 100%; height: auto; display: block; }`;
     function equalizeCodeHeights() {
         const preview = document.getElementById("typoPreview");
         const target = Math.max(620, preview ? preview.offsetHeight : 0);
-        ["cssOutput", "htmlOutput", "btnsCssOutput", "btnsHtmlOutput"].forEach(
-            (id) => {
-                const box = document.getElementById(id);
-                if (box) box.style.minHeight = target + "px";
-            }
-        );
+        [
+            "cssOutput",
+            "htmlOutput",
+            "btnsCssOutput",
+            "btnsHtmlOutput",
+            "calloutsCssOutput",
+            "calloutsHtmlOutput",
+        ].forEach((id) => {
+            const box = document.getElementById(id);
+            if (box) box.style.minHeight = target + "px";
+        });
     }
 
     // ===== Кнопки (набір) =====
@@ -2206,6 +2265,182 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
   setTimeout(tuneAll, 0);
 })();`;
 
+    // ------- 6) CALLOUTS / ALERTS -------
+    const CALLOUTS_HTML = `
+<!-- 01. Info -->
+<div class="callout info">
+  <div class="icon">ℹ</div>
+  <div class="body">
+    <strong>Heads up:</strong> This plan was updated recently. <a href="#">See what changed</a>.
+  </div>
+  <button class="x" aria-label="Close" data-dismiss="callout">×</button>
+</div>
+
+<!-- 02. Success -->
+<div class="callout success">
+  <div class="icon">✓</div>
+  <div class="body">
+    <strong>Success!</strong> Your preferences were saved.
+  </div>
+</div>
+
+<!-- 03. Warning -->
+<div class="callout warning">
+  <div class="icon">!</div>
+  <div class="body">
+    <strong>Warning:</strong> You’re approaching your monthly limit. <a href="#">Review options</a>.
+  </div>
+</div>
+
+<!-- 04. Danger -->
+<div class="callout danger">
+  <div class="icon">✕</div>
+  <div class="body">
+    <strong>Error:</strong> Payment failed. Please <a href="#">update billing</a> or try again later.
+    <div class="actions">
+      <a class="btn outline" href="#">Retry</a>
+      <a class="btn link" href="#">Contact support</a>
+    </div>
+  </div>
+</div>
+
+<!-- 05. Neutral -->
+<div class="callout neutral">
+  <div class="icon">ⓘ</div>
+  <div class="body">
+    <strong>Note:</strong> Results may vary based on your routine and diet.
+  </div>
+</div>
+
+<!-- 06. Tip -->
+<div class="callout tip">
+  <div class="icon">💡</div>
+  <div class="body">
+    <strong>Pro tip:</strong> Drink 2 glasses of water 30 minutes before meals.
+  </div>
+</div>
+
+<!-- 07. Sticky Note -->
+<div class="callout note">
+  <div class="icon">📝</div>
+  <div class="body">
+    <strong>Remember:</strong> Take photos weekly for better progress tracking.
+  </div>
+</div>
+
+<!-- 08. Promo (with CTA) -->
+<div class="callout promo">
+  <div class="icon">🎁</div>
+  <div class="body">
+    <strong>Limited offer:</strong> Save 30% today only.
+    <div class="actions">
+      <a class="btn cta-buy ripple" href="#">Get Deal</a>
+    </div>
+  </div>
+</div>
+
+<!-- 09. Inline pill -->
+<p>
+  New routine is rolling out <span class="callout inline info">Beta</span>.
+  Some features may change.
+</p>
+
+<!-- 10. Banner -->
+<div class="callout banner">
+  <div class="icon">⚠</div>
+  <div class="body">
+    <strong>Maintenance:</strong> App will be read-only from 01:00–02:00 UTC.
+  </div>
+</div>
+`;
+
+    const CALLOUTS_CSS = `
+/* ==== Callouts / Alerts (01–10) ==== */
+:root{
+  /* fallback tokens (світла тема) */
+  --co-text:#1c2430; --co-border:#d7dde6; --co-bg:#f2f4f8;
+
+  --co-info:#2563eb;    --co-info-bg:#eff6ff;    --co-info-br:#bfdbfe;
+  --co-success:#16a34a; --co-success-bg:#ecfdf5; --co-success-br:#a7f3d0;
+  --co-warning:#f59e0b; --co-warning-bg:#fff7ed; --co-warning-br:#fed7aa;
+  --co-danger:#ef4444;  --co-danger-bg:#fee2e2;  --co-danger-br:#fecaca;
+  --co-neutral:#64748b; --co-neutral-bg:#f1f5f9; --co-neutral-br:#cbd5e1;
+  --co-tip:#10b981;     --co-tip-bg:#ecfdf5;     --co-tip-br:#a7f3d0;
+  --co-note:#8b5cf6;    --co-note-bg:#f5f3ff;    --co-note-br:#ddd6fe;
+}
+
+.std-demo .callout{
+  --co-accent: var(--co-neutral);
+  --co-bg-use: var(--co-neutral-bg);
+  --co-br-use: var(--co-neutral-br);
+  color: var(--co-text);
+  background: var(--co-bg-use);
+  border:1px solid var(--co-br-use);
+  border-left:6px solid var(--co-accent);
+  border-radius:12px;
+  padding:12px 14px 12px 12px;
+  display:flex; gap:10px; align-items:flex-start; position:relative; margin:0 0 12px;
+}
+.std-demo .callout .icon{
+  width:28px;height:28px; flex:0 0 28px; display:grid; place-items:center;
+  background:#fff; border-radius:8px; border:1px solid rgba(0,0,0,.1);
+  font-weight:800; line-height:1;
+}
+.std-demo .callout .body{ flex:1 1 auto; }
+.std-demo .callout .body a{ color:inherit; text-decoration:underline; }
+.std-demo .callout .actions{ margin-top:8px; display:flex; gap:8px; flex-wrap:wrap }
+.std-demo .callout .x{
+  position:absolute; top:6px; right:8px; border:0; background:transparent; cursor:pointer;
+  font-size:18px; line-height:1; opacity:.7;
+}
+.std-demo .callout .x:hover{ opacity:1 }
+
+/* variants */
+.std-demo .callout.info    { --co-accent:var(--co-info);    --co-bg-use:var(--co-info-bg);    --co-br-use:var(--co-info-br) }
+.std-demo .callout.success { --co-accent:var(--co-success); --co-bg-use:var(--co-success-bg); --co-br-use:var(--co-success-br) }
+.std-demo .callout.warning { --co-accent:var(--co-warning); --co-bg-use:var(--co-warning-bg); --co-br-use:var(--co-warning-br) }
+.std-demo .callout.danger  { --co-accent:var(--co-danger);  --co-bg-use:var(--co-danger-bg);  --co-br-use:var(--co-danger-br) }
+.std-demo .callout.neutral { --co-accent:var(--co-neutral); --co-bg-use:var(--co-neutral-bg); --co-br-use:var(--co-neutral-br) }
+.std-demo .callout.tip     { --co-accent:var(--co-tip);     --co-bg-use:var(--co-tip-bg);     --co-br-use:var(--co-tip-br) }
+.std-demo .callout.note    { --co-accent:var(--co-note);    --co-bg-use:var(--co-note-bg);    --co-br-use:var(--co-note-br) }
+
+/* Inline pill */
+.std-demo .callout.inline{
+  display:inline-flex; padding:3px 8px; border-radius:999px; border-left-width:4px; font-weight:700; font-size:12px;
+}
+.std-demo .callout.inline .icon{ display:none }
+
+/* Banner */
+.std-demo .callout.banner{
+  --co-accent:#e74856;
+  background:#111; color:#fff; border-color:#2a2a2a; border-left-color:var(--co-accent);
+  align-items:center; gap:10px;
+}
+.std-demo .callout.banner .icon{ background:transparent; border-color:rgba(255,255,255,.25); color:#fff }
+
+/* Dark theme tweaks */
+body.theme-dark .std-demo .callout{
+  color:#e6e8ee; background:#0e1015; border-color:rgba(255,255,255,.08);
+}
+body.theme-dark .std-demo .callout .icon{ background:#0b0d12; border-color:rgba(255,255,255,.08) }
+body.theme-dark .std-demo .callout.info    { --co-bg-use:#0f172a; --co-br-use:rgba(37,99,235,.35) }
+body.theme-dark .std-demo .callout.success { --co-bg-use:#052e27; --co-br-use:rgba(16,185,129,.35) }
+body.theme-dark .std-demo .callout.warning { --co-bg-use:#2b1d07; --co-br-use:rgba(245,158,11,.35) }
+body.theme-dark .std-demo .callout.danger  { --co-bg-use:#2a0e10; --co-br-use:rgba(239,68,68,.35) }
+body.theme-dark .std-demo .callout.neutral { --co-bg-use:#0e1219; --co-br-use:rgba(100,116,139,.35) }
+body.theme-dark .std-demo .callout.tip     { --co-bg-use:#062a21; --co-br-use:rgba(16,185,129,.35) }
+body.theme-dark .std-demo .callout.note    { --co-bg-use:#20194a; --co-br-use:rgba(139,92,246,.35) }
+`;
+
+    const CALLOUTS_JS = `// Dismiss callout
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-dismiss="callout"]');
+  if(!btn) return;
+  const c = btn.closest('.callout');
+  if(c) c.remove();
+  e.preventDefault();
+});`;
+
     /* ===== УТИЛІТИ ДЛЯ ПОБУДОВИ ПАКЕТУ (html+css+js) ===== */
     const AT_RULE_RE = /@[\s\S]*?\{[\s\S]*?\}/g; // дуже спрощено: @media/@keyframes тощо
     function unscopeCss(css) {
@@ -2364,6 +2599,15 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             "imgsHtmlOutput",
             "imgsJsOutput"
         );
+        mountStdGroup(
+            CALLOUTS_CSS,
+            CALLOUTS_HTML,
+            CALLOUTS_JS,
+            "calloutsDemo",
+            "calloutsCssOutput",
+            "calloutsHtmlOutput",
+            "calloutsJsOutput"
+        );
     }
     function wireStandardCopyChips() {
         const groups = [
@@ -2415,6 +2659,14 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                 label: "Copy",
                 roots: [".btn"],
             },
+            {
+                root: "#calloutsDemo",
+                css: CALLOUTS_CSS,
+                js: CALLOUTS_JS,
+                itemSel: ".callout",
+                label: "Copy Callout",
+                roots: [".callout"],
+            },
         ];
 
         groups.forEach((g) => {
@@ -2459,10 +2711,9 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
                             cssByClass,
                             g.roots || []
                         );
-
+                        const cssWithVars = prependUsedVars(cssTight, node); // ⬅️ додати --vars
                         const js = unscopeCss(g.js || "");
-
-                        return bundleSnippet(html, cssTight, js);
+                        return bundleSnippet(html, cssWithVars, js);
                     },
                     g.label
                 );
@@ -2482,6 +2733,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         sbAds: { id: "std-ads", css: ADS_CSS },
         sbImages: { id: "std-images", css: IMGS_CSS },
         sbButtons: { id: "std-buttons", css: "" },
+        sbCallouts: { id: "std-callouts", css: CALLOUTS_CSS },
     };
 
     function showStdGroup(btnId) {
@@ -2513,6 +2765,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         "sbAds",
         "sbImages",
         "sbButtons",
+        "sbCallouts",
     ].forEach((id) => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -2535,6 +2788,9 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
         ["copyImgsJsBtn", "imgsJsOutput"],
         ["copyBtnsCssBtn", "btnsCssOutput"],
         ["copyBtnsHtmlBtn", "btnsHtmlOutput"],
+        ["copyCalloutsCssBtn", "calloutsCssOutput"],
+        ["copyCalloutsHtmlBtn", "calloutsHtmlOutput"],
+        ["copyCalloutsJsBtn", "calloutsJsOutput"],
     ].forEach(([btnId, boxId]) => {
         const b = document.getElementById(btnId);
         if (b) b.addEventListener("click", () => copyFrom(boxId));
@@ -2645,6 +2901,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             "imgsDemo",
             "section.hero, article.product, .avatars, figure.story-card"
         );
+        add("calloutsDemo", ".callout");
     }
 
     function appendIncludeNote(previewId) {
@@ -2670,6 +2927,7 @@ body.theme-dark .std-demo .avatars .more{background:#0e1015}
             "adsPreview",
             "imgsPreview",
             "btnsPreview",
+            "calloutsPreview",
         ].forEach(appendIncludeNote);
     }
 
