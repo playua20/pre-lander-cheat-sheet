@@ -1662,7 +1662,7 @@ body.theme-dark .std-demo .nav{background:#12141a;border-color:rgba(255,255,255,
 .std-demo .nav .links{display:flex;gap:16px;flex-wrap:wrap}
 .std-demo .nav .links a{padding:6px 10px;border-radius:8px;color:inherit;text-decoration:none;opacity:.95}
 .std-demo .nav .links a:hover{background:rgba(28,36,48,.06)}
-.std-demo .nav .links a.current{background:var(--nav-accent);}
+.std-demo .nav .links a.current{background:var(--nav-accent);color:#fff;}
 .std-demo .nav .btn{white-space:nowrap}
 .std-demo .nav .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
