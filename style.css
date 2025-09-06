@@ -152,6 +152,8 @@ body.theme-dark .notice{ color:#9aa3b2; }
 /* === Copy-chip біля компонентів/елементів === */
 .comp-wrap { position: relative; }
 #std-buttons .copy-chip{ top:-23px}
+#adsPreview .copy-chip{ top:-5px}
+
 .copy-chip{
   position:absolute; right:8px; top:8px; z-index:3;
   display:inline-flex; align-items:center; gap:6px;
@@ -165,3 +167,56 @@ body.theme-dark .copy-chip{ background:#0e1015; color:#e6e8ee; border-color:rgba
 /* Для типографіки — щоб чип стояв біля елемента */
 .copy-target{ position:relative; }
 .copy-target .copy-chip{ top:-10px; right:-10px; }
+
+/* Прев’ю */
+.std-demo .modal{ position:fixed; inset:0; display:grid; place-items:center; z-index:1000; }
+.std-demo .modal[hidden]{ display:none; }
+
+/* Робочий CSS (потрапить у прод після unscope) */
+.modal{ position:fixed; inset:0; display:grid; place-items:center; z-index:1000; }
+.modal[hidden]{ display:none; }
+/* DEMO fix: поверх усього */
+.std-demo .modal{ z-index: 9999; }
+/* ===== Modal + Overlays (поверх усього, по центру) */
+.std-demo .disc .disc-modal{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:9999;
+}
+.std-demo .disc .disc-modal[hidden]{ display:none }
+
+/* Повноекранний overlay */
+.std-demo .disc .disc-overlay{ position:absolute; inset:0; }
+
+/* Базові варіанти (як було) */
+.std-demo .disc .overlay-dark  { background:rgba(0,0,0,.58); }
+.std-demo .disc .overlay-light { background:rgba(255,255,255,.66); }
+.std-demo .disc .overlay-blur  { background:rgba(0,0,0,.35); backdrop-filter:blur(6px); }
+
+/* Нові кольори overlay (для різних модалок) */
+.std-demo .disc .overlay-green { background:rgba(16,185,129,.35); }
+.std-demo .disc .overlay-blue  { background:rgba(37,99,235,.35); }
+.std-demo .disc .overlay-amber { background:rgba(245,158,11,.35); }
+
+/* Вікно модалки — різні радіуси */
+.std-demo .disc .disc-box{
+  position:relative; z-index:1;
+  width:min(92vw,560px);
+  background:#fff; color:#1c2430;
+   padding:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+body.theme-dark .std-demo .disc .disc-box{ background:#12141a; color:#e6e8ee }
+.std-demo .disc .disc-box h3{ margin:.1em 0 .45em }
+.std-demo .disc .disc-x{
+  position:absolute; top:8px; right:10px;
+  border:0; background:transparent; font-size:20px; cursor:pointer;
+}
+
+/* радіуси-утиліти */
+.std-demo .disc .box-r8  { border-radius: 8px;  }
+.std-demo .disc .box-r12 { border-radius:12px; }
+.std-demo .disc .box-r14 { border-radius:14px; }
+.std-demo .disc .box-r16 { border-radius:16px; }
+.std-demo .disc .box-r20 { border-radius:20px; }
+.std-demo .disc .box-r24 { border-radius:24px; }
+
+

@@ -1607,6 +1607,50 @@ img { max-width: 100%; height: auto; display: block; }`;
         });
     });
 
+    // === DEMO: live-обробники для модалок у прев’ю ====================
+    // Звичайні модалки <div class="modal" data-modal="...">
+    document.addEventListener("click", (e) => {
+        const open = e.target.closest("[data-modal-open]");
+        if (open) {
+            const name = open.getAttribute("data-modal-open");
+            // шукаємо спершу в межах поточної std-групи, далі глобально
+            const scope = open.closest(".std-group") || document;
+            const m =
+                scope.querySelector(`.modal[data-modal="${name}"]`) ||
+                document.querySelector(`.modal[data-modal="${name}"]`);
+            if (m) m.hidden = false;
+            e.preventDefault();
+            return;
+        }
+        const close = e.target.closest("[data-modal-close]");
+        if (close) {
+            const m = close.closest(".modal");
+            if (m) m.hidden = true;
+            e.preventDefault();
+        }
+    });
+
+    // Disclosure-модалки всередині .disc
+    document.addEventListener("click", (e) => {
+        const open = e.target.closest("[data-disc-open]");
+        if (open) {
+            const id = open.getAttribute("data-disc-open");
+            const host = open.closest(".disc") || open.closest(".std-group");
+            const modal =
+                host?.querySelector(`.disc-modal[data-disc="${id}"]`) ||
+                document.querySelector(`.disc-modal[data-disc="${id}"]`);
+            if (modal) modal.hidden = false;
+            e.preventDefault();
+            return;
+        }
+        const close = e.target.closest("[data-disc-close]");
+        if (close) {
+            const m = close.closest(".disc-modal");
+            if (m) m.hidden = true;
+            e.preventDefault();
+        }
+    });
+
     /* ===================== STANDARD COMPONENTS ===================== */
 
     // ------- 1) HEADER / NAVBAR -------
@@ -1963,7 +2007,7 @@ body.theme-dark .std-demo .foot-cols h4{color:#9aa3b2}
 .std-demo .modal{position:fixed;inset:0;display:grid;place-items:center}
 .std-demo .modal[hidden]{display:none}
 .std-demo .modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45)}
-.std-demo .modal-box{position:relative;background:#fff;color:#1c2430;border-radius:12px;padding:16px;max-width:520px;width:min(92vw,520px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.std-demo .modal-box{position:relative;background:#fff;color:#1c2430;padding:16px;max-width:520px;width:min(92vw,520px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .std-demo .modal-x{position:absolute;top:8px;right:10px;border:0;background:transparent;font-size:20px;cursor:pointer}
 body.theme-dark .std-demo .modal-box{background:#12141a;color:#e6e8ee}
 `;
@@ -1973,54 +2017,279 @@ document.addEventListener('click', (e) => {
   if (open) {
     const name = open.getAttribute('data-modal-open');
     const m = document.querySelector('.modal[data-modal="' + name + '"]');
-    if (m) m.hidden = false;
+    if (m) {
+      m.hidden = false;
+    }
+    e.preventDefault();
+    return;
+  }
+
+  const close = e.target.closest('[data-modal-close]');
+  if (close) {
+    const m = close.closest('.modal');
+    if (m) {
+      m.hidden = true;
+    }
     e.preventDefault();
   }
-  if (e.target.closest('[data-modal-close]')) {
-    const m = e.target.closest('.modal');
+});
+
+// Disclosure modals (Advertorial | Disclosure)
+document.addEventListener('click', (e) => {
+  const open = e.target.closest('[data-disc-open]');
+  if (open) {
+    const id = open.getAttribute('data-disc-open');
+    const host = open.closest('.disc');
+    const modal = host?.querySelector('.disc-modal[data-disc="' + id + '"]') ||
+                  document.querySelector('.disc-modal[data-disc="' + id + '"]');
+    if (modal) {
+      modal.hidden = false;
+    }
+    e.preventDefault();
+    return;
+  }
+
+  const close = e.target.closest('[data-disc-close]');
+  if (close) {
+    const m = close.closest('.disc-modal');
+    if (m) {
+      m.hidden = true;
+    }
+    e.preventDefault();
+  }
+});
+`;
+
+    // ------- 4) ADVERTISEMENT / DISCLOSURE (нові демо) -------
+    // Верхній маленький дисклеймер: зліва / центр / справа
+    const ADS_HTML = `
+<!-- 01. Left • muted • чорний overlay • r12 -->
+<div class="disc disc-left disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d1">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d1" hidden>
+    <div class="disc-overlay overlay-dark" data-disc-close></div>
+    <div class="disc-box box-r12">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertorial & Disclosure</h3>
+      <p>The material may contain affiliate links. If you purchase through a link,
+      we may earn a commission — at no extra cost to you.</p>
+    </div>
+  </div>
+</div>
+<!-- 02. Center • dark • blur overlay • r16 -->
+<div class="disc disc-center disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d2">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d2" hidden>
+    <div class="disc-overlay overlay-blur" data-disc-close></div>
+    <div class="disc-box box-r16">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Disclosure</h3>
+      <p>Our content is reader-supported. Purchases made through our links help
+      support the site. Thank you!</p>
+    </div>
+  </div>
+</div>
+<!-- 03. Right • dark • світлий overlay • r20 (по центру, НЕ знизу) -->
+<div class="disc disc-right disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d3">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d3" hidden>
+    <div class="disc-overlay overlay-light" data-disc-close></div>
+    <div class="disc-box box-r20">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>About This Page</h3>
+      <p>This page is promotional (advertorial). All opinions are editorial,
+      but we may receive compensation for referrals.</p>
+    </div>
+  </div>
+</div>
+<!-- 04. Left • muted • чорний overlay -->
+<div class="disc disc-left disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d1">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d1" hidden>
+    <div class="disc-overlay overlay-dark" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertorial & Disclosure</h3>
+      <p>The material may contain affiliate links. If you purchase through a link,
+      we may earn a commission — at no extra cost to you.</p>
+    </div>
+  </div>
+</div>
+<!-- 05. Center • dark • blur overlay -->
+<div class="disc disc-center disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d2">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d2" hidden>
+    <div class="disc-overlay overlay-blur" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Disclosure</h3>
+      <p>Our content is reader-supported. Purchases made through our links help
+      support the site. Thank you!</p>
+    </div>
+  </div>
+</div>
+<!-- 06. Right • dark • світлий overlay (по центру, НЕ знизу) -->
+<div class="disc disc-right disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d3">Advertorial | Disclosure</a>
+  <div class="disc-modal" data-disc="d3" hidden>
+    <div class="disc-overlay overlay-light" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>About This Page</h3>
+      <p>This page is promotional (advertorial). All opinions are editorial,
+      but we may receive compensation for referrals.</p>
+    </div>
+  </div>
+</div>
+<!-- 07. Left • muted • зелений overlay • r8 -->
+<div class="disc disc-left disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d4">Advertisement</a>
+  <div class="disc-modal" data-disc="d4" hidden>
+    <div class="disc-overlay overlay-green" data-disc-close></div>
+    <div class="disc-box box-r8">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertisement</h3>
+      <p>This is an advertisement. Some links may be affiliate links.</p>
+    </div>
+  </div>
+</div>
+<!-- 08. Center • dark • синій overlay • r24 -->
+<div class="disc disc-center disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d5">Advertorial</a>
+  <div class="disc-modal" data-disc="d5" hidden>
+    <div class="disc-overlay overlay-blue" data-disc-close></div>
+    <div class="disc-box box-r24">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertorial</h3>
+      <p>Editorial content with sponsor support. See policy for details.</p>
+    </div>
+  </div>
+</div>
+<!-- 09. Right • muted • бурштиновий overlay • r14 -->
+<div class="disc disc-right disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d6">Advertisement</a>
+  <div class="disc-modal" data-disc="d6" hidden>
+    <div class="disc-overlay overlay-amber" data-disc-close></div>
+    <div class="disc-box box-r14">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Sponsored Notice</h3>
+      <p>We may receive compensation for referrals or purchases made through links.</p>
+    </div>
+  </div>
+</div>
+<!-- 10. Left • muted • зелений overlay -->
+<div class="disc disc-left disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d4">Advertisement</a>
+  <div class="disc-modal" data-disc="d4" hidden>
+    <div class="disc-overlay" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertisement</h3>
+      <p>This is an advertisement. Some links may be affiliate links.</p>
+    </div>
+  </div>
+</div>
+<!-- 11. Center • dark • синій overlay -->
+<div class="disc disc-center disc-muted">
+  <a href="#" class="disc-link" data-disc-open="d5">Advertorial</a>
+  <div class="disc-modal" data-disc="d5" hidden>
+    <div class="disc-overlay" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Advertorial</h3>
+      <p>Editorial content with sponsor support. See policy for details.</p>
+    </div>
+  </div>
+</div>
+<!-- 12. Right • muted • бурштиновий overlay -->
+<div class="disc disc-right disc-dark">
+  <a href="#" class="disc-link" data-disc-open="d6">Advertisement</a>
+  <div class="disc-modal" data-disc="d6" hidden>
+    <div class="disc-overlay" data-disc-close></div>
+    <div class="disc-box">
+      <button class="disc-x" aria-label="Close" data-disc-close>×</button>
+      <h3>Sponsored Notice</h3>
+      <p>We may receive compensation for referrals or purchases made through links.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- 13–15. “Просто текст” (без модалки) -->
+<div class="disc disc-left  disc-muted"><span class="disc-text">Advertisement</span></div>
+<div class="disc disc-center disc-dark"><span class="disc-text">Advertorial</span></div>
+<div class="disc disc-right disc-muted"><span class="disc-text">Advertisement</span></div>
+`;
+
+    const ADS_CSS = `
+/* ==== Top-of-page Disclosures ============================ */
+.std-demo .disc{
+  margin:0 0 10px;
+  font-size:.88em;         /* трохи менше за <p> */
+  line-height:1.45;
+}
+.std-demo .disc-left{ text-align:left }
+.std-demo .disc-center{ text-align:center }
+.std-demo .disc-right{ text-align:right }
+.std-demo .disc-right .disc-box{ text-align:center }
+
+.std-demo .disc-muted{ color:#6b7686 }
+body.theme-dark .std-demo .disc-muted{ color:#9aa3b2 }
+.std-demo .disc-dark{ color:#1c2430 }
+body.theme-dark .std-demo .disc-dark{ color:#e6e8ee }
+
+.std-demo .disc .disc-link{
+  color:inherit; text-decoration:none; border-bottom:1px dotted currentColor;
+}
+.std-demo .disc .disc-link:hover{ text-decoration:underline }
+
+/* ==== Modal + Overlays (усе під коренем .disc, щоб копі-експорт підхоплював) */
+.std-demo .disc .disc-modal{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:60;
+}
+.std-demo .disc .disc-modal[hidden]{ display:none }
+
+.std-demo .disc .disc-overlay{ position:absolute; inset:0; }
+.std-demo .disc .overlay-dark { background:rgba(0,0,0,.58); }
+.std-demo .disc .overlay-light{ background:rgba(255,255,255,.66); }
+.std-demo .disc .overlay-blur { background:rgba(0,0,0,.35); backdrop-filter:blur(6px); }
+
+/* Вікно */
+.std-demo .disc .disc-box{
+  position:relative; z-index:1;
+  width:min(92vw,560px);
+  background:#fff; color:#1c2430;
+   padding:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+body.theme-dark .std-demo .disc .disc-box{ background:#12141a; color:#e6e8ee }
+.std-demo .disc .disc-box h3{ margin:.1em 0 .45em }
+
+.std-demo .disc .disc-x{
+  position:absolute; top:8px; right:10px;
+  border:0; background:transparent; font-size:20px; cursor:pointer;
+}
+
+
+`;
+
+    const ADS_JS = `// Disclosure modals (відкрити/закрити)
+document.addEventListener('click', (e) => {
+  const open = e.target.closest('[data-disc-open]');
+  if (open){
+    const id = open.getAttribute('data-disc-open');
+    const host = open.closest('.disc');
+    const modal = host?.querySelector('.disc-modal[data-disc="'+id+'"]') ||
+                  document.querySelector('.disc-modal[data-disc="'+id+'"]');
+    if (modal) modal.hidden = false;
+    e.preventDefault();
+  }
+  if (e.target.closest('[data-disc-close]')){
+    const m = e.target.closest('.disc-modal');
     if (m) m.hidden = true;
     e.preventDefault();
   }
 });`;
-
-    // ------- 4) ADVERTISEMENT / DISCLOSURE -------
-    const ADS_HTML = `
-<!-- 01. Top ad bar -->
-<div class="adbar">
-  <span class="ad-badge">Ad</span> This article contains affiliate links. We may earn a commission at no cost to you.
-</div>
-
-<!-- 02. Disclosure card -->
-<div class="disclosure">
-  <div class="icon">ℹ</div>
-  <div class="text"><strong>Advertising Disclosure:</strong> Our content is reader-supported. Purchases through links help this site.</div>
-</div>
-
-<!-- 03. Sponsored tag on image -->
-<div class="sponsored-card">
-  <span class="sponsored-tag">Sponsored</span>
-  <img src="https://picsum.photos/id/1025/640/320" alt="sample">
-</div>
-
-<!-- 04. Sticky bottom bar -->
-<div class="adbar sticky">
-  <span class="ad-badge">Ad</span> Limited offer — up to 40% off today.
-</div>
-`;
-
-    const ADS_CSS = `
-/* ==== Advertisement / Disclosure (01–04) ==== */
-.std-demo .adbar{background:#fff3cd;color:#3b2f05;border:1px solid #ffe08a;border-radius:12px;padding:10px 12px;margin:0 0 12px}
-.std-demo .adbar.sticky{position:sticky;bottom:0;z-index:5}
-.std-demo .ad-badge{display:inline-block;background:#f59e0b;color:#1c2430;border-radius:6px;padding:2px 6px;margin-right:8px;font-weight:700}
-.std-demo .disclosure{display:flex;gap:10px;align-items:flex-start;background:#f1f4f8;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:12px;margin:0 0 12px}
-body.theme-dark .std-demo .disclosure{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
-.std-demo .disclosure .icon{width:28px;height:28px;display:grid;place-items:center;background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,.1)}
-.std-demo .sponsored-card{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12);margin:0 0 12px}
-.std-demo .sponsored-card img{width:100%;display:block}
-.std-demo .sponsored-tag{position:absolute;top:10px;left:10px;background:#111;color:#fff;border-radius:6px;padding:4px 8px;opacity:.9}
-`;
-    const ADS_JS = `// Ads / Disclosure — JS не потрібний.`;
 
     // ------- 5) IMAGES / HERO -------
     const IMGS_HTML = `
@@ -2638,11 +2907,12 @@ document.addEventListener('click', (e) => {
             {
                 root: "#adsDemo",
                 css: ADS_CSS,
-                js: "",
-                itemSel: ".adbar,.disclosure,.sponsored-card",
-                label: "Copy Block",
-                roots: [".adbar", ".disclosure", ".sponsored-card"],
+                js: ADS_JS,
+                itemSel: ".disc",
+                label: "Copy Disclosure",
+                roots: [".disc"],
             },
+
             {
                 root: "#imgsDemo",
                 css: IMGS_CSS,
@@ -2895,7 +3165,7 @@ document.addEventListener('click', (e) => {
         // Footer
         add("footDemo", ".foot");
         // Advertisement / Disclosure
-        add("adsDemo", ".adbar, .disclosure, .sponsored-card");
+        add("adsDemo", ".disc");
         // Images (hero/product/avatar/cards)
         add(
             "imgsDemo",
