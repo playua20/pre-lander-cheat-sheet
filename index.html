@@ -1,470 +1,687 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="uk">
+<!doctype html>
+<html lang="uk" class="theme-light">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  <title>Pre-landers UI Cheatsheet</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pre-landers UI Cheatsheet</title>
+
+    <!-- БАЗА -->
+    <link rel="stylesheet" href="assets/css/base.css" />
+
+    <!-- КОМПОНЕНТИ -->
+    <link rel="stylesheet" href="assets/components/buttons/buttons.css" />
+    <link rel="stylesheet" href="assets/components/navbar/navbar.css" />
+    <link rel="stylesheet" href="assets/components/breadcrumbs/breadcrumbs.css" />
+    <link rel="stylesheet" href="assets/components/footer/footer.css" />
+    <link rel="stylesheet" href="assets/components/disclosure/disclosure.css" />
+    <link rel="stylesheet" href="assets/components/hero/hero.css" />
+    <link rel="stylesheet" href="assets/components/callout/callout.css" />
+    <link rel="stylesheet" href="assets/components/product/product.css" />
+    <link rel="stylesheet" href="assets/components/story-card/story-card.css" />
+    <link rel="stylesheet" href="assets/components/avatars/avatars.css" />
+    <link rel="stylesheet" href="assets/interactive/sweepstake/sweepstake.css" />
+
+
+    <style>
+        .copybar [data-state="copied"]::after {
+            content: " Скопійовано!";
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body class="theme-light">
-  <div class="app">
-    <div class="top-tabs" role="tablist" aria-label="Main tabs">
-      <button class="top-tab" role="tab" aria-selected="true" data-tab="typography">Типографіка</button>
-      <button class="top-tab" role="tab" aria-selected="false" data-tab="standard">Базові компоненти</button>
-      <button class="top-tab" role="tab" aria-selected="false" data-tab="interactive">Інтерактивні компоненти</button>
-      <button class="top-tab" role="switch" id="themeBtn">Тема: Light</button>
+    <div class="app">
+        <!-- Хедер -->
+        <div class="top-tabs" role="tablist" aria-label="Main tabs">
+            <button class="top-tab" role="tab" aria-selected="true" data-tab="typography">Типографіка</button>
+            <button class="top-tab" role="tab" aria-selected="false" data-tab="standard">Базові компоненти</button>
+            <button class="top-tab" role="tab" aria-selected="false" data-tab="interactive">Інтерактивні
+                компоненти</button>
+        </div>
+
+        <!-- TIPOGRAPHY TAB -->
+        <section class="shell tab" id="tab-typography" data-active="true" aria-label="Типографіка">
+            <!-- Обгортка shell тепер містить і aside, і main -->
+            <aside class="sidebar" id="tab-typography-sidebar">
+                <div class="sidebar-tabs" role="tablist" aria-label="Sidebar tabs">
+                    <button class="sidebar-tab" id="sbFontsTab" aria-selected="true">Шрифт</button>
+                    <button class="sidebar-tab" id="sbColorsTab" aria-selected="false">Кольори</button>
+                </div>
+                <!-- … (весь контент для шрифтів і кольорів без змін) … -->
+                <div id="fontsPanel">
+                    <button class="accordion-hdr" id="accFonts" aria-expanded="true">
+                        <span class="chev">&#x25BC;</span> Шрифт
+                    </button>
+                    <div class="accordion-panel" id="accFontsBody">
+                        <ul class="list" id="fontList"></ul>
+                    </div>
+
+                    <button class="accordion-hdr" id="accStyles" aria-expanded="false">
+                        <span class="chev">&#x25BC;</span> Стилі шрифту
+                    </button>
+                    <div class="accordion-panel" id="accStylesBody" hidden>
+                        <!-- База -->
+                        <div class="control">
+                            <h5>База</h5>
+                            <div class="row">
+                                <label for="baseSize">Base size</label>
+                                <input id="baseSize" type="number" min="12" max="22" step="1" value="16" />
+                            </div>
+                        </div>
+
+                        <!-- Heading scales -->
+                        <div class="control">
+                            <h5>Heading scales</h5>
+                            <div class="row"><label>H1 size</label><select data-key="h1.size"></select></div>
+                            <div class="row"><label>H2 size</label><select data-key="h2.size"></select></div>
+                            <div class="row"><label>H3 size</label><select data-key="h3.size"></select></div>
+                            <div class="row"><label>H4 size</label><select data-key="h4.size"></select></div>
+                            <div class="row"><label>H5 size</label><select data-key="h5.size"></select></div>
+                            <div class="row"><label>H6 size</label><select data-key="h6.size"></select></div>
+                        </div>
+
+                        <!-- Heading weight / line-height -->
+                        <div class="control">
+                            <h5>Heading weight / line-height</h5>
+                            <div class="row"><label>H1</label><select data-key="h1.weight"></select></div>
+                            <div class="row"><label>H2</label><select data-key="h2.weight"></select></div>
+                            <div class="row"><label>H3</label><select data-key="h3.weight"></select></div>
+                            <div class="row"><label>H4</label><select data-key="h4.weight"></select></div>
+                            <div class="row"><label>H5</label><select data-key="h5.weight"></select></div>
+                            <div class="row"><label>H6</label><select data-key="h6.weight"></select></div>
+                            <div class="row"><label>H1 LH</label><select data-key="h1.lh"></select></div>
+                            <div class="row"><label>H2 LH</label><select data-key="h2.lh"></select></div>
+                            <div class="row"><label>H3 LH</label><select data-key="h3.lh"></select></div>
+                            <div class="row"><label>H4 LH</label><select data-key="h4.lh"></select></div>
+                            <div class="row"><label>H5 LH</label><select data-key="h5.lh"></select></div>
+                            <div class="row"><label>H6 LH</label><select data-key="h6.lh"></select></div>
+                        </div>
+
+                        <!-- Paragraphs / Links / Lists -->
+                        <div class="control">
+                            <h5>Paragraphs / Links / Lists</h5>
+                            <div class="row"><label>P size</label><select data-key="p.size"></select></div>
+                            <div class="row"><label>P weight</label><select data-key="p.weight"></select></div>
+                            <div class="row"><label>P line-height</label><select data-key="p.lh"></select></div>
+
+                            <div class="row">
+                                <label>Links</label>
+                                <select id="linkStyle">
+                                    <option value="underline">underline</option>
+                                    <option value="hover">hover only</option>
+                                    <option value="hover-underline">hover & underline</option>
+                                    <option value="none">none</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label>UL style</label>
+                                <select id="ulStyle">
+                                    <option value="disc">disc</option>
+                                    <option value="circle">circle</option>
+                                    <option value="square">square</option>
+                                    <option value="icon">icon</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label>OL style</label>
+                                <select id="olStyle">
+                                    <option value="disc">disc</option>
+                                    <option value="decimal">decimal</option>
+                                    <option value="decimal-leading-zero">decimal-leading-zero</option>
+                                    <option value="lower-alpha">lower-alpha</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="colorsPanel" hidden>
+                    <div class="control">
+                        <h5>Фон демо (Preview)</h5>
+                        <div class="row"><label>Background</label><input type="color" id="color-previewBg"
+                                value="#fafbfe" /></div>
+                    </div>
+
+                    <div class="control">
+                        <h5>Тексти</h5>
+                        <div class="row"><label>H1</label><input type="color" id="color-h1" value="#1c2430" /></div>
+                        <div class="row"><label>H2</label><input type="color" id="color-h2" value="#1c2430" /></div>
+                        <div class="row"><label>H3</label><input type="color" id="color-h3" value="#1c2430" /></div>
+                        <div class="row"><label>H4</label><input type="color" id="color-h4" value="#1c2430" /></div>
+                        <div class="row"><label>H5</label><input type="color" id="color-h5" value="#1c2430" /></div>
+                        <div class="row"><label>H6</label><input type="color" id="color-h6" value="#1c2430" /></div>
+                        <div class="row"><label>P</label><input type="color" id="color-p" value="#1c2430" /></div>
+                        <div class="row"><label>Link</label><input type="color" id="color-a" value="#0a7c5e" /></div>
+                        <div class="row"><label>Link hover</label><input type="color" id="color-aHover"
+                                value="#085f48" /></div>
+                    </div>
+
+                    <div class="control">
+                        <h5>Blockquote</h5>
+                        <div class="row"><label>Text</label><input type="color" id="color-bqText" value="#1c2430" />
+                        </div>
+                        <div class="row"><label>Background</label><input type="color" id="color-bqBg" value="#f1f4f8" />
+                        </div>
+                        <div class="row"><label>Border</label><input type="color" id="color-bqBorder" value="#b8c2cc" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn" id="resetBtn">Скинути стилі</button>
+                </div>
+
+            </aside>
+
+            <main class="panel">
+                <div class="buttons">
+                    <button class="btn" id="randomizeTopBtn">🎲 Рандомна типографіка</button>
+                    <button class="btn" id="randomizeColorsBtn">🎲 Рандомні кольори</button>
+                </div>
+
+                <div class="inner-tabs" role="tablist" aria-label="Typography inner tabs">
+                    <button class="inner-tab" role="tab" aria-selected="true" data-inner="preview">Preview</button>
+                    <button class="inner-tab" role="tab" aria-selected="false" data-inner="css">CSS</button>
+                    <button class="inner-tab" role="tab" aria-selected="false" data-inner="html">HTML</button>
+                </div>
+
+                <!-- Preview -->
+                <div id="typoPreview" class="preview" data-inner-panel="preview">
+                    <div id="previewScope" class="content hover-mode">
+                        <h1><span class="badge">&lt;h1&gt;</span>Elegant Typography Cheat Test</h1>
+                        <p><span class="badge">&lt;p&gt;</span>This block demonstrates a consistent set of styles …</p>
+                        <h2><span class="badge">&lt;h2&gt;</span>Section Title &amp; Rhythm</h2>
+                        <p><span class="badge">&lt;p&gt;</span>Good typography balances <a href="#"><span
+                                    class="badge">&lt;a&gt;</span>readability</a>, hierarchy …</p>
+                        <h3><span class="badge">&lt;h3&gt;</span>Lists</h3>
+                        <p id="ulLabel" class="notice"><span class="badge">&lt;ul&gt; + &lt;li&gt;</span> з іконкою
+                            (заміни в css на свою)</p>
+                        <ul>
+                            <li>Readable base size with generous line-height.</li>
+                            <li>Predictable heading increments and weights.</li>
+                            <li>Clear link styling with accessible states.</li>
+                        </ul>
+                        <p id="olLabel" class="notice"><span class="badge">&lt;ol&gt; + &lt;li&gt;</span> з точками</p>
+                        <ol>
+                            <li>Use system/installed fonts to avoid CDNs.</li>
+                            <li>Keep min width at 320px.</li>
+                            <li>Prefer semantic HTML for screen readers.</li>
+                        </ol>
+                        <h4><span class="badge">&lt;h4&gt;</span>Blockquote</h4>
+                        <blockquote><span class="badge">&lt;blockquote&gt;</span>“People ignore design that ignores
+                            people.” —
+                            Frank Chimero</blockquote>
+                        <h5><span class="badge">&lt;h5&gt;</span>Highlights (20)</h5>
+
+                        <!-- Повний список 20 highlight -->
+                        <p><span class="badge">&lt;span .highlight-1&gt;</span><span
+                                class="highlight highlight-1">Variant
+                                1</span></p>
+                        <p><span class="badge">&lt;span .highlight-2&gt;</span><span
+                                class="highlight highlight-2">Variant
+                                2</span></p>
+                        <p><span class="badge">&lt;span .highlight-3&gt;</span><span
+                                class="highlight highlight-3">Variant
+                                3</span></p>
+                        <p><span class="badge">&lt;span .highlight-4&gt;</span><span
+                                class="highlight highlight-4">Variant
+                                4</span></p>
+                        <p><span class="badge">&lt;span .highlight-5&gt;</span><span
+                                class="highlight highlight-5">Variant
+                                5</span></p>
+                        <p><span class="badge">&lt;span .highlight-6&gt;</span><span
+                                class="highlight highlight-6">Variant
+                                6</span></p>
+                        <p><span class="badge">&lt;span .highlight-7&gt;</span><span
+                                class="highlight highlight-7">Variant
+                                7</span></p>
+                        <p><span class="badge">&lt;span .highlight-8&gt;</span><span
+                                class="highlight highlight-8">Variant
+                                8</span></p>
+                        <p><span class="badge">&lt;span .highlight-9&gt;</span><span
+                                class="highlight highlight-9">Variant
+                                9</span></p>
+                        <p><span class="badge">&lt;span .highlight-10&gt;</span><span
+                                class="highlight highlight-10">Variant
+                                10</span></p>
+                        <p><span class="badge">&lt;span .highlight-11&gt;</span><span
+                                class="highlight highlight-11">Variant
+                                11</span></p>
+                        <p><span class="badge">&lt;span .highlight-12&gt;</span><span
+                                class="highlight highlight-12">Variant
+                                12</span></p>
+                        <p><span class="badge">&lt;span .highlight-13&gt;</span><span
+                                class="highlight highlight-13">Variant
+                                13</span></p>
+                        <p><span class="badge">&lt;span .highlight-14&gt;</span><span
+                                class="highlight highlight-14">Variant
+                                14</span></p>
+                        <p><span class="badge">&lt;span .highlight-15&gt;</span><span
+                                class="highlight highlight-15">Variant
+                                15</span></p>
+                        <p><span class="badge">&lt;span .highlight-16&gt;</span><span
+                                class="highlight highlight-16">Variant
+                                16</span></p>
+                        <p><span class="badge">&lt;span .highlight-17&gt;</span><span
+                                class="highlight highlight-17">Variant
+                                17</span></p>
+                        <p><span class="badge">&lt;span .highlight-18&gt;</span><span
+                                class="highlight highlight-18">Variant
+                                18</span></p>
+                        <p><span class="badge">&lt;span .highlight-19&gt;</span><span
+                                class="highlight highlight-19">Variant
+                                19</span></p>
+                        <p><span class="badge">&lt;span .highlight-20&gt;</span><span
+                                class="highlight highlight-20">Variant
+                                20</span></p>
+                    </div>
+                </div>
+
+                <!-- CSS -->
+                <div id="typoCSS" data-inner-panel="css" hidden>
+                    <div class="copybar"><button class="btn" id="copyCssBtn">Copy CSS</button></div>
+                    <div id="cssOutput" class="codebox"></div>
+                    <p class="notice">Скопійований CSS: спочатку «Базові стилі», потім обрана типографіка + ваші
+                        налаштування і
+                        кольори.</p>
+                </div>
+
+                <!-- HTML -->
+                <div id="typoHTML" data-inner-panel="html" hidden>
+                    <div class="copybar"><button class="btn" id="copyHtmlBtn">Copy HTML</button></div>
+                    <div id="htmlOutput" class="codebox"></div>
+                </div>
+            </main>
+        </section>
+
+        <section class="shell tab" id="tab-standard" aria-label="Базові компоненти" hidden>
+            <aside class="sidebar" id="standardSidebar">
+                <h4>Базові</h4>
+                <ul class="list">
+                    <li><button id="sbHeader">Header / Navbar</button></li>
+                    <li><button id="sbBreadcrumbs">Breadcrumbs</button></li>
+                    <li><button id="sbFooter">Footer (links + modals)</button></li>
+                    <li><button id="sbAds">Advertisement | Disclosure</button></li>
+                    <li><button id="sbImages">Images (hero/product/avatar)</button></li>
+                    <li><button id="sbButtons" class="active">Buttons</button></li>
+                </ul>
+                <h4>Контент</h4>
+                <ul class="list">
+                    <li><button id="sbCallouts">Callouts / Alerts</button></li>
+                    <!-- <li class="disabled">Callout/Alert</li> -->
+                    <li class="disabled">FAQ</li>
+                    <li class="disabled">Testimonials</li>
+                    <li class="disabled">Comments</li>
+                </ul>
+            </aside>
+
+            <main class="panel" id="standardMain">
+                <!-- ===== GROUP: HEADER / NAVBAR ===== -->
+                <div class="std-group" id="std-header" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Header inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="head-preview">Preview</button><button class="inner-tab" role="tab"
+                            aria-selected="false" data-inner="head-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="head-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="head-js">JS</button>
+                    </div>
+
+                    <div id="headPreview" class="preview" data-inner-panel="head-preview">
+                        <div class="std-demo" id="headDemo"></div>
+                    </div>
+                    <div id="headCSS" data-inner-panel="head-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyHeadCssBtn">Copy CSS</button></div>
+                        <div id="headCssOutput" class="codebox"></div>
+                    </div>
+                    <div id="headJS" data-inner-panel="head-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyHeadJsBtn">Copy JS</button></div>
+                        <div id="headJsOutput" class="codebox"></div>
+                    </div>
+                    <div id="headHTML" data-inner-panel="head-html" hidden>
+                        <div class="copybar"><button class="btn" id="copyHeadHtmlBtn">Copy HTML</button></div>
+                        <div id="headHtmlOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+
+
+                <!-- ===== GROUP: BREADCRUMBS ===== -->
+                <div class="std-group" id="std-crumbs" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Breadcrumbs inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="crumbs-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false"
+                            data-inner="crumbs-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="crumbs-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="crumbs-js">JS</button>
+                    </div>
+                    <div id="crumbsPreview" class="preview" data-inner-panel="crumbs-preview">
+                        <div class="std-demo" id="crumbsDemo"></div>
+                    </div>
+                    <div id="crumbsJS" data-inner-panel="crumbs-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyCrumbsJsBtn">Copy JS</button></div>
+                        <div id="crumbsJsOutput" class="codebox"></div>
+                    </div>
+                    <div id="crumbsCSS" data-inner-panel="crumbs-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyCrumbsCssBtn">Copy CSS</button></div>
+                        <div id="crumbsCssOutput" class="codebox"></div>
+                    </div>
+                    <div id="crumbsHTML" data-inner-panel="crumbs-html" hidden>
+                        <div class="copybar"><button class="btn" id="copyCrumbsHtmlBtn">Copy HTML</button></div>
+                        <div id="crumbsHtmlOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+                <!-- ===== GROUP: FOOTER ===== -->
+                <div class="std-group" id="std-footer" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Footer inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="foot-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="foot-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="foot-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="foot-js">JS</button>
+                    </div>
+                    <div id="footPreview" class="preview" data-inner-panel="foot-preview">
+                        <div class="std-demo" id="footDemo"></div>
+                    </div>
+                    <div id="footCSS" data-inner-panel="foot-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyFootCssBtn">Copy CSS</button></div>
+                        <div id="footCssOutput" class="codebox"></div>
+                    </div>
+                    <div id="footJS" data-inner-panel="foot-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyFootJsBtn">Copy JS</button></div>
+                        <div id="footJsOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+                <!-- ===== GROUP: ADS / DISCLOSURE ===== -->
+                <div class="std-group" id="std-ads" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Ads inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="ads-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="ads-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="ads-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="ads-js">JS</button>
+                    </div>
+                    <div id="adsPreview" class="preview" data-inner-panel="ads-preview">
+                        <div class="std-demo" id="adsDemo"></div>
+                    </div>
+                    <div id="adsCSS" data-inner-panel="ads-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyAdsCssBtn">Copy CSS</button></div>
+                        <div id="adsCssOutput" class="codebox"></div>
+                    </div>
+                    <div id="adsHTML" data-inner-panel="ads-html" hidden>
+                        <div class="copybar"><button class="btn" id="copyAdsHtmlBtn">Copy HTML</button></div>
+                        <div id="adsHtmlOutput" class="codebox"></div>
+                    </div>
+                    <div id="adsJS" data-inner-panel="ads-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyAdsJsBtn">Copy JS</button></div>
+                        <div id="adsJsOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+                <!-- ===== GROUP: IMAGES ===== -->
+                <div class="std-group" id="std-images" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Images inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="imgs-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-js"
+                            id="imgsJsTab">JS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-css">CSS</button>
+                        <!-- ⬇️ ДОДАНО: кнопка JS -->
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-html">HTML</button>
+                    </div>
+
+                    <div id="imgsPreview" class="preview" data-inner-panel="imgs-preview">
+                        <div class="std-demo" id="imgsDemo"></div>
+                    </div>
+
+                    <div id="imgsCSS" data-inner-panel="imgs-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyImgsCssBtn">Copy CSS</button></div>
+                        <div id="imgsCssOutput" class="codebox"></div>
+                    </div>
+
+                    <!-- ⬇️ ДОДАНО: панель JS -->
+                    <div id="imgsJS" data-inner-panel="imgs-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyImgsJsBtn">Copy JS</button></div>
+                        <div id="imgsJsOutput" class="codebox"></div>
+                        <p class="notice">Цей JS керує “вузьким” діапазоном 350–490px (is-compact/shift-out) і підрізає
+                            довгі
+                            заголовки.</p>
+                    </div>
+
+                    <div id="imgsHTML" data-inner-panel="imgs-html" hidden>
+                        <div class="copybar"><button class="btn" id="copyImgsHtmlBtn">Copy HTML</button></div>
+                        <div id="imgsHtmlOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+
+                <!-- ===== GROUP: BUTTONS (існуючий блок, просто обгорнули) ===== -->
+                <div class="std-group" id="std-buttons">
+                    <div class="inner-tabs" role="tablist" aria-label="Buttons inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="btns-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-js">JS</button>
+                    </div>
+                    <div id="btnsPreview" data-inner-panel="btns-preview">
+                        <div class="btns-grid" id="btnsGrid"></div>
+                    </div>
+                    <div id="btnsCSS" data-inner-panel="btns-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyBtnsCssBtn">Copy CSS</button></div>
+                        <div id="btnsCssOutput" class="codebox"></div>
+                    </div>
+                    <div id="btnsJS" data-inner-panel="btns-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyBtnsJsBtn">Copy JS</button></div>
+                        <div id="btnsJsOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+                <section class="std-group" id="std-callouts" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Callouts inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="co-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="co-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="co-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="co-js">JS</button>
+                    </div>
+
+                    <!-- Preview -->
+                    <div id="calloutsPreview" class="preview" data-inner-panel="co-preview">
+                        <div class="std-demo" id="calloutsDemo"></div>
+                    </div>
+
+                    <!-- CSS -->
+                    <div id="calloutsCSS" data-inner-panel="co-css" hidden>
+                        <div class="copybar"><button class="btn" id="copyCalloutsCssBtn">Copy CSS</button></div>
+                        <div id="calloutsCssOutput" class="codebox"></div>
+                    </div>
+
+                    <!-- HTML -->
+                    <div id="calloutsHTML" data-inner-panel="co-html" hidden>
+                        <div class="copybar"><button class="btn" id="copyCalloutsHtmlBtn">Copy HTML</button></div>
+                        <div id="calloutsHtmlOutput" class="codebox"></div>
+                    </div>
+
+                    <!-- JS -->
+                    <div id="calloutsJS" data-inner-panel="co-js" hidden>
+                        <div class="copybar"><button class="btn" id="copyCalloutsJsBtn">Copy JS</button></div>
+                        <div id="calloutsJsOutput" class="codebox"></div>
+                    </div>
+                </section>
+
+            </main>
+        </section>
+
+        <!-- INTERACTIVE TAB -->
+        <section class="shell tab" id="tab-interactive" aria-label="Інтерактивні компоненти" hidden>
+            <aside class="sidebar" id="interactiveSidebar">
+                <h4>Інтерактивні</h4>
+                <ul class="list">
+                    <li><button id="sbSweepstake" class="active">Sweepstake</button></li>
+                    <li><button id="sbForm">form + countdown</button></li>
+                    <li><button id="sbCongrats">congrats</button></li>
+                </ul>
+            </aside>
+
+            <main class="panel" id="interactiveMain">
+                <!-- ===== GROUP: SWEEPSTAKE ===== -->
+                <div class="std-group" id="int-sweepstake">
+                    <div class="inner-tabs" role="tablist" aria-label="Sweepstake inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="swp-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="swp-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="swp-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="swp-js">JS</button>
+                    </div>
+
+                    <div id="swpPreview" class="preview" data-inner-panel="swp-preview">
+                        <div class="std-demo" id="sweepDemo">
+                            <!-- Sweep -->
+                            <div class="i-sweep" id="sweep">
+                                <div class="i-sweep__wheel">
+                                    <div class="i-sweep__rotor" data-rotor>
+                                        <div class="i-sweep__disc"></div>
+                                    </div>
+                                    <button class="i-sweep__hub" data-spin type="button" aria-label="Spin"></button>
+                                    <div class="i-sweep__pointer"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal -->
+                            <div class="modal" id="congratsModal" hidden>
+                                <div class="modal__overlay"></div>
+                                <div class="modal__content">
+                                    <div class="modal__icon">✔</div>
+                                    <h2>Congratulations!</h2>
+                                    <p>You won <strong>50% discount</strong>!</p>
+                                    <button class="btn" id="congratsOk">OK</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Form -->
+                            <div class="form-wrap" id="formWrap" hidden>
+                                <h2 class="form-headline">Official request form</h2>
+                            
+                                <img src="./assets/interactive/sweepstake/pr.png" alt="Product" class="form-img" />
+                                <p class="form-stock">
+                                    <span id="stockNum">#982 of 1000</span> as of <span id="stockDate"></span>
+                                </p>
+                                <p class="form-sub">For a promo purchase of Alphavit at a discounted price</p>
+                            
+                                <p class="form-price">
+                                    <span class="old">₱3,980</span>
+                                    <span class="new">₱1,990</span>
+                                </p>
+                            
+                                <div class="form-banner">
+                                    To get Alphavit with a discount, enter your name and phone number below and click "LEAVE A REQUEST"
+                                </div>
+                            
+                                <form id="leadForm">
+                                    <label for="name" class="sr-only">Name</label>
+                                    <input id="name" type="text" name="name" placeholder="Name" required />
+                                    <label for="phone" class="sr-only">Phone number</label>
+                                    <input id="phone" type="tel" name="phone" placeholder="Phone number" required />
+                                    <button type="submit" class="btn">LEAVE A REQUEST</button>
+                                </form>
+                            
+                                <p class="countdown">Offer ends in: <span id="timer">10:00</span></p>
+                                <p class="form-footnote">
+                                    After submitting, our operator will call you to confirm the order and delivery details.
+                                </p>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <div id="swpHTML" data-inner-panel="swp-html" hidden>
+                        <div class="copybar"><button class="btn" id="copySweepHtmlBtn">Copy HTML</button></div>
+                        <div id="sweepHtmlOutput" class="codebox"></div>
+                    </div>
+
+                    <div id="swpCSS" data-inner-panel="swp-css" hidden>
+                        <div class="copybar"><button class="btn" id="copySweepCssBtn">Copy CSS</button></div>
+                        <div id="sweepCssOutput" class="codebox"></div>
+                    </div>
+
+                    <div id="swpJS" data-inner-panel="swp-js" hidden>
+                        <div class="copybar"><button class="btn" id="copySweepJsBtn">Copy JS</button></div>
+                        <div id="sweepJsOutput" class="codebox"></div>
+                    </div>
+                </div>
+
+                <!-- ===== GROUP: FORM + COUNTDOWN (заглушка) ===== -->
+                <div class="std-group" id="int-form" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Form inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="form-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="form-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="form-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="form-js">JS</button>
+                    </div>
+                    <div class="preview" data-inner-panel="form-preview">
+                        <div class="std-demo">
+                            <p class="notice">Form + countdown зʼявиться після інтеграції зі Sweepstake.</p>
+                        </div>
+                    </div>
+                    <div data-inner-panel="form-html" hidden>
+                        <div class="codebox" id="formHtmlOutput"></div>
+                    </div>
+                    <div data-inner-panel="form-css" hidden>
+                        <div class="codebox" id="formCssOutput"></div>
+                    </div>
+                    <div data-inner-panel="form-js" hidden>
+                        <div class="codebox" id="formJsOutput"></div>
+                    </div>
+                </div>
+
+                <!-- ===== GROUP: CONGRATS (заглушка) ===== -->
+                <div class="std-group" id="int-congrats" hidden>
+                    <div class="inner-tabs" role="tablist" aria-label="Congrats inner tabs">
+                        <button class="inner-tab" role="tab" aria-selected="true"
+                            data-inner="cg-preview">Preview</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="cg-html">HTML</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="cg-css">CSS</button>
+                        <button class="inner-tab" role="tab" aria-selected="false" data-inner="cg-js">JS</button>
+                    </div>
+                    <div class="preview" data-inner-panel="cg-preview">
+                        <div class="std-demo">
+                            <p class="notice">Congrats-модалка підʼєднається після виграшу у Sweepstake.</p>
+                        </div>
+                    </div>
+                    <div data-inner-panel="cg-html" hidden>
+                        <div class="codebox" id="congratsHtmlOutput"></div>
+                    </div>
+                    <div data-inner-panel="cg-css" hidden>
+                        <div class="codebox" id="congratsCssOutput"></div>
+                    </div>
+                    <div data-inner-panel="cg-js" hidden>
+                        <div class="codebox" id="congratsJsOutput"></div>
+                    </div>
+                </div>
+            </main>
+        </section>
+
+
     </div>
 
-    <!-- TIPOGRAPHY TAB -->
-    <section class="shell tab" id="tab-typography" data-active="true" aria-label="Типографіка">
-      <aside class="sidebar" id="tab-typography-sidebar">
-        <div class="sidebar-tabs" role="tablist" aria-label="Sidebar tabs">
-          <button class="sidebar-tab" id="sbFontsTab" aria-selected="true">Шрифт</button>
-          <button class="sidebar-tab" id="sbColorsTab" aria-selected="false">Кольори</button>
-        </div>
+    <!-- Динамічні стилі -->
+    <style id="typoStyle"></style>
+    <style id="colorStyle"></style>
+    <style id="btnKitStyle"></style>
+    <style id="stdStyle"></style>
 
-        <div id="fontsPanel">
-          <button class="accordion-hdr" id="accFonts" aria-expanded="true"><span class="chev">&#x25BC;</span>
-            Шрифт</button>
-          <div class="accordion-panel" id="accFontsBody">
-            <ul class="list" id="fontList"></ul>
-          </div>
-
-          <button class="accordion-hdr" id="accStyles" aria-expanded="false"><span class="chev">&#x25BC;</span> Стилі
-            шрифту</button>
-          <div class="accordion-panel" id="accStylesBody" hidden>
-            <div class="control">
-              <h5>База</h5>
-              <div class="row">
-                <label for="baseSize">Base size</label>
-                <input id="baseSize" type="number" min="12" max="22" step="1" value="16" />
-              </div>
-            </div>
-
-            <div class="control">
-              <h5>Heading scales</h5>
-              <div class="row"><label>H1 size</label><select data-key="h1.size"></select></div>
-              <div class="row"><label>H2 size</label><select data-key="h2.size"></select></div>
-              <div class="row"><label>H3 size</label><select data-key="h3.size"></select></div>
-              <div class="row"><label>H4 size</label><select data-key="h4.size"></select></div>
-              <div class="row"><label>H5 size</label><select data-key="h5.size"></select></div>
-              <div class="row"><label>H6 size</label><select data-key="h6.size"></select></div>
-            </div>
-
-            <div class="control">
-              <h5>Heading weight / line-height</h5>
-              <div class="row"><label>H1</label><select data-key="h1.weight"></select></div>
-              <div class="row"><label>H2</label><select data-key="h2.weight"></select></div>
-              <div class="row"><label>H3</label><select data-key="h3.weight"></select></div>
-              <div class="row"><label>H4</label><select data-key="h4.weight"></select></div>
-              <div class="row"><label>H5</label><select data-key="h5.weight"></select></div>
-              <div class="row"><label>H6</label><select data-key="h6.weight"></select></div>
-              <div class="row"><label>H1 LH</label><select data-key="h1.lh"></select></div>
-              <div class="row"><label>H2 LH</label><select data-key="h2.lh"></select></div>
-              <div class="row"><label>H3 LH</label><select data-key="h3.lh"></select></div>
-              <div class="row"><label>H4 LH</label><select data-key="h4.lh"></select></div>
-              <div class="row"><label>H5 LH</label><select data-key="h5.lh"></select></div>
-              <div class="row"><label>H6 LH</label><select data-key="h6.lh"></select></div>
-            </div>
-
-            <div class="control">
-              <h5>Paragraphs / Links / Lists</h5>
-              <div class="row"><label>P size</label><select data-key="p.size"></select></div>
-              <div class="row"><label>P weight</label><select data-key="p.weight"></select></div>
-              <div class="row"><label>P line-height</label><select data-key="p.lh"></select></div>
-              <div class="row">
-                <label>Links</label>
-                <select id="linkStyle">
-                  <option value="underline">underline</option>
-                  <option value="hover">hover only</option>
-                  <option value="hover-underline">hover & underline</option>
-                  <option value="none">none</option>
-                </select>
-              </div>
-              <div class="row">
-                <label>UL style</label>
-                <select id="ulStyle">
-                  <option value="disc">disc</option>
-                  <option value="circle">circle</option>
-                  <option value="square">square</option>
-                  <option value="icon">icon</option>
-                </select>
-              </div>
-              <div class="row">
-                <label>OL style</label>
-                <select id="olStyle">
-                  <option value="disc">disc</option>
-                  <option value="decimal">decimal</option>
-                  <option value="decimal-leading-zero">decimal-leading-zero</option>
-                  <option value="lower-alpha">lower-alpha</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="colorsPanel" hidden>
-          <div class="control">
-            <h5>Фон демо (Preview)</h5>
-            <div class="row"><label>Background</label><input type="color" id="color-previewBg" value="#fafbfe" /></div>
-          </div>
-          <div class="control">
-            <h5>Тексти</h5>
-            <div class="row"><label>H1</label><input type="color" id="color-h1" value="#1c2430" /></div>
-            <div class="row"><label>H2</label><input type="color" id="color-h2" value="#1c2430" /></div>
-            <div class="row"><label>H3</label><input type="color" id="color-h3" value="#1c2430" /></div>
-            <div class="row"><label>H4</label><input type="color" id="color-h4" value="#1c2430" /></div>
-            <div class="row"><label>H5</label><input type="color" id="color-h5" value="#1c2430" /></div>
-            <div class="row"><label>H6</label><input type="color" id="color-h6" value="#1c2430" /></div>
-            <div class="row"><label>P</label><input type="color" id="color-p" value="#1c2430" /></div>
-            <div class="row"><label>Link</label><input type="color" id="color-a" value="#0a7c5e" /></div>
-            <div class="row"><label>Link hover</label><input type="color" id="color-aHover" value="#085f48" /></div>
-          </div>
-          <div class="control">
-            <h5>Blockquote</h5>
-            <div class="row"><label>Text</label><input type="color" id="color-bqText" value="#1c2430" /></div>
-            <div class="row"><label>Background</label><input type="color" id="color-bqBg" value="#f1f4f8" /></div>
-            <div class="row"><label>Border</label><input type="color" id="color-bqBorder" value="#b8c2cc" /></div>
-          </div>
-        </div>
-
-        <div class="buttons">
-          <button class="btn" id="resetBtn">Скинути стилі</button>
-        </div>
-      </aside>
-
-      <main class="panel">
-        <div class="buttons">
-          <button class="btn" id="randomizeTopBtn">🎲 Рандомна типографіка</button>
-          <button class="btn" id="randomizeColorsBtn">🎲 Рандомні кольори</button>
-        </div>
-
-        <div class="inner-tabs" role="tablist" aria-label="Typography inner tabs">
-          <button class="inner-tab" role="tab" aria-selected="true" data-inner="preview">Preview</button>
-          <button class="inner-tab" role="tab" aria-selected="false" data-inner="css">CSS</button>
-          <button class="inner-tab" role="tab" aria-selected="false" data-inner="html">HTML</button>
-        </div>
-
-        <div id="typoPreview" class="preview" data-inner-panel="preview">
-          <div id="previewScope" class="content hover-mode">
-            <h1><span class="badge">&lt;h1&gt;</span>Elegant Typography Cheat Test</h1>
-            <p><span class="badge">&lt;p&gt;</span>This block demonstrates a consistent set of styles applied to the
-              same content. Switch fonts on the left to compare rhythm, sizes, and contrast. You can also override
-              heading scales, paragraph metrics, lists and links.</p>
-            <h2><span class="badge">&lt;h2&gt;</span>Section Title &amp; Rhythm</h2>
-            <p><span class="badge">&lt;p&gt;</span>Good typography balances <a href="#"><span
-                  class="badge">&lt;a&gt;</span>readability</a>, hierarchy, and spacing. A clear scale for headings
-              (H1–H6) and consistent paragraph line-height improve scannability and comprehension on long pre-landers.
-            </p>
-            <h3><span class="badge">&lt;h3&gt;</span>Lists</h3>
-            <p id="ulLabel" class="notice"><span class="badge">&lt;ul&gt; + &lt;li&gt;</span> з іконкою</p>
-            <ul>
-              <li>Readable base size with generous line-height.</li>
-              <li>Predictable heading increments and weights.</li>
-              <li>Clear link styling with accessible states.</li>
-            </ul>
-            <p id="olLabel" class="notice"><span class="badge">&lt;ol&gt; + &lt;li&gt;</span> з точками</p>
-            <ol>
-              <li>Use system/installed fonts to avoid CDNs.</li>
-              <li>Keep min width at 320px.</li>
-              <li>Prefer semantic HTML for screen readers.</li>
-            </ol>
-            <h4><span class="badge">&lt;h4&gt;</span>Blockquote</h4>
-            <blockquote><span class="badge">&lt;blockquote&gt;</span>“People ignore design that ignores people.” — Frank
-              Chimero</blockquote>
-            <h5><span class="badge">&lt;h5&gt;</span>Highlights (20)</h5>
-            <p><span class="badge">&lt;span .highlight-1&gt;</span><span class="highlight highlight-1">Variant 1</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-2&gt;</span><span class="highlight highlight-2">Variant 2</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-3&gt;</span><span class="highlight highlight-3">Variant 3</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-4&gt;</span><span class="highlight highlight-4">Variant 4</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-5&gt;</span><span class="highlight highlight-5">Variant 5</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-6&gt;</span><span class="highlight highlight-6">Variant 6</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-7&gt;</span><span class="highlight highlight-7">Variant 7</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-8&gt;</span><span class="highlight highlight-8">Variant 8</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-9&gt;</span><span class="highlight highlight-9">Variant 9</span>
-            </p>
-            <p><span class="badge">&lt;span .highlight-10&gt;</span><span class="highlight highlight-10">Variant
-                10</span></p>
-            <p><span class="badge">&lt;span .highlight-11&gt;</span><span class="highlight highlight-11">Variant
-                11</span></p>
-            <p><span class="badge">&lt;span .highlight-12&gt;</span><span class="highlight highlight-12">Variant
-                12</span></p>
-            <p><span class="badge">&lt;span .highlight-13&gt;</span><span class="highlight highlight-13">Variant
-                13</span></p>
-            <p><span class="badge">&lt;span .highlight-14&gt;</span><span class="highlight highlight-14">Variant
-                14</span></p>
-            <p><span class="badge">&lt;span .highlight-15&gt;</span><span class="highlight highlight-15">Variant
-                15</span></p>
-            <p><span class="badge">&lt;span .highlight-16&gt;</span><span class="highlight highlight-16">Variant
-                16</span></p>
-            <p><span class="badge">&lt;span .highlight-17&gt;</span><span class="highlight highlight-17">Variant
-                17</span></p>
-            <p><span class="badge">&lt;span .highlight-18&gt;</span><span class="highlight highlight-18">Variant
-                18</span></p>
-            <p><span class="badge">&lt;span .highlight-19&gt;</span><span class="highlight highlight-19">Variant
-                19</span></p>
-            <p><span class="badge">&lt;span .highlight-20&gt;</span><span class="highlight highlight-20">Variant
-                20</span></p>
-          </div>
-        </div>
-
-        <div id="typoCSS" data-inner-panel="css" hidden>
-          <div class="copybar"><button class="btn" id="copyCssBtn">Copy CSS</button></div>
-          <div id="cssOutput" class="codebox"></div>
-          <p class="notice">Скопійований CSS: спочатку «Базові стилі», потім обрана типографіка + ваші налаштування і
-            кольори.</p>
-        </div>
-
-        <div id="typoHTML" data-inner-panel="html" hidden>
-          <div class="copybar"><button class="btn" id="copyHtmlBtn">Copy HTML</button></div>
-          <div id="htmlOutput" class="codebox"></div>
-        </div>
-      </main>
-    </section>
-
-    <!-- STANDARD TAB -->
-    <section class="shell tab" id="tab-standard" aria-label="Базові компоненти" hidden>
-      <aside class="sidebar" id="standardSidebar">
-        <h4>Базові</h4>
-        <ul class="list">
-          <li><button id="sbHeader">Header / Navbar</button></li>
-          <li><button id="sbBreadcrumbs">Breadcrumbs</button></li>
-          <li><button id="sbFooter">Footer (links + modals)</button></li>
-          <li><button id="sbAds">Advertisement | Disclosure</button></li>
-          <li><button id="sbImages">Images (hero/product/avatar)</button></li>
-          <li><button id="sbButtons" class="active">Buttons</button></li>
-        </ul>
-        <h4>Контент</h4>
-        <ul class="list">
-          <li><button id="sbCallouts">Callouts / Alerts</button></li>
-          <!-- <li class="disabled">Callout/Alert</li> -->
-          <li class="disabled">FAQ</li>
-          <li class="disabled">Testimonials</li>
-          <li class="disabled">Comments</li>
-        </ul>
-      </aside>
-
-      <main class="panel" id="standardMain">
-        <!-- ===== GROUP: HEADER / NAVBAR ===== -->
-        <div class="std-group" id="std-header" hidden>
-          <div class="inner-tabs" role="tablist" aria-label="Header inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="head-preview">Preview</button><button
-              class="inner-tab" role="tab" aria-selected="false" data-inner="head-html">HTML</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="head-css">CSS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="head-js">JS</button>
-          </div>
-
-          <div id="headPreview" class="preview" data-inner-panel="head-preview">
-            <div class="std-demo" id="headDemo"></div>
-          </div>
-          <div id="headCSS" data-inner-panel="head-css" hidden>
-            <div class="copybar"><button class="btn" id="copyHeadCssBtn">Copy CSS</button></div>
-            <div id="headCssOutput" class="codebox"></div>
-          </div>
-          <div id="headJS" data-inner-panel="head-js" hidden>
-            <div class="copybar"><button class="btn" id="copyHeadJsBtn">Copy JS</button></div>
-            <div id="headJsOutput" class="codebox"></div>
-          </div>
-          <div id="headHTML" data-inner-panel="head-html" hidden>
-            <div class="copybar"><button class="btn" id="copyHeadHtmlBtn">Copy HTML</button></div>
-            <div id="headHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-
-
-        <!-- ===== GROUP: BREADCRUMBS ===== -->
-        <div class="std-group" id="std-crumbs" hidden>
-          <div class="inner-tabs" role="tablist" aria-label="Breadcrumbs inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="crumbs-preview">Preview</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="crumbs-css">CSS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="crumbs-html">HTML</button>
-          </div>
-          <div id="crumbsPreview" class="preview" data-inner-panel="crumbs-preview">
-            <div class="std-demo" id="crumbsDemo"></div>
-          </div>
-          <div id="crumbsCSS" data-inner-panel="crumbs-css" hidden>
-            <div class="copybar"><button class="btn" id="copyCrumbsCssBtn">Copy CSS</button></div>
-            <div id="crumbsCssOutput" class="codebox"></div>
-          </div>
-          <div id="crumbsHTML" data-inner-panel="crumbs-html" hidden>
-            <div class="copybar"><button class="btn" id="copyCrumbsHtmlBtn">Copy HTML</button></div>
-            <div id="crumbsHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-        <!-- ===== GROUP: FOOTER ===== -->
-        <div class="std-group" id="std-footer" hidden>
-          <div class="inner-tabs" role="tablist" aria-label="Footer inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="foot-preview">Preview</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="foot-css">CSS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="foot-html">HTML</button>
-          </div>
-          <div id="footPreview" class="preview" data-inner-panel="foot-preview">
-            <div class="std-demo" id="footDemo"></div>
-          </div>
-          <div id="footCSS" data-inner-panel="foot-css" hidden>
-            <div class="copybar"><button class="btn" id="copyFootCssBtn">Copy CSS</button></div>
-            <div id="footCssOutput" class="codebox"></div>
-          </div>
-          <div id="footHTML" data-inner-panel="foot-html" hidden>
-            <div class="copybar"><button class="btn" id="copyFootHtmlBtn">Copy HTML</button></div>
-            <div id="footHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-        <!-- ===== GROUP: ADS / DISCLOSURE ===== -->
-        <div class="std-group" id="std-ads" hidden>
-          <div class="inner-tabs" role="tablist" aria-label="Ads inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="ads-preview">Preview</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="ads-css">CSS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="ads-html">HTML</button>
-          </div>
-          <div id="adsPreview" class="preview" data-inner-panel="ads-preview">
-            <div class="std-demo" id="adsDemo"></div>
-          </div>
-          <div id="adsCSS" data-inner-panel="ads-css" hidden>
-            <div class="copybar"><button class="btn" id="copyAdsCssBtn">Copy CSS</button></div>
-            <div id="adsCssOutput" class="codebox"></div>
-          </div>
-          <div id="adsHTML" data-inner-panel="ads-html" hidden>
-            <div class="copybar"><button class="btn" id="copyAdsHtmlBtn">Copy HTML</button></div>
-            <div id="adsHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-        <!-- ===== GROUP: IMAGES ===== -->
-        <div class="std-group" id="std-images" hidden>
-          <div class="inner-tabs" role="tablist" aria-label="Images inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="imgs-preview">Preview</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-css">CSS</button>
-            <!-- ⬇️ ДОДАНО: кнопка JS -->
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-js" id="imgsJsTab">JS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="imgs-html">HTML</button>
-          </div>
-
-          <div id="imgsPreview" class="preview" data-inner-panel="imgs-preview">
-            <div class="std-demo" id="imgsDemo"></div>
-          </div>
-
-          <div id="imgsCSS" data-inner-panel="imgs-css" hidden>
-            <div class="copybar"><button class="btn" id="copyImgsCssBtn">Copy CSS</button></div>
-            <div id="imgsCssOutput" class="codebox"></div>
-          </div>
-
-          <!-- ⬇️ ДОДАНО: панель JS -->
-          <div id="imgsJS" data-inner-panel="imgs-js" hidden>
-            <div class="copybar"><button class="btn" id="copyImgsJsBtn">Copy JS</button></div>
-            <div id="imgsJsOutput" class="codebox"></div>
-            <p class="notice">Цей JS керує “вузьким” діапазоном 350–490px (is-compact/shift-out) і підрізає довгі
-              заголовки.</p>
-          </div>
-
-          <div id="imgsHTML" data-inner-panel="imgs-html" hidden>
-            <div class="copybar"><button class="btn" id="copyImgsHtmlBtn">Copy HTML</button></div>
-            <div id="imgsHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-
-        <!-- ===== GROUP: BUTTONS (існуючий блок, просто обгорнули) ===== -->
-        <div class="std-group" id="std-buttons">
-          <div class="inner-tabs" role="tablist" aria-label="Buttons inner tabs">
-            <button class="inner-tab" role="tab" aria-selected="true" data-inner="btns-preview">Preview</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-css">CSS</button>
-            <button class="inner-tab" role="tab" aria-selected="false" data-inner="btns-html">HTML</button>
-          </div>
-          <div id="btnsPreview" data-inner-panel="btns-preview">
-            <div class="btns-grid" id="btnsGrid"></div>
-          </div>
-          <div id="btnsCSS" data-inner-panel="btns-css" hidden>
-            <div class="copybar"><button class="btn" id="copyBtnsCssBtn">Copy CSS</button></div>
-            <div id="btnsCssOutput" class="codebox"></div>
-          </div>
-          <div id="btnsHTML" data-inner-panel="btns-html" hidden>
-            <div class="copybar"><button class="btn" id="copyBtnsHtmlBtn">Copy HTML</button></div>
-            <div id="btnsHtmlOutput" class="codebox"></div>
-          </div>
-        </div>
-
-        <section class="std-group" id="std-callouts" hidden>
-          <aside class="preview" id="calloutsPreview">
-            <div class="std-demo" id="calloutsDemo"></div>
-          </aside>
-        
-          <div class="code cols-3">
-            <div class="code-box">
-              <div class="code-head">
-                <strong>CSS</strong>
-                <button id="copyCalloutsCssBtn" class="copy-btn">Copy CSS</button>
-              </div>
-              <pre class="code-pre" id="calloutsCssOutput"></pre>
-            </div>
-        
-            <div class="code-box">
-              <div class="code-head">
-                <strong>HTML</strong>
-                <button id="copyCalloutsHtmlBtn" class="copy-btn">Copy HTML</button>
-              </div>
-              <pre class="code-pre" id="calloutsHtmlOutput"></pre>
-            </div>
-        
-            <div class="code-box">
-              <div class="code-head">
-                <strong>JS</strong>
-                <button id="copyCalloutsJsBtn" class="copy-btn">Copy JS</button>
-              </div>
-              <pre class="code-pre" id="calloutsJsOutput"></pre>
-            </div>
-          </div>
-        </section>
-      </main>
-    </section>
-
-    
-
-
-
-    <!-- INTERACTIVE TAB -->
-    <section class="shell tab" id="tab-interactive" aria-label="Інтерактивні компоненти" hidden>
-      <aside class="sidebar" id="interactiveSidebar">
-        <h4>Модулі</h4>
-        <ul class="list">
-          <li class="disabled">Modals</li>
-          <li class="disabled">Toasts</li>
-          <li class="disabled">Cookie / GDPR</li>
-          <li class="disabled">Countdown</li>
-          <li class="disabled">Sweepstakes / Wheel / Quiz</li>
-          <li class="disabled">Social Proof</li>
-          <li class="disabled">Order Form variants</li>
-          <li class="disabled">Sticky CTA / Bars</li>
-          <li class="disabled">Lockers (CTA → unlock)</li>
-        </ul>
-      </aside>
-      <main class="panel">
-        <p class="notice">Тут будуть інтерактивні демо та API.</p>
-      </main>
-    </section>
-  </div>
-
-  <!-- Динамічні стилі -->
-  <style id="typoStyle"></style>
-  <style id="colorStyle"></style>
-  <style id="btnKitStyle"></style>
-  <style id="stdStyle"></style>
-
-  <script src="app.js" defer></script>
+    <!-- JS -->
+    <script type="module" src="assets/js/app.js" defer></script>
 </body>
 
 </html>

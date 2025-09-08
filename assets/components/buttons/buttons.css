@@ -1,0 +1,356 @@
+/* assets/components/buttons/buttons.css */
+/* Бібліотека кнопок (підключається незалежно) */
+
+/* Base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: filter .2s, box-shadow .2s, transform .2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn.square {
+  border-radius: 6px;
+}
+
+.btn.pill {
+  border-radius: 999px;
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.btn.full {
+  width: 100%;
+}
+
+/* 01 Primary */
+.btn.primary {
+  background: #5bd1a8;
+  border-color: #5bd1a8;
+  color: #0a0e0c;
+}
+
+.btn.primary:hover {
+  filter: brightness(.95);
+  box-shadow: 0 8px 18px rgba(91, 209, 168, .35);
+}
+
+/* 02 Outline */
+.btn.outline {
+  background: transparent;
+  border: 2px solid #1c2430;
+  color: #1c2430;
+}
+
+.btn.outline:hover {
+  background: rgba(28, 36, 48, .06);
+}
+
+/* 03 Ghost */
+.btn.ghost:hover {
+  background: rgba(28, 36, 48, .08);
+}
+
+/* 04 Gradient */
+.btn.gradient {
+  background: linear-gradient(90deg, #5bd1a8, #09c2a1);
+  border-color: transparent;
+  color: #0a0e0c;
+  background-size: 200% 100%;
+}
+
+.btn.gradient:hover {
+  background-position: 100% 0;
+}
+
+/* 05 Shadow */
+.btn.shadow {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, .15);
+}
+
+.btn.shadow:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .2);
+  transform: translateY(-1px);
+}
+
+/* 06 Raised */
+.btn.raised {
+  box-shadow: 0 4px 0 #0f7f66;
+  background: #14b8a6;
+  border-color: #0f7f66;
+  color: #0a0e0c;
+}
+
+.btn.raised:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #0f7f66;
+}
+
+/* 07 Pill Primary */
+.btn.pill.primary {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  color: #fff;
+}
+
+.btn.pill.primary:hover {
+  filter: brightness(.95);
+}
+
+/* 08 Link */
+.btn.link {
+  background: transparent;
+  border-color: transparent;
+  color: #0a7c5e;
+  text-decoration: underline;
+}
+
+/* 09 Success */
+.btn.success {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #0a0e0c;
+}
+
+.btn.success:hover {
+  filter: brightness(.95);
+}
+
+/* 10 Warning */
+.btn.warning {
+  background: #ffb020;
+  border-color: #ffb020;
+  color: #1c2430;
+}
+
+.btn.warning:hover {
+  filter: brightness(.95);
+}
+
+/* 11–16 Square family */
+.btn.square.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.btn.square.outline {
+  background: transparent;
+  border: 2px solid #1c2430;
+  color: #1c2430;
+}
+
+.btn.square.dashed {
+  border-style: dashed;
+}
+
+.btn.square.info {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.btn.square.danger {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.btn.square.ghost {
+  background: transparent;
+}
+
+.btn.square.ghost:hover {
+  background: rgba(28, 36, 48, .08);
+}
+
+/* 17 Neon */
+.btn.square.neon {
+  background: #111;
+  color: #5bd1a8;
+  text-shadow: 0 0 8px #5bd1a8;
+  border-color: #333;
+}
+
+.btn.square.neon:hover {
+  box-shadow: 0 0 18px 4px rgba(91, 209, 168, .4);
+}
+
+/* 18 Glass */
+.btn.square.glass {
+  background: rgba(255, 255, 255, .35);
+  backdrop-filter: blur(6px);
+  border-color: rgba(255, 255, 255, .5);
+}
+
+/* 19 / 20 Icons */
+.btn.icon-left::before {
+  content: "↗";
+}
+
+.btn.icon-right::after {
+  content: "→";
+}
+
+/* CTA 21..30 */
+.btn.cta-offer {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #fff;
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, .5);
+}
+
+@keyframes pulseCta {
+  from {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, .5);
+  }
+
+  to {
+    box-shadow: 0 0 0 16px rgba(22, 163, 74, 0);
+  }
+}
+
+.btn.cta-offer:hover {
+  animation: pulseCta 1s ease-out;
+}
+
+.btn.cta-buy {
+  background: #e11d48;
+  border-color: #e11d48;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.cta-discount {
+  color: #0a0e0c;
+  background: linear-gradient(90deg, #ffe259, #ffa751);
+  border-color: transparent;
+  background-size: 200% 100%;
+}
+
+.btn.cta-discount:hover {
+  background-position: 100% 0;
+}
+
+.btn.cta-trial {
+  background: rgba(14, 165, 233, .12);
+  border: 2px solid rgba(14, 165, 233, .6);
+  color: #0a0e0c;
+  backdrop-filter: blur(6px);
+}
+
+.btn.cta-trial:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(14, 165, 233, .25);
+}
+
+.btn.cta-eligibility {
+  background: #0f172a;
+  color: #facc15;
+  border-color: #0f172a;
+}
+
+.btn.cta-eligibility:hover {
+  background: #111827;
+  color: #fde68a;
+}
+
+.btn.cta-bonus {
+  background: #111;
+  color: #22c55e;
+  border-color: #333;
+  box-shadow: 0 0 12px rgba(34, 197, 94, .35);
+}
+
+.btn.cta-bonus:hover {
+  box-shadow: 0 0 18px rgba(34, 197, 94, .6);
+}
+
+.btn.cta-cart {
+  background: #0ea5e9;
+  color: #fff;
+  border-color: #0ea5e9;
+}
+
+.btn.cta-cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(14, 165, 233, .35);
+}
+
+.btn.cta-download {
+  background: #10b981;
+  color: #0a0e0c;
+  border-color: #10b981;
+}
+
+.btn.cta-download::after {
+  content: "→";
+  margin-left: 6px;
+  transition: transform .2s;
+}
+
+.btn.cta-download:hover::after {
+  transform: translateX(3px);
+}
+
+.btn.cta-waitlist {
+  background: transparent;
+  color: #1c2430;
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+}
+
+.btn.cta-waitlist:hover {
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, .18);
+}
+
+.btn.cta-sample {
+  position: relative;
+  overflow: hidden;
+  background: #f59e0b;
+  color: #1c2430;
+  border-color: #f59e0b;
+}
+
+.btn.cta-sample::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  transform: translateX(-120%) rotate(12deg);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .6) 50%, rgba(255, 255, 255, 0) 100%);
+}
+
+.btn.cta-sample:hover::before {
+  transform: translateX(60%) rotate(12deg);
+  transition: transform .6s ease;
+}
+
+/* touch-only: вимикаємо ховер-ефекти */
+@media (hover:none) {
+  .btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn:active {
+    transform: scale(.98);
+  }
+}
+
+/* Блок з prefers-reduced-motion БУЛО ВИДАЛЕНО за вимогою */

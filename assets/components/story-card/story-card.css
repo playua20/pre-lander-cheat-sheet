@@ -1,0 +1,75 @@
+/* assets\components\story-card\story-card.css */
+
+.c-story {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, .12);
+  margin: 0 0 12px;
+  background: #fff
+}
+
+.c-story img {
+  width: 100%;
+  display: block
+}
+
+.c-story figcaption {
+  padding: 10px 12px
+}
+
+.c-story--bar figcaption {
+  background: #f8b4c7;
+  color: #1c2430;
+  font-weight: 800;
+  text-align: center
+}
+
+.c-story--ribbon {
+  --r: #111;
+  --txt: #fff
+}
+
+.c-story--ribbon .c-story__ribbon {
+  position: absolute;
+  top: 10px;
+  left: -55px;
+  transform: rotate(-30deg);
+  background: var(--r);
+  color: var(--txt);
+  padding: 6px 56px;
+  font-weight: 800;
+  letter-spacing: .06em
+}
+
+.c-story--ribbon figcaption {
+  background: #f2f4f8
+}
+
+.c-story--polaroid {
+  padding: 10px;
+  background: #fff
+}
+
+.c-story--polaroid img {
+  border: 8px solid #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, .12);
+  border-radius: 4px
+}
+
+.c-story--polaroid figcaption {
+  font-style: italic;
+  text-align: center;
+  color: #374151
+}
+
+
+.c-story {
+  --r: 12px;
+  border-radius: var(--r);
+  overflow: hidden
+}
+
+.c-story--square {
+  --r: 0
+}

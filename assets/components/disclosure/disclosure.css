@@ -1,0 +1,188 @@
+/* ===== Disclosure / Advertisement (top-of-page) ===== */
+.disc {
+    margin: 0 0 10px;
+    font-size: .88em;
+    line-height: 1.45;
+}
+
+.disc-left {
+    text-align: left
+}
+
+.disc-center {
+    text-align: center
+}
+
+.disc-right:not(.disc-right .disc-box) {
+    text-align: right
+}
+
+.disc-right .disc-box {
+    text-align: center;
+}
+
+.disc-muted {
+    color: #6b7686
+}
+
+.disc-dark {
+    color: #1c2430
+}
+
+
+
+/* Trigger link */
+.disc .disc-link {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+}
+
+.disc .disc-link:hover {
+    text-decoration: underline
+}
+
+/* “Text-only” variant */
+.disc .disc-text {
+    opacity: .85
+}
+
+/* --- Optional pill/tinted link styles --- */
+.disc.disc-pill .disc-link {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    background: var(--disc-tint, #eef0f7);
+    color: var(--disc-ink, #1c2430);
+}
+
+.disc.disc-pill .disc-link:hover {
+    filter: brightness(.98);
+    text-decoration: none;
+}
+
+.disc.disc-desat .disc-link {
+    filter: saturate(.65);
+}
+
+/* Presets */
+.disc.disc-tint-indigo {
+    --disc-tint: #eef0ff;
+    --disc-ink: #20275a;
+}
+
+.disc.disc-tint-teal {
+    --disc-tint: #e7fff9;
+    --disc-ink: #0d3f35;
+}
+
+.disc.disc-tint-rose {
+    --disc-tint: #ffeef3;
+    --disc-ink: #611a2d;
+}
+
+/* Modal root */
+.disc .disc-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 60;
+}
+
+.disc .disc-modal[hidden] {
+    display: none;
+}
+
+/* Overlays */
+.disc .disc-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.disc .overlay-dark {
+    background: rgba(0, 0, 0, .58);
+}
+
+.disc .overlay-light {
+    background: rgba(255, 255, 255, .66);
+}
+
+.disc .overlay-blur {
+    background: rgba(0, 0, 0, .35);
+    backdrop-filter: blur(6px);
+}
+
+.disc .overlay-green {
+    background: rgba(10, 124, 94, .22);
+}
+
+.disc .overlay-blue {
+    background: rgba(37, 99, 235, .25);
+}
+
+.disc .overlay-amber {
+    background: rgba(245, 158, 11, .25);
+}
+
+.disc .overlay-desat {
+    filter: saturate(.6);
+}
+
+/* Modal box */
+.disc .disc-box {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 560px);
+    background: #fff;
+    color: #1c2430;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+
+
+.disc .disc-box h3 {
+    margin: .1em 0 .45em;
+}
+
+/* Radius helpers */
+.disc .box-r8 {
+    border-radius: 8px
+}
+
+.disc .box-r12 {
+    border-radius: 12px
+}
+
+.disc .box-r14 {
+    border-radius: 14px
+}
+
+.disc .box-r16 {
+    border-radius: 16px
+}
+
+.disc .box-r20 {
+    border-radius: 20px
+}
+
+.disc .box-r24 {
+    border-radius: 24px
+}
+
+/* Close button */
+.disc .disc-x {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+}

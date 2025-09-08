@@ -1,0 +1,205 @@
+:root {
+  --nav-accent: #b71c1c
+}
+
+.c-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin: 0 0 12px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: inset 0 -2px 0 var(--nav-accent)
+}
+
+
+.c-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  letter-spacing: .02em
+}
+
+.c-nav__brand .logo {
+  font-size: 20px;
+  color: var(--nav-accent)
+}
+
+.c-nav__links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap
+}
+
+.c-nav__links a {
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  opacity: .95
+}
+
+.c-nav__links a:hover:not(.is-current) {
+  background: rgba(28, 36, 48, .06)
+}
+
+.c-nav__links a.is-current:hover {
+  filter: brightness(1.1);
+}
+
+.c-nav__links .is-current {
+  background: var(--nav-accent);
+  color: #fff
+}
+
+.c-nav .btn {
+  white-space: nowrap
+}
+
+/* модифікатори */
+.c-nav--centered {
+  justify-content: center
+}
+
+.c-nav--centered .c-nav__brand {
+  margin-right: auto
+}
+
+.c-nav--centered .c-nav__links {
+  margin-right: auto
+}
+
+.c-nav--split {
+  gap: 8px
+}
+
+/* hamburger */
+.c-nav__toggle {
+  display: none;
+  position: relative;
+  width: 36px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  cursor: pointer
+}
+
+.c-nav__toggle span {
+  display: block;
+  height: 3px;
+  margin: 5px 0;
+  background: #1c2430;
+  border-radius: 3px;
+  transition: .2s
+}
+
+/* мобільний режим */
+@media (max-width:900px) {
+  .c-nav__links {
+    display: none
+  }
+
+  .c-nav.is-open .c-nav__links {
+    display: flex
+  }
+
+  .c-nav {
+    padding: 10px 12px
+  }
+
+  .c-nav .c-nav__toggle {
+    display: inline-block
+  }
+
+  .c-nav .c-nav__links {
+    position: absolute;
+    z-index: 30;
+    left: 10px;
+    right: 10px;
+    top: 100%;
+    flex-direction: column;
+    gap: 0;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 12px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+    margin-top: 8px
+  }
+
+
+  .c-nav .c-nav__links a {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(0, 0, 0, .06);
+    border-radius: 0;
+    text-align: center
+  }
+
+  .c-nav .c-nav__links a:first-child {
+    border-top: none
+  }
+
+  .c-nav.is-open .c-nav__links {
+    max-height: 70vh
+  }
+}
+
+/* === SQUARE (повністю квадратний контейнер і лінки) === */
+.c-nav--square {
+  border-radius: 0
+}
+
+.c-nav--square .c-nav__links a {
+  border-radius: 0 !important
+}
+
+/* === DARK (темний фон + світлий текст) === */
+.c-nav--dark {
+  background: #0f1117;
+  /* базовий темний */
+  color: #e6e8ee;
+  border-color: rgba(255, 255, 255, .08);
+}
+
+.c-nav--dark .c-nav__toggle span {
+  background: #e6e8ee
+}
+
+.c-nav--dark .c-nav__links a:hover:not(.is-current) {
+  background: rgba(255, 255, 255, .08)
+}
+
+/* відтінки темного фону (обери клас або комбінуй) */
+.c-nav--dark-1 {
+  background: #111827
+}
+
+/* slate */
+.c-nav--dark-2 {
+  background: #0b0c0f
+}
+
+/* near-black */
+.c-nav--dark-3 {
+  background: #0e1015
+}
+
+/* gunmetal */
+
+@media (max-width:900px) {
+  .c-nav.c-nav--dark .c-nav__links {
+    background: inherit;
+    /* темне моб меню */
+    border-color: rgba(255, 255, 255, .08);
+  }
+
+  .c-nav.c-nav--dark .c-nav__links a {
+    border-top-color: rgba(255, 255, 255, .08);
+  }
+}

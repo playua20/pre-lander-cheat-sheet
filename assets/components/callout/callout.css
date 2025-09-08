@@ -1,0 +1,226 @@
+/* ==== Callouts / Alerts (01–10) + квадратні варіанти ==== */
+:root {
+  /* fallback tokens (світла тема) */
+  --co-text: #1c2430;
+  --co-border: #d7dde6;
+  --co-bg: #f2f4f8;
+
+  --co-info: #2563eb;
+  --co-info-bg: #eff6ff;
+  --co-info-br: #bfdbfe;
+  --co-success: #16a34a;
+  --co-success-bg: #ecfdf5;
+  --co-success-br: #a7f3d0;
+  --co-warning: #f59e0b;
+  --co-warning-bg: #fff7ed;
+  --co-warning-br: #fed7aa;
+  --co-danger: #ef4444;
+  --co-danger-bg: #fee2e2;
+  --co-danger-br: #fecaca;
+  --co-neutral: #64748b;
+  --co-neutral-bg: #f1f5f9;
+  --co-neutral-br: #cbd5e1;
+  --co-tip: #10b981;
+  --co-tip-bg: #ecfdf5;
+  --co-tip-br: #a7f3d0;
+  --co-note: #8b5cf6;
+  --co-note-bg: #f5f3ff;
+  --co-note-br: #ddd6fe;
+}
+
+.std-demo .callout {
+  --co-accent: var(--co-neutral);
+  --co-bg-use: var(--co-neutral-bg);
+  --co-br-use: var(--co-neutral-br);
+  --r: 12px;
+  /* радіус блоку */
+  --ri: 8px;
+  /* радіус іконки */
+  color: var(--co-text);
+  background: var(--co-bg-use);
+  border: 1px solid var(--co-br-use);
+  border-left: 6px solid var(--co-accent);
+  border-radius: var(--r);
+  padding: 12px 14px 12px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  position: relative;
+  margin: 0 0 12px;
+}
+
+.std-demo .callout.square {
+  --r: 0;
+  --ri: 0
+}
+
+/* повністю квадратні */
+
+.std-demo .callout .icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border-radius: var(--ri);
+  border: 1px solid rgba(0, 0, 0, .1);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.std-demo .callout .body {
+  flex: 1 1 auto;
+  padding-top: 0.37em;
+}
+
+.std-demo .callout .body a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.std-demo .callout .actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap
+}
+
+.std-demo .callout .x {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  opacity: .7;
+}
+
+.std-demo .callout .x:hover {
+  opacity: 1
+}
+
+/* variants */
+.std-demo .callout.info {
+  --co-accent: var(--co-info);
+  --co-bg-use: var(--co-info-bg);
+  --co-br-use: var(--co-info-br)
+}
+
+.std-demo .callout.success {
+  --co-accent: var(--co-success);
+  --co-bg-use: var(--co-success-bg);
+  --co-br-use: var(--co-success-br)
+}
+
+.std-demo .callout.warning {
+  --co-accent: var(--co-warning);
+  --co-bg-use: var(--co-warning-bg);
+  --co-br-use: var(--co-warning-br)
+}
+
+.std-demo .callout.danger {
+  --co-accent: var(--co-danger);
+  --co-bg-use: var(--co-danger-bg);
+  --co-br-use: var(--co-danger-br)
+}
+
+.std-demo .callout.neutral {
+  --co-accent: var(--co-neutral);
+  --co-bg-use: var(--co-neutral-bg);
+  --co-br-use: var(--co-neutral-br)
+}
+
+.std-demo .callout.tip {
+  --co-accent: var(--co-tip);
+  --co-bg-use: var(--co-tip-bg);
+  --co-br-use: var(--co-tip-br)
+}
+
+.std-demo .callout.note {
+  --co-accent: var(--co-note);
+  --co-bg-use: var(--co-note-bg);
+  --co-br-use: var(--co-note-br)
+}
+
+/* Inline pill */
+.std-demo .callout.inline {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border-left-width: 4px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.std-demo .callout.inline .icon {
+  display: none
+}
+
+/* Banner */
+.std-demo .callout.banner {
+  --co-accent: #e74856;
+  --r: 12px;
+  /* за замовчуванням, але якщо .square — стане 0 */
+  background: #111;
+  color: #fff;
+  border-color: #2a2a2a;
+  border-left-color: var(--co-accent);
+  align-items: center;
+  gap: 10px;
+}
+
+.std-demo .callout.banner .icon {
+  background: transparent;
+  border-color: rgba(255, 255, 255, .25);
+  color: #fff
+}
+
+/* Dark theme tweaks */
+body.theme-dark .std-demo .callout {
+  color: #e6e8ee;
+  background: #0e1015;
+  border-color: rgba(255, 255, 255, .08);
+}
+
+body.theme-dark .std-demo .callout .icon {
+  background: #0b0d12;
+  border-color: rgba(255, 255, 255, .08)
+}
+
+body.theme-dark .std-demo .callout.info {
+  --co-bg-use: #0f172a;
+  --co-br-use: rgba(37, 99, 235, .35)
+}
+
+body.theme-dark .std-demo .callout.success {
+  --co-bg-use: #052e27;
+  --co-br-use: rgba(16, 185, 129, .35)
+}
+
+body.theme-dark .std-demo .callout.warning {
+  --co-bg-use: #2b1d07;
+  --co-br-use: rgba(245, 158, 11, .35)
+}
+
+body.theme-dark .std-demo .callout.danger {
+  --co-bg-use: #2a0e10;
+  --co-br-use: rgba(239, 68, 68, .35)
+}
+
+body.theme-dark .std-demo .callout.neutral {
+  --co-bg-use: #0e1219;
+  --co-br-use: rgba(100, 116, 139, .35)
+}
+
+body.theme-dark .std-demo .callout.tip {
+  --co-bg-use: #062a21;
+  --co-br-use: rgba(16, 185, 129, .35)
+}
+
+body.theme-dark .std-demo .callout.note {
+  --co-bg-use: #20194a;
+  --co-br-use: rgba(139, 92, 246, .35)
+}

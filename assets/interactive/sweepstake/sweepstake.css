@@ -1,0 +1,235 @@
+/* ===== Sweepstake (image wheel) ===== */
+.i-sweep {
+    --size: 340px;
+    --duration: 4.2s;
+    --ease: cubic-bezier(.12, .52, .1, 1);
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+}
+
+.i-sweep__wheel {
+    position: relative;
+    width: var(--size);
+    aspect-ratio: 1 / 1;
+}
+
+.i-sweep__rotor {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: rotate(0deg);
+    transition: transform var(--duration) var(--ease);
+}
+
+.i-sweep__disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: url("./prizewheel.png") center/contain no-repeat;
+    filter: drop-shadow(0 10px 26px rgba(0, 0, 0, .22));
+}
+
+/* Центр-хаб */
+.i-sweep__hub {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 28%;
+    aspect-ratio: 1 / 1;
+    border: 0;
+    border-radius: 50%;
+    background: url("./wheel-cursor.png") center/contain no-repeat;
+    cursor: pointer;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+}
+
+.i-sweep__hub::after {
+    content: "SPIN";
+    font-weight: 900;
+    font-size: clamp(12px, 2.6vw, 18px);
+    letter-spacing: .08em;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, .45);
+    pointer-events: none;
+}
+
+.i-sweep__hub[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.i-sweep__pointer {
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 18px solid #fff;
+    filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .25));
+    z-index: 2;
+}
+
+/* ===== Modal ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .4s ease;
+    z-index: 100;
+}
+
+.modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+}
+
+.modal__content {
+    position: relative;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    transform: translateY(-60px);
+    animation: slideDown .6s ease forwards;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+}
+
+@keyframes slideDown {
+    to {
+        transform: translateY(0);
+    }
+}
+
+.modal__icon {
+    font-size: 2rem;
+    color: #16a34a;
+    margin-bottom: 1rem;
+}
+
+/* ===== Form + countdown (square look) ===== */
+.form-wrap {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.form-headline {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 10px;
+}
+
+.form-img {
+    width: 220px;
+    max-width: 60vw;
+    display: block;
+    margin: 10px auto 6px;
+}
+
+.form-stock {
+    color: #0d62ff;
+    font-size: 14px;
+    margin: 6px 0 2px;
+}
+
+.form-sub {
+    color: #374151;
+    margin: 4px 0 12px;
+}
+
+.form-price {
+    margin: 6px 0 16px;
+    font-size: 20px;
+}
+
+.form-price .old {
+    color: #6b7280;
+    text-decoration: line-through;
+    margin-right: 12px;
+}
+
+.form-price .new {
+    color: #ef0000;
+    font-weight: 900;
+    font-size: 24px;
+}
+
+.form-banner {
+    border: 2px solid #0d62ff;
+    padding: 14px;
+    font-weight: 700;
+    margin: 18px auto 16px;
+    max-width: 980px;
+    border-radius: 0;
+    /* square */
+}
+
+.form-wrap form {
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.form-wrap input {
+    display: block;
+    width: 100%;
+    margin: 12px auto;
+    padding: 14px 12px;
+    border: 2px solid #0d62ff;
+    border-radius: 0;
+    /* square */
+    font-size: 16px;
+}
+
+.form-wrap .btn,
+.form-wrap button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 16px 12px;
+    border: 0;
+    border-radius: 0;
+    /* square */
+    background: #0d4f66;
+    color: #fff;
+    font-weight: 800;
+    letter-spacing: .02em;
+    cursor: pointer;
+}
+
+.form-footnote {
+    margin: 14px auto 0;
+    max-width: 980px;
+    color: #374151;
+}
+
+.countdown {
+    margin-top: 12px;
+    font-weight: 800;
+    color: #dc2626;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .i-sweep {
+        --size: 300px;
+    }
+
+    .form-wrap form {
+        padding: 0 16px;
+    }
+}

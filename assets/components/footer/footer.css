@@ -1,0 +1,274 @@
+/* Footer (component-scoped via .c-foot) */
+.c-foot {
+    --bg: #fff;
+    --ink: #1c2430;
+    --muted: #6b7686;
+    --line: rgba(0, 0, 0, .12);
+    --accent: #0a7c5e;
+    --link: #0a7c5e;
+    --modal-bg: #fff;
+    --modal-ink: #1c2430;
+
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+}
+
+/* Grid / sections */
+.c-foot__grid {
+    display: grid;
+    gap: 16px
+}
+
+.c-foot__grid.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+}
+
+.c-foot__grid.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+}
+
+.c-foot__grid.cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+}
+
+@media (max-width:900px) {
+    .c-foot__grid.cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+}
+
+@media (max-width:640px) {
+
+    .c-foot__grid.cols-2,
+    .c-foot__grid.cols-3,
+    .c-foot__grid.cols-4 {
+        grid-template-columns: 1fr
+    }
+}
+
+.c-foot__ttl {
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: .2em 0 .6em;
+    font-weight: 800;
+}
+
+.c-foot__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px
+}
+
+.c-foot__list a {
+    color: inherit;
+    text-decoration: none;
+    opacity: .95
+}
+
+.c-foot__list a:hover {
+    text-decoration: underline
+}
+
+.c-foot a {
+    color: var(--link)
+}
+
+.c-foot__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900
+}
+
+.c-foot__brand img {
+    width: 20px;
+    height: 20px
+}
+
+/* Legal row */
+.c-foot__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.c-foot__legal a {
+    color: inherit;
+    text-decoration: none
+}
+
+.c-foot__legal a:hover {
+    text-decoration: underline
+}
+
+.c-foot__legal .sep {
+    opacity: .35
+}
+
+/* Align helpers */
+.c-foot--center {
+    text-align: center
+}
+
+.c-foot--center .c-foot__brand {
+    justify-content: center
+}
+
+/* Variants — LIGHT (6) */
+.c-foot--light-1 {
+    --bg: #fff
+}
+
+.c-foot--light-2 {
+    --bg: #f7f9fc
+}
+
+.c-foot--light-3 {
+    --bg: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .06)
+}
+
+.c-foot--light-4 {
+    --bg: #ffffff;
+    --line: rgba(0, 0, 0, .08)
+}
+
+.c-foot--light-5 {
+    --bg: #f9fafb;
+    --accent: #0b70c9;
+    --link: #0b70c9
+}
+
+.c-foot--light-6 {
+    --bg: #fffef8;
+    --accent: #ff6f00;
+    --link: #ff6f00
+}
+
+/* Variants — COLORED (3, soft brand) */
+.c-foot--brand-indigo {
+    --bg: #eef0ff;
+    --accent: #4f46e5;
+    --link: #4338ca
+}
+
+.c-foot--brand-teal {
+    --bg: #e7fff9;
+    --accent: #0a7c5e;
+    --link: #0a7c5e
+}
+
+.c-foot--brand-amber {
+    --bg: #fff7e6;
+    --accent: #f59e0b;
+    --link: #d97706
+}
+
+/* Variants — DARK (3) */
+.c-foot--dark-1 {
+    --bg: #0f1117;
+    --ink: #e6e8ee;
+    --muted: #9aa3b2;
+    --line: rgba(255, 255, 255, .12);
+    --link: #60a5fa;
+    --modal-bg: #0f1117;
+    --modal-ink: #e6e8ee;
+}
+
+.c-foot--dark-2 {
+    --bg: #0e1015;
+    --ink: #e6e8ee;
+    --muted: #9aa3b2;
+    --line: rgba(255, 255, 255, .12);
+    --link: #5bd1a8;
+    --modal-bg: #0e1015;
+    --modal-ink: #e6e8ee;
+}
+
+.c-foot--dark-3 {
+    --bg: #111827;
+    --ink: #e5e7eb;
+    --muted: #9aa3b2;
+    --line: rgba(255, 255, 255, .12);
+    --link: #f59e0b;
+    --modal-bg: #111827;
+    --modal-ink: #e5e7eb;
+}
+
+/* Modal + overlay (local to footer) */
+.c-foot .c-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    z-index: 999;
+}
+
+.c-foot .c-overlay[hidden] {
+    display: none;
+}
+
+.c-foot .c-modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+}
+
+.c-foot .c-modal[hidden] {
+    display: none;
+}
+
+.c-foot .c-modal__box {
+    position: relative;
+    /* ← ВАЖЛИВО: X буде прив’язаний до коробки */
+    width: min(92vw, 560px);
+    background: var(--modal-bg);
+    color: var(--modal-ink);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+
+.c-foot .c-modal__x {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+}
+
+
+.c-foot .c-modal__box h3 {
+    margin: .1em 0 .45em
+}
+
+.c-foot .c-modal__x {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    color: inherit;
+}

@@ -1,0 +1,254 @@
+/* assets\components\hero\hero.css */
+.c-hero {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 0 0 12px;
+  border: 1px solid rgba(0, 0, 0, .12);
+  background: #fff;
+  display: grid;
+  --r: 14px;
+  border-radius: var(--r);
+  overflow: hidden
+}
+
+.c-hero--square {
+  --r: 0
+}
+
+/* новий модифікатор */
+
+.c-hero>img {
+  width: 100%;
+  height: auto;
+  display: block;
+  grid-area: 1/1;
+  object-fit: cover
+}
+
+.c-hero__caption {
+  grid-area: 1/1;
+  align-self: end;
+  margin: 0 16px 16px 16px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .6));
+  color: #fff;
+  border-radius: 12px;
+  padding: 14px
+}
+
+.c-hero__caption h2 {
+  margin: 0 0 .25em;
+  text-wrap: balance
+}
+
+.c-hero__caption .eyebrow {
+  display: block;
+  opacity: .85;
+  letter-spacing: .06em;
+  margin-bottom: 4px
+}
+
+/* clamp */
+.c-hero__caption h2.c-hero--clamp2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden
+}
+
+/* Вариант 01 */
+.c-hero--01 .c-hero__caption {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .6))
+}
+
+@media (max-width:450px) {
+  .c-hero--01 {
+    display: block
+  }
+
+  .c-hero--01 .c-hero__caption {
+    position: static;
+    margin: 0;
+    border-radius: 0 0 14px 14px;
+    background: #0f172a
+  }
+}
+
+.c-hero--compact .c-hero__caption {
+  position: static;
+  margin: 0;
+  border-radius: 0 0 14px 14px;
+  background: #0f172a
+}
+
+.c-hero--compact .c-hero__caption h2 {
+  font-size: 20px
+}
+
+/* Вариант 02 (бар новин) */
+.c-hero--02 .c-hero__caption {
+  background: rgba(231, 72, 86, .9);
+  border-radius: 0;
+  inset: auto 0 0 0;
+  color: #fff;
+  margin: 0;
+  padding: 12px 16px
+}
+
+.c-hero--02 .c-hero__caption h2 {
+  margin: 2px 0 0
+}
+
+.c-hero--02.c-hero--compact .c-hero__caption {
+  position: static;
+  background: #e74856;
+  border-radius: 0 0 14px 14px
+}
+
+/* Split (03) */
+.c-hero--split {
+  grid-template-columns: 1.15fr 1fr;
+  gap: 12px;
+  align-items: center
+}
+
+.c-hero--split .copy {
+  padding: 16px
+}
+
+.c-hero--split img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 260px
+}
+
+@media (max-width:700px) {
+  .c-hero--split {
+    grid-template-columns: 1fr
+  }
+}
+
+.c-hero--split.c-hero--compact .copy h2 {
+  font-size: 22px
+}
+
+/* 04 */
+.c-hero--04>img {
+  filter: contrast(1.05) saturate(1.05)
+}
+
+.c-hero--04 .c-hero__caption {
+  align-self: center;
+  justify-self: start;
+  max-width: min(620px, 92%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .55)), linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0) 65%);
+  padding: 18px
+}
+
+.c-hero--04 .trust {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: .4em 0 1em 0;
+  padding: 0;
+  list-style: none
+}
+
+.c-hero--04.c-hero--compact .c-hero__caption h2 {
+  font-size: 20px
+}
+
+/* 05 */
+.c-hero--05 .c-hero__caption {
+  align-self: end;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .7));
+  padding: 16px
+}
+
+.c-hero--05 .byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  opacity: .92
+}
+
+.c-hero--05 .avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .8)
+}
+
+.c-hero--05.c-hero--compact .c-hero__caption h2 {
+  font-size: 19px
+}
+
+/* дрібні фікси */
+@media (min-width:350px) and (max-width:490px) {
+  .c-hero .c-hero__caption {
+    padding: 12px
+  }
+}
+
+.c-hero {
+  position: relative;
+  display: grid
+}
+
+.c-hero>img {
+  width: 100%;
+  height: auto;
+  display: block;
+  grid-area: 1/1;
+  object-fit: cover
+}
+
+.c-hero__caption {
+  grid-area: 1/1;
+  align-self: end;
+  margin: 0 16px 16px;
+  color: #fff;
+  +background: linear-gradient(180deg, rgba(0, 0, 0, .0), rgba(0, 0, 0, .65));
+  +padding: 14px;
+  border-radius: 12px
+}
+
+.c-hero__caption h2 {
+  margin: 0 0 .25em;
+  text-wrap: balance
+}
+
+.c-hero__caption .eyebrow {
+  display: block;
+  opacity: .85;
+  letter-spacing: .06em;
+  margin-bottom: 4px
+}
+
+.c-hero__byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  opacity: .92
+}
+
+.c-hero__byline .avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, .85)
+}
+
+@media (max-width:450px) {
+  .c-hero--overlay .c-hero__caption {
+    position: static;
+    margin: 0;
+    border-radius: 0 0 var(--r) var(--r);
+    background: #0f172a
+  }
+
+
+}

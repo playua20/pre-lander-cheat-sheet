@@ -220,3 +220,34 @@ body.theme-dark .std-demo .disc .disc-box{ background:#12141a; color:#e6e8ee }
 .std-demo .disc .box-r24 { border-radius:24px; }
 
 
+/* ==== Copy Chip (для елементів у прев’ю) ==== */
+.copy-chip{
+  position:absolute;
+  right:8px;
+  top:8px;
+  z-index:3;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid var(--line, rgba(0,0,0,.12));
+  background: var(--surface, #fff);
+  color: var(--ink, #1c2430);
+  font-size:12px;
+  cursor:pointer;
+  user-select:none;
+}
+.copy-chip[data-state="copied"]{
+  outline:2px solid var(--accent, #5bd1a8);
+  background:#eafff6;
+}
+/* щоб чіп позиціонувався від блоку */
+.copy-target{ position:relative; }
+
+/* темна тема */
+html.theme-dark .copy-chip{
+  background:#0e1015;
+  color:#e6e8ee;
+  border-color:rgba(255,255,255,.08);
+}
