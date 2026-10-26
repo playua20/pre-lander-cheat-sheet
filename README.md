@@ -6,10 +6,6 @@ A working catalogue of the interface pieces a pre-lander actually needs, in
 plain HTML, CSS and JavaScript. Open `index.html` and every block is on one
 page, in its real state, ready to be lifted into a project.
 
-It exists because the same dozen blocks come back on every pre-lander, and
-rewriting them each time is where the hours go. Here they are once, with the
-behaviour already attached.
-
 ## What is in it
 
 **Components** — `assets/components/`
