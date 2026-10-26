@@ -39,9 +39,10 @@ behaviour already attached.
   folders exist, the files hold nothing. What they were meant to carry already
   lives in `sweepstake.js`.
 
-Nothing here posts anywhere. The form has no `action` and no request behind
-it: it is a demonstration of the interface, not a working intake. That is also
-why the page runs on GitHub Pages, which serves static files and nothing else.
+Nothing here sends anything, and nothing is meant to: this is a source of
+frontend code to copy, not an intake. Submission belongs to the project the
+block is copied into, together with its endpoint, its validation rules and
+its spam traps — none of which can be decided here.
 
 ## How to use it
 
