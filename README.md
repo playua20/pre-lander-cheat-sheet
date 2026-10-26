@@ -54,8 +54,9 @@ assets/components/story-card/
 
 ## Notes
 
-- Everything is static: it runs from the file system, from GitHub Pages, or
-  from any host that serves files.
+- Everything is static: it runs straight from the file system, or from any host
+  that serves files — GitHub Pages, where the live page above sits, as well as
+  Vercel, Netlify and the rest.
 - A few labels on the page are in Ukrainian — this started as a working tool.
   The component code itself carries no language.
 - `*-OLD.*` files are the first version, kept for reference since the rewrite
