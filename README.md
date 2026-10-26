@@ -33,9 +33,15 @@ behaviour already attached.
 
 **Interactive** — `assets/interactive/`
 
-- `form` — the request form: inline validation, states, submission
-- `congrats` — the confirmation screen after a send
-- `sweepstake` — the prize-draw block
+- `sweepstake` — the prize-draw block, and with it the lead form: it catches
+  the submit, stops the reload, and swaps the form for a confirmation panel
+- `form/form.js` and `congrats/congrats.js` are **empty placeholders** — the
+  folders exist, the files hold nothing. What they were meant to carry already
+  lives in `sweepstake.js`.
+
+Nothing here posts anywhere. The form has no `action` and no request behind
+it: it is a demonstration of the interface, not a working intake. That is also
+why the page runs on GitHub Pages, which serves static files and nothing else.
 
 ## How to use it
 
